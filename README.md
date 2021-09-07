@@ -1,5 +1,5 @@
 # DESIGN
-[Design](Calculator.png)
+![Design](Calculator.png)
 
 # INTRODUCTION
 A modern arbitrary precision reverse polish notation mathematical calculator with built-in keyboard shortcuts and history buffer support.
