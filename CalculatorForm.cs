@@ -150,7 +150,7 @@ namespace Calculator
             {
                 if (expressionChar == '(')
                     unclosedOpeningParenthesisCount++;
-                else if (unclosedOpeningParenthesisCount > 0 && expressionChar == ')')
+                else if (expressionChar == ')')
                     unclosedOpeningParenthesisCount--;
             }
 

@@ -1,18 +1,20 @@
 # DESIGN
-<img src="calculator.png" width = "300" height = "400">
+[Design](Calculator.png)
 
 # INTRODUCTION
-A minimalist feature-rich keyboard-centric reverse polish notation arbitrary precision calculator with built-in keybind and history buffer support. \
-The project's main goal is to provide a better experience for people who expect more from their default plain calculator.
+A modern arbitrary precision reverse polish notation mathematical calculator with built-in keyboard shortcuts and history buffer support.
 
 ## Feature tracker
 - [x] Order of operations
 - [x] Infinite precision decimals
-- [ ] Automatic expression calculation
-- [ ] Simple keyboard layout navigation
-- [ ] Easy to use sign/parenthesis/conditional insertion functionality
-- [ ] Efficient usage of calculator via keybindings
-- [ ] Undo/redo functionality via history buffer
+- [X] Automatic expression calculation
+- [X] Easy to use sign/parenthesis insertion functionality
+- [ ] Fix exceptions
+- [ ] Help message box
+- [ ] Auto detect text overflow in expression/result label
+- [ ] Keyboard shorcut support
+- [ ] History buffer support
+- [ ] Improve comments
 
 ## Keybinds
 Keybind | Action
@@ -39,7 +41,7 @@ An expression is the result of combining decimals and operators together in a st
 
 Operator | Operation
 ---------|----------
-\** | Exponentiation
+\*\* | Exponentiation
 \* | Multiplication
 \/ | Division
 \+ | Addition
