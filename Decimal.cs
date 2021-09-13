@@ -18,7 +18,7 @@ namespace Calculator
 		public Decimal(string decimalString = "0")
 		{
 			if (string.IsNullOrEmpty(decimalString))
-				throw new Exception("DecimalNullError");
+				throw new DecimalNullError();
 
 			// Split string representation into integer and fractional parts
 			int periodIndex = decimalString.LastIndexOf('.');
@@ -36,7 +36,7 @@ namespace Calculator
 				decimalSubstring = decimalString.Substring(periodIndex + 1, decimalString.Length - periodIndex - 1);
 				_fractionalPart = CharacterLinkedListExtension.StringToLinkedList(decimalSubstring);
 				if (_integerPart.Count == 0 || _fractionalPart.Count == 0)
-					throw new Exception("DecimalPeriodError");
+					throw new DecimalPeriodError();
 			}
 
 			// Extract sign from integer part
@@ -45,21 +45,21 @@ namespace Calculator
 				_isPositive = _integerPart.First.Value == '+';
 				_integerPart.RemoveFirst();
 				if (_integerPart.Count == 0)
-					throw new Exception("DecimalPeriodError");
+					throw new DecimalPeriodError();
 			}
 			if (CharacterLinkedListExtension.IsAllZeroes(_integerPart) == true && CharacterLinkedListExtension.IsAllZeroes(_fractionalPart) == true)
 				_isPositive = true;
 
 			// Remove and validate integer and fractional parts
 			if (_integerPart.Count > 1 && _integerPart.First.Value == '0')
-				throw new Exception("DecimalInvalidError");
-			foreach(char integerChar in _integerPart)
-				if(!char.IsDigit(integerChar))
-					throw new Exception("DecimalInvalidError");
+				throw new DecimalInvalidError();
+			foreach (char integerChar in _integerPart)
+				if (!char.IsDigit(integerChar))
+					throw new DecimalInvalidError();
 			CharacterLinkedListExtension.RemoveLastZeroes(_fractionalPart);
 			foreach(char fractionalChar in _fractionalPart)
 				if(!char.IsDigit(fractionalChar))
-					throw new Exception("DecimalInvalidError");
+					throw new DecimalInvalidError();
 		}
 
 		// Decimal's string representation
@@ -158,11 +158,14 @@ namespace Calculator
 
 		public static Decimal Division(Decimal dividend, Decimal divisor)
 		{
+			if (DivisionPrecision < 0)
+				throw new DecimalDivisionError();
+
 			// Convert decimals to division routine format
 			LinkedList<char> dividendAsInteger = decimalToLinkedList(dividend);
 			LinkedList<char> divisorAsInteger = decimalToLinkedList(divisor);
 			if (CharacterLinkedListExtension.IsAllZeroes(divisorAsInteger))
-				throw new Exception("DecimalDivisionError");
+				throw new DecimalDivisionError();
 			CharacterLinkedListExtension.RemoveFirstZeroes(dividendAsInteger);
 			CharacterLinkedListExtension.RemoveFirstZeroes(divisorAsInteger);
 			int exponentOffset = CharacterLinkedListExtension.RemoveLastZeroes(dividendAsInteger) - CharacterLinkedListExtension.RemoveLastZeroes(divisorAsInteger) + divisor._fractionalPart.Count - dividend._fractionalPart.Count;
@@ -215,7 +218,7 @@ namespace Calculator
 		}
 
 		// Decimal's fields
-		public static int DivisionPrecision = 10;
+		public static int DivisionPrecision = 15;
 		private bool _isPositive = true;
 		private LinkedList<char> _integerPart, _fractionalPart;
 	}

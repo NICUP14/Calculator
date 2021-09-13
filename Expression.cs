@@ -11,7 +11,7 @@ namespace Calculator
 		public static string ToPostfix(string infix)
 		{
 			if (string.IsNullOrEmpty(infix))
-				throw new Exception("ExpressionNullError");
+				throw new ExpressionNullError();
 
 			// Split infix expression
 			StringBuilder infixSubstringBuilder = new StringBuilder(infix.Length);
@@ -58,26 +58,26 @@ namespace Calculator
 
 					case ElementType.OpeningParenthesis:
 						if (previousType == ElementType.Decimal)
-							throw new Exception("ExpressionSyntaxError");
+							throw new System.Exception("ExpressionSyntaxError");
 						operatorStack.Push("(");
 						break;
 
 					case ElementType.ClosingParenthesis:
 						if (previousType == ElementType.OpeningParenthesis || previousType == ElementType.Operator)
-							throw new Exception("ExpressionSyntaxError");
+							throw new System.Exception("ExpressionSyntaxError");
 						while (operatorStack.Count > 0 && operatorStack.Peek() != "(")
 						{
 							postfixBuilder.Append(operatorStack.Pop());
 							postfixBuilder.Append(" ");
 						}
 						if (operatorStack.Count == 0)
-							throw new Exception("ExpressionSyntaxError");
+							throw new System.Exception("ExpressionSyntaxError");
 						operatorStack.Pop();
 						break;
 
 					case ElementType.Operator:
 						if (!_operatorDict.ContainsKey(infixSubstring))
-							throw new Exception("ExpressionElementError");
+							throw new System.Exception("ExpressionElementError");
 						if (previousType == ElementType.OpeningParenthesis)
                         {
 							if (infixSubstring == "+")
@@ -98,7 +98,7 @@ namespace Calculator
 			while (operatorStack.Count > 0)
 			{
 				if (operatorStack.Peek() == "(")
-					throw new Exception("ExpressionSyntaxError");
+					throw new System.Exception("ExpressionSyntaxError");
 				postfixBuilder.Append(operatorStack.Pop());
 				postfixBuilder.Append(" ");
 			}
@@ -111,7 +111,7 @@ namespace Calculator
 		public static string ToInfix(string postfix)
 		{
 			if (string.IsNullOrEmpty(postfix))
-				throw new Exception("ExpressionNullError");
+				throw new System.Exception("ExpressionNullError");
 
 			Stack<string> operandStack = new Stack<string>();
 			foreach (string postfixSubstring in postfix.Split(" "))
@@ -121,7 +121,7 @@ namespace Calculator
 				else
 				{
 					if (operandStack.Count < 2)
-						throw new Exception("ExpressionSyntaxError");
+						throw new System.Exception("ExpressionSyntaxError");
 
 					// Operation handler
 					string operand = operandStack.Pop();

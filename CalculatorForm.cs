@@ -21,10 +21,6 @@ namespace Calculator
         // Set button tags after the form loaded
         private void formLoad(object sender, EventArgs e)
         {
-            //string expression = "2*1.15";
-            //expressionLabel.Text = expression;
-            //expressionBuilder.Append(expression);
-
             clearButton.Tag = ButtonTag.Clear;
             signButton.Tag = ButtonTag.Sign;
             parenthesisButton.Tag = ButtonTag.Parenthesis;
@@ -44,7 +40,7 @@ namespace Calculator
             sevenButton.Tag = ButtonTag.Seven;
             eightButton.Tag = ButtonTag.Eight;
             nineButton.Tag = ButtonTag.Nine;
-
+            helpButton.Tag = ButtonTag.Undefined;
         }
 
         /// Update form when button is clicked
@@ -115,31 +111,37 @@ namespace Calculator
 
         private void AppendSign()
         {
-            char lastExpressionChar = expressionBuilder[expressionBuilder.Length - 1];
-            if(lastExpressionChar == '(' || lastExpressionChar == ')')
+            int expressionLength = expressionBuilder.Length;
+            if (expressionLength == 0)
                 expressionBuilder.Append("-");
-            else if (lastExpressionChar == '.' || char.IsDigit(lastExpressionChar))
-            {
-                int expressionIndex = expressionBuilder.Length - 1;
-                while (expressionIndex > 0 && (expressionBuilder[expressionIndex] == '.' || char.IsDigit(expressionBuilder[expressionIndex])))
-                    expressionIndex--;
-                char expressionChar = expressionBuilder[expressionIndex];
-                if (expressionChar == '+' || expressionChar == '-')
-                    expressionBuilder[expressionIndex] = expressionChar == '+' ? '-' : '+';
-                else
-                {
-                    if (expressionIndex == 0)
-                        expressionBuilder.Insert(expressionIndex, "-");
-                    else
-                        expressionBuilder.Insert(expressionIndex + 1, "(-");
-                }
-            }
             else
             {
-                if (lastExpressionChar == '+' || lastExpressionChar == '-')
-                    expressionBuilder[expressionBuilder.Length - 1] = lastExpressionChar == '+' ? '-' : '+';
+                char lastExpressionChar = expressionBuilder[expressionBuilder.Length - 1];
+                if (lastExpressionChar == '(' || lastExpressionChar == ')')
+                    expressionBuilder.Append("-");
+                else if (lastExpressionChar == '.' || char.IsDigit(lastExpressionChar))
+                {
+                    int expressionIndex = expressionBuilder.Length - 1;
+                    while (expressionIndex > 0 && (expressionBuilder[expressionIndex] == '.' || char.IsDigit(expressionBuilder[expressionIndex])))
+                        expressionIndex--;
+                    char expressionChar = expressionBuilder[expressionIndex];
+                    if (expressionChar == '+' || expressionChar == '-')
+                        expressionBuilder[expressionIndex] = expressionChar == '+' ? '-' : '+';
+                    else
+                    {
+                        if (expressionIndex == 0)
+                            expressionBuilder.Insert(expressionIndex, "-");
+                        else
+                            expressionBuilder.Insert(expressionIndex + 1, "(-");
+                    }
+                }
                 else
-                    expressionBuilder.Append("(-");
+                {
+                    if (lastExpressionChar == '+' || lastExpressionChar == '-')
+                        expressionBuilder[expressionBuilder.Length - 1] = lastExpressionChar == '+' ? '-' : '+';
+                    else
+                        expressionBuilder.Append("(-");
+                }
             }
         }
 
@@ -154,11 +156,17 @@ namespace Calculator
                     unclosedOpeningParenthesisCount--;
             }
 
-            char lastExpressionChar = expressionBuilder[expressionBuilder.Length - 1];
-            if (lastExpressionChar == ')' || lastExpressionChar == '.' || char.IsDigit(lastExpressionChar))
-                expressionBuilder.Append(unclosedOpeningParenthesisCount == 0 ? "*(" : ')');
-            else
+            int expressionLength = expressionBuilder.Length;
+            if (expressionLength == 0)
                 expressionBuilder.Append('(');
+            else
+            {
+                char lastExpressionChar = expressionBuilder[expressionBuilder.Length - 1];
+                if (lastExpressionChar == ')' || lastExpressionChar == '.' || char.IsDigit(lastExpressionChar))
+                    expressionBuilder.Append(unclosedOpeningParenthesisCount == 0 ? "*(" : ')');
+                else
+                    expressionBuilder.Append('(');
+            }
         }
 
         private void UpdateLabels()
@@ -167,12 +175,22 @@ namespace Calculator
             expressionLabel.Text = expression;
             try
             {
-                string result = Expression.ToInfix(Expression.ToPostfix(expression));
+                int openParenthesisCount = 0;
+                foreach (char expressionChar in expressionBuilder.ToString())
+                    if (expressionChar == '(')
+                        openParenthesisCount++;
+                    else if(expressionChar == ')')
+                        openParenthesisCount--;
+
+                string result = Expression.ToInfix(Expression.ToPostfix(expression + new string(')', openParenthesisCount)));
                 resultLabel.Text = result;
             }
             catch(Exception e)
             {
-                resultLabel.Text = e.Message;
+                if (e is not ExpressionNullError)
+                    resultLabel.Text = "Error";
+                else
+                    expressionLabel.Text = resultLabel.Text = string.Empty;
             }
         }
 
