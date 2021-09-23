@@ -401,7 +401,7 @@ namespace Calculator
             this.signButton.Name = "signButton";
             this.signButton.Size = new System.Drawing.Size(200, 182);
             this.signButton.TabIndex = 9;
-            this.signButton.Text = "+ -";
+            this.signButton.Text = "+/-";
             this.signButton.UseVisualStyleBackColor = false;
             this.signButton.Click += new System.EventHandler(this.buttonClick);
             // 
@@ -505,7 +505,7 @@ namespace Calculator
             this.resultLabel.Font = new System.Drawing.Font("Segoe UI", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.resultLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(78)))), ((int)(((byte)(78)))));
             this.resultLabel.Location = new System.Drawing.Point(0, 195);
-            this.resultLabel.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
+            this.resultLabel.Margin = new System.Windows.Forms.Padding(0);
             this.resultLabel.Name = "resultLabel";
             this.resultLabel.Size = new System.Drawing.Size(800, 195);
             this.resultLabel.TabIndex = 10;

@@ -159,6 +159,8 @@ namespace Calculator
 				}
 			}
 
+			if (operandStack.Count > 1)
+				throw new ExpressionSyntaxError();
 			return CalculateExpression ? new Decimal(operandStack.Peek()).ToString() : operandStack.Peek();
 		}
 
