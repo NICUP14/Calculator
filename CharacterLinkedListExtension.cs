@@ -2,12 +2,13 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 
-namespace Calculator
+namespace Calculator_backend
 {
-	// Extension methods on linked lists
+    /// <summary>
+    ///	Additional methods for linked lists containing characters
+    /// </summary>
 	static class CharacterLinkedListExtension
 	{
-		// Convert string to linked list
 		public static LinkedList<char> StringToLinkedList(string str)
 		{
 			LinkedList<char> list = new LinkedList<char>();
@@ -16,7 +17,6 @@ namespace Calculator
 			return list;
 		}
 
-		// Convert linked list to string
 		public static string LinkedListToString(LinkedList<char> list)
 		{
 			StringBuilder strBuilder = new StringBuilder(list.Count);
@@ -25,7 +25,6 @@ namespace Calculator
 			return strBuilder.ToString();
 		}
 
-		// Deep copy linked list
 		public static LinkedList<char> Clone(LinkedList<char> list)
 		{
 			LinkedList<char> newList = new LinkedList<char>();
@@ -34,7 +33,6 @@ namespace Calculator
 			return newList;
 		}
 
-		// Checks if linked list contains only digits
 		public static bool IsAllDigits(LinkedList<char> list)
 		{
 			if (list.Count == 0)
@@ -45,7 +43,6 @@ namespace Calculator
 			return true;
 		}
 
-		// Checks if linked list contains only character zero
 		public static bool IsAllZeroes(LinkedList<char> list)
 		{
 			if (list.Count == 0)
@@ -56,8 +53,7 @@ namespace Calculator
 			return true;
 		}
 
-		// Removes a sequence of character zero from beginning of linked list
-		public static int RemoveFirstZeroes(LinkedList<char> list)
+		public static int RemoveLeadingZeroes(LinkedList<char> list)
 		{
 			LinkedListNode<char> listNode = list.First, auxiliaryNode;
 			int nodeCount = 0;
@@ -71,8 +67,7 @@ namespace Calculator
 			return nodeCount;
 		}
 
-		// Removes a sequence of character zero from end of linked list
-		public static int RemoveLastZeroes(LinkedList<char> list)
+		public static int RemoveTrailingZeroes(LinkedList<char> list)
 		{
 			LinkedListNode<char> listNode = list.Last, auxiliaryNode;
 			int nodeCount = 0;
@@ -86,7 +81,6 @@ namespace Calculator
 			return nodeCount;
 		}
 
-		// Shift specified number of nodes from first linked list to the other
 		public static void ShiftRight(LinkedList<char> list, LinkedList<char> list2, int nodeCount)
 		{
 			LinkedListNode<char> listNode = list.Last, auxiliaryNode;
@@ -107,7 +101,6 @@ namespace Calculator
 				list.AddLast('0');
 		}
 
-		// Shift specified number of nodes from second linked list to the other
 		public static void ShiftLeft(LinkedList<char> list, LinkedList<char> list2, int nodeCount)
 		{
 			LinkedListNode<char> listNode2 = list2.First, auxiliaryNode;
@@ -128,7 +121,6 @@ namespace Calculator
 				list2.AddFirst('0');
 		}
 
-		// Compare linked lists representing unsigned integers
 		public static int Compare(LinkedList<char> comparand, LinkedList<char> comparator, bool respectCount = true)
 		{
 			if (respectCount)
@@ -151,7 +143,6 @@ namespace Calculator
 			return 0;
 		}
 
-		// Add linked lists representing unsigned integers
 		public static LinkedList<char> Add(LinkedList<char> addend, LinkedList<char> addend2)
 		{
 			LinkedList<char> result = new LinkedList<char>();
@@ -180,49 +171,6 @@ namespace Calculator
 			return result;
 		}
 
-		// Add linked lists representing signed integers
-		public static LinkedList<char> SignedAdd(out bool resultIsPositive, bool addendIsPositive, LinkedList<char> addend, bool addend2IsPositive, LinkedList<char> addend2)
-		{
-			LinkedList<char> result = new LinkedList<char>();
-			bool addendIsZero = CharacterLinkedListExtension.IsAllZeroes(addend);
-			bool addend2IsZero = CharacterLinkedListExtension.IsAllZeroes(addend2);
-			int addendComparison = CharacterLinkedListExtension.Compare(addend, addend2);
-			if (addendIsZero == true)
-			{
-				resultIsPositive = addend2IsPositive;
-				result = Clone(addend2);
-			}
-			else if (addend2IsZero == true)
-			{
-				resultIsPositive = addendIsPositive;
-				result = Clone(addend);
-			}
-			else if (addendIsPositive == addend2IsPositive)
-			{
-				resultIsPositive = addendIsPositive;
-				result = CharacterLinkedListExtension.Add(addend, addend2);
-			}
-			else
-			{
-				if (addendComparison == 0)
-				{
-					resultIsPositive = true;
-					result.AddLast('0');
-				}
-				else
-				{
-					resultIsPositive = addendIsPositive == (addendComparison >= 0);
-					if (addendComparison == 1)
-						result = CharacterLinkedListExtension.Subtract(addend, addend2);
-					else
-						result = CharacterLinkedListExtension.Subtract(addend2, addend);
-				}
-			}
-
-			return result;
-		}
-
-		// Multiply linked lists representing unsigned integers
 		public static LinkedList<char> Multiply(LinkedList<char> multiplicand, LinkedList<char> multiplicator)
 		{
 			// Preallocate space for new list
@@ -258,49 +206,6 @@ namespace Calculator
 			return result;
 		}
 
-		// Division of lists representing unsigned integers
-		public static LinkedList<char> Divide(LinkedList<char> dividend, LinkedList<char> divisor, int fractionalPrecision)
-		{
-			// Precompute first 10 multiples of divisor
-			LinkedList<char> auxiliary = new LinkedList<char>();
-			LinkedList<char>[] divisorMultiples = new LinkedList<char>[10];
-			auxiliary.AddLast('0');
-			for (int divisorMultiplesIndex = 0; divisorMultiplesIndex < 10; divisorMultiplesIndex++)
-			{
-				divisorMultiples[divisorMultiplesIndex] = auxiliary;
-				auxiliary = Add(auxiliary, divisor);
-			}
-			auxiliary.Clear();
-
-			LinkedList<char> result = new LinkedList<char>();
-			LinkedListNode<char> dividendNode = dividend.First;
-			int quotient;
-			while (dividendNode != null && Compare(auxiliary, divisor) < 0)
-			{
-				auxiliary.AddLast(dividendNode.Value);
-				dividendNode = dividendNode.Next;
-			}
-			while ((dividendNode != null || IsAllZeroes(auxiliary) == false) && fractionalPrecision >= 0)
-			{
-				RemoveFirstZeroes(auxiliary);
-				quotient = LessThanOrEqualBinarySearch(auxiliary, divisorMultiples);
-				auxiliary = Subtract(auxiliary, divisorMultiples[quotient]);
-				result.AddLast((char)(quotient + '0'));
-				if (dividendNode == null)
-				{
-					auxiliary.AddLast('0');
-					fractionalPrecision--;
-				}
-				else
-				{
-					auxiliary.AddLast(dividendNode.Value);
-					dividendNode = dividendNode.Next;
-				}
-			}
-			return result;
-		}
-
-		// Subtract linked lists representing unsigned integers (first list must be bigger than the other)
 		public static LinkedList<char> Subtract(LinkedList<char> minuend, LinkedList<char> subtrahend)
 		{
 			LinkedList<char> result = new LinkedList<char>();
@@ -333,7 +238,12 @@ namespace Calculator
 			return result;
 		}
 
-		// Searches index of linked list from linked list array that is smaller than or equal than specified list
+		/// <summary>
+		// Efficiently searches index of linked list from a array that is smaller than or equal than the specified list
+		/// </summary>
+		/// <param name="list"></param>
+		/// <param name="array"></param>
+		/// <returns></returns>
 		public static int LessThanOrEqualBinarySearch(LinkedList<char> list, LinkedList<char>[] array)
 		{
 			int leftIndex = 0;

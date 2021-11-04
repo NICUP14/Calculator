@@ -1,70 +1,90 @@
 ﻿using System;
 
-namespace Calculator
+namespace Calculator_backend
 {
-    // Error message definitions
     class ErrorMessage
     {
-        public const string DecimalNullErrorMessage = "Decimal can not be an empty string";
-        public const string DecimalPeriodErrorMessage = "Decimal has a misplaced period";
-        public const string DecimalInvalidErrorMessage = "Decimal contains invalid characters";
-        public const string DecimalDivisionErrorMessage = "Decimal can not be divided";
-        public const string ExpressionNullErrorMessage = "Expression can not be an empty string";
-        public const string ExpressionSyntaxErrorMessage = "Expression is missing a parenthesis/operand/operator";
-        public const string ExpressionElementMessage = "Expression contains invalid operator/characters";
+        public const string DecimalNullError = "DecimalNullError";
+        public const string DecimalPeriodError = "DecimalPeriodError";
+        public const string DecimalInvalidError = "DecimalInvalidError";
+        public const string DecimalDivisionError = "DecimalDivisiorError";
+        public const string ExpressionParserNullError = "ExpressionParserNullError";
+        public const string ExpressionParserSyntaxError = "ExpressionParserSyntaxError";
+        public const string ExpressionParserTokenError = "ExpressionParserTokenError";
     }
 
+    /// <summary>
+    /// Occurs when a decimal is constructed from a null or an empty string
+    /// </summary>
     class DecimalNullError : Exception
     {
-        public DecimalNullError() : base(ErrorMessage.DecimalNullErrorMessage)
+        public DecimalNullError() : base(ErrorMessage.DecimalNullError)
         {
 
         }
     }
 
+    /// <summary>
+    /// Occurs when a decimal is constructed from a string with a misplaced period
+    /// </summary>
     class DecimalPeriodError : Exception
     {
-        public DecimalPeriodError() : base(ErrorMessage.DecimalPeriodErrorMessage)
+        public DecimalPeriodError() : base(ErrorMessage.DecimalPeriodError)
         {
 
         }
     }
 
+    /// <summary>
+    /// Occurs when a decimal is constructed from a string with invalid characters
+    /// </summary>
     class DecimalInvalidError : Exception
     {
-        public DecimalInvalidError() : base(ErrorMessage.DecimalInvalidErrorMessage)
+        public DecimalInvalidError() : base(ErrorMessage.DecimalInvalidError)
         {
 
         }
     }
 
+    /// <summary>
+    /// Occurs when the decimal's internal division precision is less than one or a decimal is divided by zero
+    /// </summary>
     class DecimalDivisionError : Exception
     {
-        public DecimalDivisionError() : base(ErrorMessage.DecimalDivisionErrorMessage)
+        public DecimalDivisionError() : base(ErrorMessage.DecimalDivisionError)
         {
 
         }
     }
 
-    class ExpressionNullError : Exception
+    /// <summary>
+    /// Occurs when the expression parser encounters a null or an empty expression
+    /// </summary>
+    class ExpressionParserNullError : Exception
     {
-        public ExpressionNullError() : base(ErrorMessage.ExpressionNullErrorMessage)
+        public ExpressionParserNullError() : base(ErrorMessage.ExpressionParserNullError)
         {
 
         }
     }
 
-    class ExpressionSyntaxError : Exception
+    /// <summary>
+    /// Occurs when the expression parser detects a syntactically invalid expression
+    /// </summary>
+    class ExpressionParserSyntaxError : Exception
     {
-        public ExpressionSyntaxError() : base(ErrorMessage.ExpressionSyntaxErrorMessage)
+        public ExpressionParserSyntaxError() : base(ErrorMessage.ExpressionParserSyntaxError)
         {
 
         }
     }
 
-    class ExpressionElementError : Exception
+    /// <summary>
+    /// Occurs when the expression parser detects an undefined token
+    /// </summary>
+    class ExpressionParserTokenError : Exception
     {
-        public ExpressionElementError() : base(ErrorMessage.ExpressionElementMessage)
+        public ExpressionParserTokenError() : base(ErrorMessage.ExpressionParserTokenError)
         {
 
         }

@@ -145,6 +145,7 @@ namespace Calculator
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.helpButton.BackColor = System.Drawing.Color.White;
+            this.helpButton.Enabled = false;
             this.helpButton.FlatAppearance.BorderSize = 0;
             this.helpButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.helpButton.Font = new System.Drawing.Font("Segoe UI", 20.1F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
@@ -154,7 +155,6 @@ namespace Calculator
             this.helpButton.Name = "helpButton";
             this.helpButton.Size = new System.Drawing.Size(200, 183);
             this.helpButton.TabIndex = 25;
-            this.helpButton.Text = "?";
             this.helpButton.UseVisualStyleBackColor = false;
             this.helpButton.Click += new System.EventHandler(this.buttonClick);
             // 

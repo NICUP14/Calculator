@@ -1,43 +1,35 @@
 # Calculator
 
-![](Calculator.png) \
-A modern arbitrary precision reverse polish notation mathematical calculator with built-in keyboard shortcuts and history buffer support.
+![](Calculator.png)
+
+A modern and minimalist calculator
 
 ## Feature tracker
 
-- [ ] Settings button
-- [x] Order of operations
-- [x] Infinite precision decimals
-- [X] Automatic expression calculation
-- [X] Application resizing
-- [X] Easy to use sign/parenthesis insertion functionality
-- [ ] Auto detect text overflow in expression/result label
-- [ ] Keyboard shorcut support
-- [ ] History buffer support
-- [ ] Refactoring/Comments
+- [X] Decimal
+- [X] Expression parser
+- [X] Calculator frontend
+- [ ] Frontend functionality
+- [ ] Keyboard shortcut support
+- [ ] Label overflow protection
 
-## Keybinds
+## Keybindings
 
-Keybind | Action
+Keybindings | Action
 --------|-------
-C | Copy
-V | paste
 c | Clear
+Backspace | Undo
 s | Insert sign
-p | Insert parentesis
+p | Insert parenthesis
 \+ | Add
 \- | Subtract
 \* | Multiply
 / | Divide
-^ | Exponentiation
-Up | Undo
-Down | Redo
 
 ## Expression
 
 Operator | Operation
 ---------|----------
-\*\* | Exponentiation
 \* | Multiplication
 / | Division
 \+ | Addition

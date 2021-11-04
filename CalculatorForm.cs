@@ -176,11 +176,12 @@ namespace Calculator
             try
             {
                 int openParenthesisCount = 0;
-                foreach (char expressionChar in expressionBuilder.ToString())
+                foreach (char expressionChar in expression)
                     if (expressionChar == '(')
                         openParenthesisCount++;
                     else if(expressionChar == ')')
                         openParenthesisCount--;
+
 
                 string result = Expression.ToInfix(Expression.ToPostfix(expression + new string(')', openParenthesisCount)));
                 resultLabel.Text = result;
