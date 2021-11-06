@@ -2,7 +2,7 @@ using System.Text;
 using static System.Console;
 using System.Collections.Generic;
 
-namespace Calculator_backend
+namespace Calculator
 {
     /// <summary>
     /// Expression parser implementation

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Calculator_backend
+namespace Calculator
 {
     class ErrorMessage
     {

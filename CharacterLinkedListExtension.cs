@@ -2,7 +2,7 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 
-namespace Calculator_backend
+namespace Calculator
 {
     /// <summary>
     ///	Additional methods for linked lists containing characters

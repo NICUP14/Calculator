@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Calculator
@@ -14,40 +8,18 @@ namespace Calculator
     {
         public CalculatorForm()
         {
-            expressionBuilder = new StringBuilder(expressionMaxLength);
             InitializeComponent();
+            expressionBuilder = new StringBuilder(expressionBuilderCapacity);
         }
 
-        // Set button tags after the form loaded
-        private void formLoad(object sender, EventArgs e)
-        {
-            clearButton.Tag = ButtonTag.Clear;
-            signButton.Tag = ButtonTag.Sign;
-            parenthesisButton.Tag = ButtonTag.Parenthesis;
-            exponentiationButton.Tag = ButtonTag.Undefined;
-            multiplicationButton.Tag = ButtonTag.Multiplication;
-            divisionButton.Tag = ButtonTag.Division;
-            additionButton.Tag = ButtonTag.Addition;
-            subtractionButton.Tag = ButtonTag.Subtraction;
-            periodButton.Tag = ButtonTag.Period;
-            zeroButton.Tag = ButtonTag.Zero;
-            oneButton.Tag  = ButtonTag.One;
-            twoButton.Tag = ButtonTag.Two;
-            threeButton.Tag = ButtonTag.Three;
-            fourButton.Tag = ButtonTag.Four;
-            fiveButton.Tag = ButtonTag.Five;
-            sixButton.Tag = ButtonTag.Six;
-            sevenButton.Tag = ButtonTag.Seven;
-            eightButton.Tag = ButtonTag.Eight;
-            nineButton.Tag = ButtonTag.Nine;
-            helpButton.Tag = ButtonTag.Undefined;
-        }
-
-        /// Update form when button is clicked
+        /// <summary>
+        /// Button click handler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonClick(object sender, EventArgs e)
         {
-            Button button = (sender as Button);
-            switch((ButtonTag)button.Tag)
+            switch((ButtonTag)(sender as Button).Tag)
             {
                 case ButtonTag.Undefined:
                     return;
@@ -106,6 +78,7 @@ namespace Calculator
                     expressionBuilder.Append('9');
                     break;
             }
+
             UpdateLabels();
         }
 
@@ -116,10 +89,10 @@ namespace Calculator
                 expressionBuilder.Append("-");
             else
             {
-                char lastExpressionChar = expressionBuilder[expressionBuilder.Length - 1];
-                if (lastExpressionChar == '(' || lastExpressionChar == ')')
+                char lastExpressionParserChar = expressionBuilder[expressionBuilder.Length - 1];
+                if (lastExpressionParserChar == '(' || lastExpressionParserChar == ')')
                     expressionBuilder.Append("-");
-                else if (lastExpressionChar == '.' || char.IsDigit(lastExpressionChar))
+                else if (lastExpressionParserChar == '.' || char.IsDigit(lastExpressionParserChar))
                 {
                     int expressionIndex = expressionBuilder.Length - 1;
                     while (expressionIndex > 0 && (expressionBuilder[expressionIndex] == '.' || char.IsDigit(expressionBuilder[expressionIndex])))
@@ -137,8 +110,8 @@ namespace Calculator
                 }
                 else
                 {
-                    if (lastExpressionChar == '+' || lastExpressionChar == '-')
-                        expressionBuilder[expressionBuilder.Length - 1] = lastExpressionChar == '+' ? '-' : '+';
+                    if (lastExpressionParserChar == '+' || lastExpressionParserChar == '-')
+                        expressionBuilder[expressionBuilder.Length - 1] = lastExpressionParserChar == '+' ? '-' : '+';
                     else
                         expressionBuilder.Append("(-");
                 }
@@ -161,8 +134,8 @@ namespace Calculator
                 expressionBuilder.Append('(');
             else
             {
-                char lastExpressionChar = expressionBuilder[expressionBuilder.Length - 1];
-                if (lastExpressionChar == ')' || lastExpressionChar == '.' || char.IsDigit(lastExpressionChar))
+                char lastExpressionParserChar = expressionBuilder[expressionBuilder.Length - 1];
+                if (lastExpressionParserChar == ')' || lastExpressionParserChar == '.' || char.IsDigit(lastExpressionParserChar))
                     expressionBuilder.Append(unclosedOpeningParenthesisCount == 0 ? "*(" : ')');
                 else
                     expressionBuilder.Append('(');
@@ -183,42 +156,20 @@ namespace Calculator
                         openParenthesisCount--;
 
 
-                string result = Expression.ToInfix(Expression.ToPostfix(expression + new string(')', openParenthesisCount)));
+                string result = ExpressionParser.Calculate(expression + new string(')', openParenthesisCount)).ToString();
                 resultLabel.Text = result;
             }
             catch(Exception e)
             {
-                if (e is not ExpressionNullError)
+                if (e is not ExpressionParserNullError)
                     resultLabel.Text = "Error";
                 else
                     expressionLabel.Text = resultLabel.Text = string.Empty;
             }
         }
 
-        private enum ButtonTag
-        {
-            Undefined,
-            Sign,
-            Parenthesis,
-            Clear,
-            Multiplication,
-            Division,
-            Addition,
-            Subtraction,
-            Period,
-            Zero,
-            One,
-            Two,
-            Three,
-            Four,
-            Five,
-            Six,
-            Seven,
-            Eight,
-            Nine
-        }
 
-        private const int expressionMaxLength = 500;
         private StringBuilder expressionBuilder;
+        private const int expressionBuilderCapacity = 500;
     }
 }

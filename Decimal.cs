@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using static System.Console;
 
-namespace Calculator_backend
+namespace Calculator
 {
 	/// <summary>
 	/// Arbitrary precision decimal implementation

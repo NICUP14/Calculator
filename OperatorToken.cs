@@ -1,4 +1,4 @@
-﻿namespace Calculator_backend
+﻿namespace Calculator
 {
     class OperatorToken : Token
     {

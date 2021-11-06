@@ -21,6 +21,30 @@ namespace Calculator
             base.Dispose(disposing);
         }
 
+        private enum ButtonTag
+        {
+            Undefined,
+            Clear,
+            Undo,
+            Sign,
+            Parenthesis,
+            Multiplication,
+            Division,
+            Addition,
+            Subtraction,
+            Period,
+            Zero,
+            One,
+            Two,
+            Three,
+            Four,
+            Five,
+            Six,
+            Seven,
+            Eight,
+            Nine
+        }
+
         #region Windows Form Designer generated code
 
         /// <summary>
@@ -33,7 +57,7 @@ namespace Calculator
             this.divisionButton = new System.Windows.Forms.Button();
             this.sevenButton = new System.Windows.Forms.Button();
             this.buttonTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
-            this.helpButton = new System.Windows.Forms.Button();
+            this.emptyButton = new System.Windows.Forms.Button();
             this.periodButton = new System.Windows.Forms.Button();
             this.zeroButton = new System.Windows.Forms.Button();
             this.threeButton = new System.Windows.Forms.Button();
@@ -44,9 +68,9 @@ namespace Calculator
             this.fourButton = new System.Windows.Forms.Button();
             this.nineButton = new System.Windows.Forms.Button();
             this.eightButton = new System.Windows.Forms.Button();
-            this.exponentiationButton = new System.Windows.Forms.Button();
             this.parenthesisButton = new System.Windows.Forms.Button();
             this.signButton = new System.Windows.Forms.Button();
+            this.undoButton = new System.Windows.Forms.Button();
             this.clearButton = new System.Windows.Forms.Button();
             this.multiplicationButton = new System.Windows.Forms.Button();
             this.additionButton = new System.Windows.Forms.Button();
@@ -73,6 +97,7 @@ namespace Calculator
             this.divisionButton.Name = "divisionButton";
             this.divisionButton.Size = new System.Drawing.Size(200, 182);
             this.divisionButton.TabIndex = 2;
+            this.divisionButton.Tag = ButtonTag.Division;
             this.divisionButton.Text = "/";
             this.divisionButton.UseVisualStyleBackColor = false;
             this.divisionButton.Click += new System.EventHandler(this.buttonClick);
@@ -92,6 +117,7 @@ namespace Calculator
             this.sevenButton.Name = "sevenButton";
             this.sevenButton.Size = new System.Drawing.Size(200, 182);
             this.sevenButton.TabIndex = 7;
+            this.sevenButton.Tag = ButtonTag.Seven;
             this.sevenButton.Text = "7";
             this.sevenButton.UseVisualStyleBackColor = false;
             this.sevenButton.Click += new System.EventHandler(this.buttonClick);
@@ -106,7 +132,7 @@ namespace Calculator
             this.buttonTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.buttonTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.buttonTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.buttonTableLayoutPanel.Controls.Add(this.helpButton, 2, 4);
+            this.buttonTableLayoutPanel.Controls.Add(this.emptyButton, 2, 4);
             this.buttonTableLayoutPanel.Controls.Add(this.periodButton, 1, 4);
             this.buttonTableLayoutPanel.Controls.Add(this.zeroButton, 0, 4);
             this.buttonTableLayoutPanel.Controls.Add(this.threeButton, 2, 3);
@@ -117,9 +143,9 @@ namespace Calculator
             this.buttonTableLayoutPanel.Controls.Add(this.fourButton, 0, 2);
             this.buttonTableLayoutPanel.Controls.Add(this.nineButton, 2, 1);
             this.buttonTableLayoutPanel.Controls.Add(this.eightButton, 1, 1);
-            this.buttonTableLayoutPanel.Controls.Add(this.exponentiationButton, 3, 0);
-            this.buttonTableLayoutPanel.Controls.Add(this.parenthesisButton, 2, 0);
-            this.buttonTableLayoutPanel.Controls.Add(this.signButton, 1, 0);
+            this.buttonTableLayoutPanel.Controls.Add(this.parenthesisButton, 3, 0);
+            this.buttonTableLayoutPanel.Controls.Add(this.signButton, 2, 0);
+            this.buttonTableLayoutPanel.Controls.Add(this.undoButton, 1, 0);
             this.buttonTableLayoutPanel.Controls.Add(this.clearButton, 0, 0);
             this.buttonTableLayoutPanel.Controls.Add(this.multiplicationButton, 3, 1);
             this.buttonTableLayoutPanel.Controls.Add(this.divisionButton, 3, 2);
@@ -139,24 +165,24 @@ namespace Calculator
             this.buttonTableLayoutPanel.Size = new System.Drawing.Size(800, 911);
             this.buttonTableLayoutPanel.TabIndex = 8;
             // 
-            // helpButton
+            // emptyButton
             // 
-            this.helpButton.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.emptyButton.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.helpButton.BackColor = System.Drawing.Color.White;
-            this.helpButton.Enabled = false;
-            this.helpButton.FlatAppearance.BorderSize = 0;
-            this.helpButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.helpButton.Font = new System.Drawing.Font("Segoe UI", 20.1F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.helpButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(78)))), ((int)(((byte)(78)))));
-            this.helpButton.Location = new System.Drawing.Point(400, 728);
-            this.helpButton.Margin = new System.Windows.Forms.Padding(0);
-            this.helpButton.Name = "helpButton";
-            this.helpButton.Size = new System.Drawing.Size(200, 183);
-            this.helpButton.TabIndex = 25;
-            this.helpButton.UseVisualStyleBackColor = false;
-            this.helpButton.Click += new System.EventHandler(this.buttonClick);
+            this.emptyButton.BackColor = System.Drawing.Color.White;
+            this.emptyButton.Enabled = false;
+            this.emptyButton.FlatAppearance.BorderSize = 0;
+            this.emptyButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.emptyButton.Font = new System.Drawing.Font("Segoe UI", 20.1F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.emptyButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(78)))), ((int)(((byte)(78)))));
+            this.emptyButton.Location = new System.Drawing.Point(400, 728);
+            this.emptyButton.Margin = new System.Windows.Forms.Padding(0);
+            this.emptyButton.Name = "emptyButton";
+            this.emptyButton.Size = new System.Drawing.Size(200, 183);
+            this.emptyButton.TabIndex = 25;
+            this.emptyButton.UseVisualStyleBackColor = false;
+            this.emptyButton.Click += new System.EventHandler(this.buttonClick);
             // 
             // periodButton
             // 
@@ -173,6 +199,7 @@ namespace Calculator
             this.periodButton.Name = "periodButton";
             this.periodButton.Size = new System.Drawing.Size(200, 183);
             this.periodButton.TabIndex = 24;
+            this.periodButton.Tag = ButtonTag.Period;
             this.periodButton.Text = ".";
             this.periodButton.UseVisualStyleBackColor = false;
             this.periodButton.Click += new System.EventHandler(this.buttonClick);
@@ -192,6 +219,7 @@ namespace Calculator
             this.zeroButton.Name = "zeroButton";
             this.zeroButton.Size = new System.Drawing.Size(200, 183);
             this.zeroButton.TabIndex = 23;
+            this.zeroButton.Tag = ButtonTag.Zero;
             this.zeroButton.Text = "0";
             this.zeroButton.UseVisualStyleBackColor = false;
             this.zeroButton.Click += new System.EventHandler(this.buttonClick);
@@ -211,6 +239,7 @@ namespace Calculator
             this.threeButton.Name = "threeButton";
             this.threeButton.Size = new System.Drawing.Size(200, 182);
             this.threeButton.TabIndex = 22;
+            this.threeButton.Tag = ButtonTag.Three;
             this.threeButton.Text = "3";
             this.threeButton.UseVisualStyleBackColor = false;
             this.threeButton.Click += new System.EventHandler(this.buttonClick);
@@ -230,6 +259,7 @@ namespace Calculator
             this.twoButton.Name = "twoButton";
             this.twoButton.Size = new System.Drawing.Size(200, 182);
             this.twoButton.TabIndex = 21;
+            this.twoButton.Tag = ButtonTag.Two;
             this.twoButton.Text = "2";
             this.twoButton.UseVisualStyleBackColor = false;
             this.twoButton.Click += new System.EventHandler(this.buttonClick);
@@ -249,6 +279,7 @@ namespace Calculator
             this.oneButton.Name = "oneButton";
             this.oneButton.Size = new System.Drawing.Size(200, 182);
             this.oneButton.TabIndex = 20;
+            this.oneButton.Tag = ButtonTag.One;
             this.oneButton.Text = "1";
             this.oneButton.UseVisualStyleBackColor = false;
             this.oneButton.Click += new System.EventHandler(this.buttonClick);
@@ -268,6 +299,7 @@ namespace Calculator
             this.sixButton.Name = "sixButton";
             this.sixButton.Size = new System.Drawing.Size(200, 182);
             this.sixButton.TabIndex = 19;
+            this.sixButton.Tag = ButtonTag.Six;
             this.sixButton.Text = "6";
             this.sixButton.UseVisualStyleBackColor = false;
             this.sixButton.Click += new System.EventHandler(this.buttonClick);
@@ -287,6 +319,7 @@ namespace Calculator
             this.fiveButton.Name = "fiveButton";
             this.fiveButton.Size = new System.Drawing.Size(200, 182);
             this.fiveButton.TabIndex = 18;
+            this.fiveButton.Tag = ButtonTag.Five;
             this.fiveButton.Text = "5";
             this.fiveButton.UseVisualStyleBackColor = false;
             this.fiveButton.Click += new System.EventHandler(this.buttonClick);
@@ -306,6 +339,7 @@ namespace Calculator
             this.fourButton.Name = "fourButton";
             this.fourButton.Size = new System.Drawing.Size(200, 182);
             this.fourButton.TabIndex = 17;
+            this.fourButton.Tag = ButtonTag.Four;
             this.fourButton.Text = "4";
             this.fourButton.UseVisualStyleBackColor = false;
             this.fourButton.Click += new System.EventHandler(this.buttonClick);
@@ -325,6 +359,7 @@ namespace Calculator
             this.nineButton.Name = "nineButton";
             this.nineButton.Size = new System.Drawing.Size(200, 182);
             this.nineButton.TabIndex = 16;
+            this.nineButton.Tag = ButtonTag.Nine;
             this.nineButton.Text = "9";
             this.nineButton.UseVisualStyleBackColor = false;
             this.nineButton.Click += new System.EventHandler(this.buttonClick);
@@ -344,28 +379,10 @@ namespace Calculator
             this.eightButton.Name = "eightButton";
             this.eightButton.Size = new System.Drawing.Size(200, 182);
             this.eightButton.TabIndex = 15;
+            this.eightButton.Tag = ButtonTag.Eight;
             this.eightButton.Text = "8";
             this.eightButton.UseVisualStyleBackColor = false;
             this.eightButton.Click += new System.EventHandler(this.buttonClick);
-            // 
-            // exponentiationButton
-            // 
-            this.exponentiationButton.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.exponentiationButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(125)))), ((int)(((byte)(0)))));
-            this.exponentiationButton.FlatAppearance.BorderSize = 0;
-            this.exponentiationButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.exponentiationButton.Font = new System.Drawing.Font("Segoe UI", 20.1F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.exponentiationButton.ForeColor = System.Drawing.Color.White;
-            this.exponentiationButton.Location = new System.Drawing.Point(600, 0);
-            this.exponentiationButton.Margin = new System.Windows.Forms.Padding(0);
-            this.exponentiationButton.Name = "exponentiationButton";
-            this.exponentiationButton.Size = new System.Drawing.Size(200, 182);
-            this.exponentiationButton.TabIndex = 11;
-            this.exponentiationButton.Text = "^";
-            this.exponentiationButton.UseVisualStyleBackColor = false;
-            this.exponentiationButton.Click += new System.EventHandler(this.buttonClick);
             // 
             // parenthesisButton
             // 
@@ -377,11 +394,12 @@ namespace Calculator
             this.parenthesisButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.parenthesisButton.Font = new System.Drawing.Font("Segoe UI", 20.1F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.parenthesisButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(78)))), ((int)(((byte)(78)))));
-            this.parenthesisButton.Location = new System.Drawing.Point(400, 0);
+            this.parenthesisButton.Location = new System.Drawing.Point(600, 0);
             this.parenthesisButton.Margin = new System.Windows.Forms.Padding(0);
             this.parenthesisButton.Name = "parenthesisButton";
             this.parenthesisButton.Size = new System.Drawing.Size(200, 182);
-            this.parenthesisButton.TabIndex = 10;
+            this.parenthesisButton.TabIndex = 11;
+            this.parenthesisButton.Tag = ButtonTag.Parenthesis;
             this.parenthesisButton.Text = "( )";
             this.parenthesisButton.UseVisualStyleBackColor = false;
             this.parenthesisButton.Click += new System.EventHandler(this.buttonClick);
@@ -396,14 +414,35 @@ namespace Calculator
             this.signButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.signButton.Font = new System.Drawing.Font("Segoe UI", 20.1F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.signButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(78)))), ((int)(((byte)(78)))));
-            this.signButton.Location = new System.Drawing.Point(200, 0);
+            this.signButton.Location = new System.Drawing.Point(400, 0);
             this.signButton.Margin = new System.Windows.Forms.Padding(0);
             this.signButton.Name = "signButton";
             this.signButton.Size = new System.Drawing.Size(200, 182);
-            this.signButton.TabIndex = 9;
+            this.signButton.TabIndex = 10;
+            this.signButton.Tag = ButtonTag.Sign;
             this.signButton.Text = "+/-";
             this.signButton.UseVisualStyleBackColor = false;
             this.signButton.Click += new System.EventHandler(this.buttonClick);
+            // 
+            // undoButton
+            // 
+            this.undoButton.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.undoButton.BackColor = System.Drawing.Color.White;
+            this.undoButton.FlatAppearance.BorderSize = 0;
+            this.undoButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.undoButton.Font = new System.Drawing.Font("Segoe UI", 20.1F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.undoButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(78)))), ((int)(((byte)(78)))));
+            this.undoButton.Location = new System.Drawing.Point(200, 0);
+            this.undoButton.Margin = new System.Windows.Forms.Padding(0);
+            this.undoButton.Name = "undoButton";
+            this.undoButton.Size = new System.Drawing.Size(200, 182);
+            this.undoButton.TabIndex = 9;
+            this.undoButton.Tag = ButtonTag.Undo;
+            this.undoButton.Text = "U";
+            this.undoButton.UseVisualStyleBackColor = false;
+            this.undoButton.Click += new System.EventHandler(this.buttonClick);
             // 
             // clearButton
             // 
@@ -420,6 +459,7 @@ namespace Calculator
             this.clearButton.Name = "clearButton";
             this.clearButton.Size = new System.Drawing.Size(200, 182);
             this.clearButton.TabIndex = 8;
+            this.clearButton.Tag = ButtonTag.Clear;
             this.clearButton.Text = "C";
             this.clearButton.UseVisualStyleBackColor = false;
             this.clearButton.Click += new System.EventHandler(this.buttonClick);
@@ -439,6 +479,7 @@ namespace Calculator
             this.multiplicationButton.Name = "multiplicationButton";
             this.multiplicationButton.Size = new System.Drawing.Size(200, 182);
             this.multiplicationButton.TabIndex = 12;
+            this.multiplicationButton.Tag = ButtonTag.Multiplication;
             this.multiplicationButton.Text = "*";
             this.multiplicationButton.UseVisualStyleBackColor = false;
             this.multiplicationButton.Click += new System.EventHandler(this.buttonClick);
@@ -458,6 +499,7 @@ namespace Calculator
             this.additionButton.Name = "additionButton";
             this.additionButton.Size = new System.Drawing.Size(200, 182);
             this.additionButton.TabIndex = 13;
+            this.additionButton.Tag = ButtonTag.Addition;
             this.additionButton.Text = "+";
             this.additionButton.UseVisualStyleBackColor = false;
             this.additionButton.Click += new System.EventHandler(this.buttonClick);
@@ -477,6 +519,7 @@ namespace Calculator
             this.subtractionButton.Name = "subtractionButton";
             this.subtractionButton.Size = new System.Drawing.Size(200, 183);
             this.subtractionButton.TabIndex = 14;
+            this.subtractionButton.Tag = ButtonTag.Subtraction;
             this.subtractionButton.Text = "-";
             this.subtractionButton.UseVisualStyleBackColor = false;
             this.subtractionButton.Click += new System.EventHandler(this.buttonClick);
@@ -543,7 +586,6 @@ namespace Calculator
             this.MinimumSize = new System.Drawing.Size(278, 467);
             this.Name = "CalculatorForm";
             this.Text = "Calculator";
-            this.Load += new System.EventHandler(this.formLoad);
             this.buttonTableLayoutPanel.ResumeLayout(false);
             this.InterfaceTableLayoutPanel.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -565,14 +607,13 @@ namespace Calculator
         private System.Windows.Forms.Button fourButton;
         private System.Windows.Forms.Button nineButton;
         private System.Windows.Forms.Button eightButton;
-        private System.Windows.Forms.Button exponentiationButton;
         private System.Windows.Forms.Button parenthesisButton;
         private System.Windows.Forms.Button signButton;
+        private System.Windows.Forms.Button undoButton;
         private System.Windows.Forms.Button clearButton;
         private System.Windows.Forms.Button multiplicationButton;
         private System.Windows.Forms.Button additionButton;
         private System.Windows.Forms.Button subtractionButton;
-        private System.Windows.Forms.Button helpButton;
         private System.Windows.Forms.Label expressionLabel;
         private System.Windows.Forms.Label resultLabel;
         private System.Windows.Forms.TableLayoutPanel InterfaceTableLayoutPanel;
