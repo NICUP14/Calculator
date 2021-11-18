@@ -178,6 +178,7 @@ namespace Calculator
             Division,
             Addition,
             Subtraction,
+            Calculate,
             Period,
             Zero,
             One,
