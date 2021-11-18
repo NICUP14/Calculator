@@ -14,14 +14,14 @@ namespace Calculator
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
-        public static Decimal Calculate(string expression)
+        public static string Calculate(string expression)
         {
             if (string.IsNullOrEmpty(expression))
                 throw new ExpressionParserNullError();
 
             /// Convert expression to a token array in postfix order
-            Token[] tokenArray = expressionToTokenArray(expression);
-            changeTokenArrayOrder(ref tokenArray);
+            Token[] tokenArray = ConvertExpressionToTokenArray(expression);
+            ChangeTokenArrayOrder(ref tokenArray);
 
             /// Evaluate postfix expression by using a stack
 
@@ -72,7 +72,7 @@ namespace Calculator
             if (operandStack.Count > 1)
                 throw new ExpressionParserSyntaxError();
 
-            return operandStack.Peek();
+            return operandStack.Peek().ToString();
         }
 
         /// <summary>
@@ -86,8 +86,8 @@ namespace Calculator
                 throw new ExpressionParserNullError();
 
             /// Convert expression to a token array in postfix order
-            Token[] tokenArray = expressionToTokenArray(expression);
-            changeTokenArrayOrder(ref tokenArray);
+            Token[] tokenArray = ConvertExpressionToTokenArray(expression);
+            ChangeTokenArrayOrder(ref tokenArray);
 
             /// Evaluate postfix expression by using a stack
             /// This approach resconstructs the initial expression instead of calculating its result
@@ -109,7 +109,7 @@ namespace Calculator
                         (operand, operand2) = (operand2, operand);
 
                         /// Push the reconstructed operation back onto the stack
-                        operandStack.Push(TokenStringRepresentation.OpeningParenthesisToken + operand + token + operand2 + TokenStringRepresentation.ClosingParenthesisToken);
+                        operandStack.Push(TokenRepresentation.OpeningParenthesisToken + operand + token + operand2 + TokenRepresentation.ClosingParenthesisToken);
                     }
                 }
             }
@@ -125,7 +125,7 @@ namespace Calculator
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
-        private static Token[] expressionToTokenArray(string expression)
+        protected static Token[] ConvertExpressionToTokenArray(string expression)
         {
             /// Delimits tokens present in expression based on character type generalization
             int tokenArrayIndex = 0;
@@ -148,7 +148,7 @@ namespace Calculator
                 bool previousTokenTypeIsParenthesis = previousTokenType == Token.TokenType.Parenthesis;
                 if (!previousTokenTypeIsUndefined && (tokenTypeIsParenthesis || previousTokenTypeIsParenthesis || tokenType != previousTokenType))
                 {
-                    tokenArray[tokenArrayIndex++] = stringToToken(tokenStringBuilder.ToString(), previousTokenType);
+                    tokenArray[tokenArrayIndex++] = ConvertStringToToken(tokenStringBuilder.ToString(), previousTokenType);
                     tokenStringBuilder.Clear();
                 }
 
@@ -157,7 +157,7 @@ namespace Calculator
                 previousTokenType = tokenType;
             }
 
-            tokenArray[tokenArrayIndex++] = stringToToken(tokenStringBuilder.ToString(), previousTokenType);
+            tokenArray[tokenArrayIndex++] = ConvertStringToToken(tokenStringBuilder.ToString(), previousTokenType);
 
             return tokenArray;
         }
@@ -167,7 +167,7 @@ namespace Calculator
         /// </summary>
         /// <param name="tokenArray"></param>
         /// <returns></returns>
-        private static void changeTokenArrayOrder(ref Token[] tokenArray)
+        public static void ChangeTokenArrayOrder(ref Token[] tokenArray)
         {
             /// Algorithm based on Edsger W. Dijkstra's shunting-yard algorithm
             /// Additionaly, this algorithm performs anti-function checks and converts unary addition and subtraction operators to binary
@@ -263,7 +263,7 @@ namespace Calculator
             tokenArray = postfixTokenArray;
         }
 
-        private static Token stringToToken(string str, Token.TokenType tokenType)
+        private static Token ConvertStringToToken(string str, Token.TokenType tokenType)
         {
             if (tokenType == Token.TokenType.Decimal)
                 return new DecimalToken(str);
@@ -274,14 +274,14 @@ namespace Calculator
         /// <summary>
         /// Connects a token's string representation to its definition
         /// </summary>
-        private static Dictionary<string, Token> tokenLookup = new Dictionary<string, Token>
+        private static readonly Dictionary<string, Token> tokenLookup = new Dictionary<string, Token>
         {
-            {TokenStringRepresentation.OpeningParenthesisToken,      ParenthesisToken.OpeningParenthesis},
-            {TokenStringRepresentation.ClosingParenthesisToken,      ParenthesisToken.ClosingParenthesis},
-            {TokenStringRepresentation.AdditionOperatorToken,        OperatorToken.Addition},
-            {TokenStringRepresentation.SubtractionOperatorToken,     OperatorToken.Subtraction},
-            {TokenStringRepresentation.MultiplicationOperatorToken,  OperatorToken.Multiplication},
-            {TokenStringRepresentation.DivisionOperatorToken,        OperatorToken.Division},
+            {TokenRepresentation.OpeningParenthesisToken,      ParenthesisToken.OpeningParenthesis},
+            {TokenRepresentation.ClosingParenthesisToken,      ParenthesisToken.ClosingParenthesis},
+            {TokenRepresentation.AdditionOperatorToken,        OperatorToken.Addition},
+            {TokenRepresentation.SubtractionOperatorToken,     OperatorToken.Subtraction},
+            {TokenRepresentation.MultiplicationOperatorToken,  OperatorToken.Multiplication},
+            {TokenRepresentation.DivisionOperatorToken,        OperatorToken.Division},
         };
     }
 }

@@ -9,7 +9,7 @@ namespace Calculator
         public CalculatorForm()
         {
             InitializeComponent();
-            expressionBuilder = new StringBuilder(expressionBuilderCapacity);
+            expressionStringBuilder = new StringBuilder(expressionStringBuilderCapacity);
         }
 
         /// <summary>
@@ -24,104 +24,103 @@ namespace Calculator
                 case ButtonTag.Undefined:
                     return;
                 case ButtonTag.Clear:
-                    expressionBuilder.Clear();
+                    expressionStringBuilder.Clear();
                     break;
                 case ButtonTag.Sign:
-                    AppendSign();
+                    ChangeSign();
                     break;
                 case ButtonTag.Parenthesis:
-                    AppendParenthesis();
+                    InsertParenthesis();
                     break;
                 case ButtonTag.Multiplication:
-                    expressionBuilder.Append('*');
+                    expressionStringBuilder.Append("×");
                     break;
                 case ButtonTag.Division:
-                    expressionBuilder.Append('/');
+                    expressionStringBuilder.Append("/");
                     break;
                 case ButtonTag.Addition:
-                    expressionBuilder.Append('+');
+                    expressionStringBuilder.Append("+");
                     break;
                 case ButtonTag.Subtraction:
-                    expressionBuilder.Append('-');
+                    expressionStringBuilder.Append("-");
                     break;
                 case ButtonTag.Period:
-                    expressionBuilder.Append('.');
+                    expressionStringBuilder.Append(".");
                     break;
                 case ButtonTag.Zero:
-                    expressionBuilder.Append('0');
+                    expressionStringBuilder.Append("0");
                     break;
                 case ButtonTag.One:
-                    expressionBuilder.Append('1');
+                    expressionStringBuilder.Append("1");
                     break;
                 case ButtonTag.Two:
-                    expressionBuilder.Append('2');
+                    expressionStringBuilder.Append("2");
                     break;
                 case ButtonTag.Three:
-                    expressionBuilder.Append('3');
+                    expressionStringBuilder.Append("3");
                     break;
                 case ButtonTag.Four:
-                    expressionBuilder.Append('4');
+                    expressionStringBuilder.Append("4");
                     break;
                 case ButtonTag.Five:
-                    expressionBuilder.Append('5');
+                    expressionStringBuilder.Append("5");
                     break;
                 case ButtonTag.Six:
-                    expressionBuilder.Append('6');
+                    expressionStringBuilder.Append("6");
                     break;
                 case ButtonTag.Seven:
-                    expressionBuilder.Append('7');
+                    expressionStringBuilder.Append("7");
                     break;
                 case ButtonTag.Eight:
-                    expressionBuilder.Append('8');
+                    expressionStringBuilder.Append("8");
                     break;
                 case ButtonTag.Nine:
-                    expressionBuilder.Append('9');
+                    expressionStringBuilder.Append("9");
                     break;
             }
 
             UpdateLabels();
         }
 
-        private void AppendSign()
+        private void ChangeSign()
         {
-            int expressionLength = expressionBuilder.Length;
-            if (expressionLength == 0)
-                expressionBuilder.Append("-");
+            if (expressionStringBuilder.Length == 0)
+                expressionStringBuilder.Append("-");
             else
             {
-                char lastExpressionParserChar = expressionBuilder[expressionBuilder.Length - 1];
+                char lastExpressionParserChar = expressionStringBuilder[expressionStringBuilder.Length - 1];
                 if (lastExpressionParserChar == '(' || lastExpressionParserChar == ')')
-                    expressionBuilder.Append("-");
+                    expressionStringBuilder.Append("-");
                 else if (lastExpressionParserChar == '.' || char.IsDigit(lastExpressionParserChar))
                 {
-                    int expressionIndex = expressionBuilder.Length - 1;
-                    while (expressionIndex > 0 && (expressionBuilder[expressionIndex] == '.' || char.IsDigit(expressionBuilder[expressionIndex])))
+                    int expressionIndex = expressionStringBuilder.Length - 1;
+                    while (expressionIndex > 0 && (expressionStringBuilder[expressionIndex] == '.' || char.IsDigit(expressionStringBuilder[expressionIndex])))
                         expressionIndex--;
-                    char expressionChar = expressionBuilder[expressionIndex];
+                    char expressionChar = expressionStringBuilder[expressionIndex];
                     if (expressionChar == '+' || expressionChar == '-')
-                        expressionBuilder[expressionIndex] = expressionChar == '+' ? '-' : '+';
+                        expressionStringBuilder[expressionIndex] = expressionChar == '+' ? '-' : '+';
                     else
                     {
                         if (expressionIndex == 0)
-                            expressionBuilder.Insert(expressionIndex, "-");
+                            expressionStringBuilder.Insert(expressionIndex, "-");
                         else
-                            expressionBuilder.Insert(expressionIndex + 1, "(-");
+                            expressionStringBuilder.Insert(expressionIndex + 1, "(-");
                     }
                 }
                 else
                 {
                     if (lastExpressionParserChar == '+' || lastExpressionParserChar == '-')
-                        expressionBuilder[expressionBuilder.Length - 1] = lastExpressionParserChar == '+' ? '-' : '+';
+                        expressionStringBuilder[expressionStringBuilder.Length - 1] = lastExpressionParserChar == '+' ? '-' : '+';
                     else
-                        expressionBuilder.Append("(-");
+                        expressionStringBuilder.Append("(-");
                 }
             }
         }
 
-        private void AppendParenthesis()
+        private void InsertParenthesis()
         {
             int unclosedOpeningParenthesisCount = 0;
-            foreach (char expressionChar in expressionBuilder.ToString())
+            foreach (char expressionChar in expressionStringBuilder.ToString())
             {
                 if (expressionChar == '(')
                     unclosedOpeningParenthesisCount++;
@@ -129,22 +128,22 @@ namespace Calculator
                     unclosedOpeningParenthesisCount--;
             }
 
-            int expressionLength = expressionBuilder.Length;
+            int expressionLength = expressionStringBuilder.Length;
             if (expressionLength == 0)
-                expressionBuilder.Append('(');
+                expressionStringBuilder.Append('(');
             else
             {
-                char lastExpressionParserChar = expressionBuilder[expressionBuilder.Length - 1];
+                char lastExpressionParserChar = expressionStringBuilder[expressionStringBuilder.Length - 1];
                 if (lastExpressionParserChar == ')' || lastExpressionParserChar == '.' || char.IsDigit(lastExpressionParserChar))
-                    expressionBuilder.Append(unclosedOpeningParenthesisCount == 0 ? "*(" : ')');
+                    expressionStringBuilder.Append(unclosedOpeningParenthesisCount == 0 ? "×(" : ')');
                 else
-                    expressionBuilder.Append('(');
+                    expressionStringBuilder.Append('(');
             }
         }
 
         private void UpdateLabels()
         {
-            string expression = expressionBuilder.ToString();
+            string expression = expressionStringBuilder.ToString();
             expressionLabel.Text = expression;
             try
             {
@@ -156,7 +155,7 @@ namespace Calculator
                         openParenthesisCount--;
 
 
-                string result = ExpressionParser.Calculate(expression + new string(')', openParenthesisCount)).ToString();
+                string result = ExpressionParser.Calculate(expression + new string(')', openParenthesisCount));
                 resultLabel.Text = result;
             }
             catch(Exception e)
@@ -168,8 +167,31 @@ namespace Calculator
             }
         }
 
+        private enum ButtonTag
+        {
+            Undefined,
+            Clear,
+            Undo,
+            Sign,
+            Parenthesis,
+            Multiplication,
+            Division,
+            Addition,
+            Subtraction,
+            Period,
+            Zero,
+            One,
+            Two,
+            Three,
+            Four,
+            Five,
+            Six,
+            Seven,
+            Eight,
+            Nine
+        }
 
-        private StringBuilder expressionBuilder;
-        private const int expressionBuilderCapacity = 500;
+        private StringBuilder expressionStringBuilder;
+        private const int expressionStringBuilderCapacity = 500;
     }
 }

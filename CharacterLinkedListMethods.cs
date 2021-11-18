@@ -7,9 +7,9 @@ namespace Calculator
     /// <summary>
     ///	Additional methods for linked lists containing characters
     /// </summary>
-	static class CharacterLinkedListExtension
+	static class CharacterLinkedListMethods
 	{
-		public static LinkedList<char> StringToLinkedList(string str)
+		public static LinkedList<char> ConvertStringToLinkedList(string str)
 		{
 			LinkedList<char> list = new LinkedList<char>();
 			foreach (char strChar in str)
@@ -17,7 +17,7 @@ namespace Calculator
 			return list;
 		}
 
-		public static string LinkedListToString(LinkedList<char> list)
+		public static string ConvertLinkedListToString(LinkedList<char> list)
 		{
 			StringBuilder strBuilder = new StringBuilder(list.Count);
 			foreach (char listChar in list)
@@ -81,6 +81,12 @@ namespace Calculator
 			return nodeCount;
 		}
 
+		/// <summary>
+		/// Transfer the specified number of nodes from the first list to the other
+		/// </summary>
+		/// <param name="list"></param>
+		/// <param name="list2"></param>
+		/// <param name="nodeCount"></param>
 		public static void ShiftRight(LinkedList<char> list, LinkedList<char> list2, int nodeCount)
 		{
 			LinkedListNode<char> listNode = list.Last, auxiliaryNode;
@@ -101,6 +107,12 @@ namespace Calculator
 				list.AddLast('0');
 		}
 
+		/// <summary>
+		/// Transfer the specified number of nodes from the second list to the other
+		/// </summary>
+		/// <param name="list"></param>
+		/// <param name="list2"></param>
+		/// <param name="nodeCount"></param>
 		public static void ShiftLeft(LinkedList<char> list, LinkedList<char> list2, int nodeCount)
 		{
 			LinkedListNode<char> listNode2 = list2.First, auxiliaryNode;

@@ -37,7 +37,7 @@ namespace Calculator
 			int periodIndex = decimalString.LastIndexOf('.');
 			if (periodIndex == -1)
 			{
-				_integerPart = CharacterLinkedListExtension.StringToLinkedList(decimalString);
+				_integerPart = CharacterLinkedListMethods.ConvertStringToLinkedList(decimalString);
 				_fractionalPart = new LinkedList<char>();
 				_fractionalPart.AddLast('0');
 			}
@@ -45,9 +45,9 @@ namespace Calculator
 			{
 				string decimalSubstring;
 				decimalSubstring = decimalString.Substring(0, periodIndex);
-				_integerPart = CharacterLinkedListExtension.StringToLinkedList(decimalSubstring);
+				_integerPart = CharacterLinkedListMethods.ConvertStringToLinkedList(decimalSubstring);
 				decimalSubstring = decimalString.Substring(periodIndex + 1, decimalString.Length - periodIndex - 1);
-				_fractionalPart = CharacterLinkedListExtension.StringToLinkedList(decimalSubstring);
+				_fractionalPart = CharacterLinkedListMethods.ConvertStringToLinkedList(decimalSubstring);
 				if (_integerPart.Count == 0 || _fractionalPart.Count == 0)
 					throw new DecimalPeriodError();
 			}
@@ -60,7 +60,7 @@ namespace Calculator
 				if (_integerPart.Count == 0)
 					throw new DecimalPeriodError();
 			}
-			if (CharacterLinkedListExtension.IsAllZeroes(_integerPart) == true && CharacterLinkedListExtension.IsAllZeroes(_fractionalPart) == true)
+			if (CharacterLinkedListMethods.IsAllZeroes(_integerPart) == true && CharacterLinkedListMethods.IsAllZeroes(_fractionalPart) == true)
 				_isPositive = true;
 
 			/// Remove and validate integer and fractional parts
@@ -69,7 +69,7 @@ namespace Calculator
 			foreach (char integerChar in _integerPart)
 				if (!char.IsDigit(integerChar))
 					throw new DecimalInvalidError();
-			CharacterLinkedListExtension.RemoveTrailingZeroes(_fractionalPart);
+			CharacterLinkedListMethods.RemoveTrailingZeroes(_fractionalPart);
 			foreach(char fractionalChar in _fractionalPart)
 				if(!char.IsDigit(fractionalChar))
 					throw new DecimalInvalidError();
@@ -82,7 +82,7 @@ namespace Calculator
 		public override string ToString()
 		{
 			/// Initialize string builder
-			bool fractionalPartIsZero = CharacterLinkedListExtension.IsAllZeroes(_fractionalPart);
+			bool fractionalPartIsZero = CharacterLinkedListMethods.IsAllZeroes(_fractionalPart);
 			int decimalStringLength = _integerPart.Count;
 			decimalStringLength += _isPositive ? 0 : 1;
 			decimalStringLength += fractionalPartIsZero ? 0 : _fractionalPart.Count + 1;
@@ -121,23 +121,23 @@ namespace Calculator
             LinkedList<char> result = new LinkedList<char>();
 			bool addendIsPositive = addend._isPositive;
 			bool addend2IsPositive = addend2._isPositive;
-			bool addendIsZero = CharacterLinkedListExtension.IsAllZeroes(addendAsInteger);
-			bool addend2IsZero = CharacterLinkedListExtension.IsAllZeroes(addend2AsInteger);
-			int addendComparison = CharacterLinkedListExtension.Compare(addendAsInteger, addend2AsInteger);
+			bool addendIsZero = CharacterLinkedListMethods.IsAllZeroes(addendAsInteger);
+			bool addend2IsZero = CharacterLinkedListMethods.IsAllZeroes(addend2AsInteger);
+			int addendComparison = CharacterLinkedListMethods.Compare(addendAsInteger, addend2AsInteger);
 			if (addendIsZero == true)
 			{
 				resultIsPositive = addend2IsPositive;
-				result = CharacterLinkedListExtension.Clone(addend2AsInteger);
+				result = CharacterLinkedListMethods.Clone(addend2AsInteger);
 			}
 			else if (addend2IsZero == true)
 			{
 				resultIsPositive = addendIsPositive;
-				result = CharacterLinkedListExtension.Clone(addendAsInteger);
+				result = CharacterLinkedListMethods.Clone(addendAsInteger);
 			}
 			else if (addendIsPositive == addend2IsPositive)
 			{
 				resultIsPositive = addendIsPositive;
-				result = CharacterLinkedListExtension.Add(addendAsInteger, addend2AsInteger);
+				result = CharacterLinkedListMethods.Add(addendAsInteger, addend2AsInteger);
 			}
 			else
 			{
@@ -150,20 +150,20 @@ namespace Calculator
 				{
 					resultIsPositive = addendIsPositive == (addendComparison >= 0);
 					if (addendComparison == 1)
-						result = CharacterLinkedListExtension.Subtract(addendAsInteger, addend2AsInteger);
+						result = CharacterLinkedListMethods.Subtract(addendAsInteger, addend2AsInteger);
 					else
-						result = CharacterLinkedListExtension.Subtract(addend2AsInteger, addendAsInteger);
+						result = CharacterLinkedListMethods.Subtract(addend2AsInteger, addendAsInteger);
 				}
 			}
 
 			/// Delimit integer and fractional parts
 			LinkedList<char> integerPart = result;
 			LinkedList<char> fractionalPart = new LinkedList<char>();
-			CharacterLinkedListExtension.ShiftRight(integerPart, fractionalPart, shiftRightOffset);
+			CharacterLinkedListMethods.ShiftRight(integerPart, fractionalPart, shiftRightOffset);
 
 			/// Remove padding from integer and fractional parts
-			CharacterLinkedListExtension.RemoveLeadingZeroes(integerPart);
-			CharacterLinkedListExtension.RemoveTrailingZeroes(fractionalPart);
+			CharacterLinkedListMethods.RemoveLeadingZeroes(integerPart);
+			CharacterLinkedListMethods.RemoveTrailingZeroes(fractionalPart);
 
 			return new Decimal(resultIsPositive, integerPart, fractionalPart);
 		}
@@ -191,17 +191,17 @@ namespace Calculator
 			/// Convert decimals to multiplication routine format
 			LinkedList<char> multiplicandAsInteger = decimalToLinkedList(multiplicand);
 			LinkedList<char> multiplicatorAsInteger = decimalToLinkedList(multiplicator);
-			CharacterLinkedListExtension.RemoveLeadingZeroes(multiplicandAsInteger);
-			CharacterLinkedListExtension.RemoveLeadingZeroes(multiplicandAsInteger);
+			CharacterLinkedListMethods.RemoveLeadingZeroes(multiplicandAsInteger);
+			CharacterLinkedListMethods.RemoveLeadingZeroes(multiplicandAsInteger);
 
 			/// Determine shift right offset
 			int shiftRightOffset = multiplicand._fractionalPart.Count + multiplicator._fractionalPart.Count;
-			shiftRightOffset -= CharacterLinkedListExtension.RemoveTrailingZeroes(multiplicandAsInteger);
-			shiftRightOffset -= CharacterLinkedListExtension.RemoveTrailingZeroes(multiplicatorAsInteger);
+			shiftRightOffset -= CharacterLinkedListMethods.RemoveTrailingZeroes(multiplicandAsInteger);
+			shiftRightOffset -= CharacterLinkedListMethods.RemoveTrailingZeroes(multiplicatorAsInteger);
 
 			/// Multiplication routine
 			LinkedList<char> result;
-			if (CharacterLinkedListExtension.IsAllZeroes(multiplicandAsInteger) || CharacterLinkedListExtension.IsAllZeroes(multiplicatorAsInteger))
+			if (CharacterLinkedListMethods.IsAllZeroes(multiplicandAsInteger) || CharacterLinkedListMethods.IsAllZeroes(multiplicatorAsInteger))
 			{
 				result = new LinkedList<char>();
 				result.AddLast('0');
@@ -209,25 +209,25 @@ namespace Calculator
 			else
             {
 				if (multiplicandAsInteger.Count == 1 && multiplicandAsInteger.First.Value == '1')
-					result = CharacterLinkedListExtension.Clone(multiplicatorAsInteger);
+					result = CharacterLinkedListMethods.Clone(multiplicatorAsInteger);
 				else if (multiplicatorAsInteger.Count == 1 && multiplicatorAsInteger.First.Value == '1')
-					result = CharacterLinkedListExtension.Clone(multiplicandAsInteger);
+					result = CharacterLinkedListMethods.Clone(multiplicandAsInteger);
 				else
-					result = CharacterLinkedListExtension.Multiply(multiplicandAsInteger, multiplicatorAsInteger);
+					result = CharacterLinkedListMethods.Multiply(multiplicandAsInteger, multiplicatorAsInteger);
             }
-			CharacterLinkedListExtension.RemoveLeadingZeroes(result);
+			CharacterLinkedListMethods.RemoveLeadingZeroes(result);
 
 			/// Delimit integer and fractional parts
 			LinkedList<char> integerPart = result;
 			LinkedList<char> fractionalPart = new LinkedList<char>();
 			if (shiftRightOffset > 0)
-				CharacterLinkedListExtension.ShiftRight(integerPart, fractionalPart, shiftRightOffset);
+				CharacterLinkedListMethods.ShiftRight(integerPart, fractionalPart, shiftRightOffset);
 			else
-				CharacterLinkedListExtension.ShiftLeft(integerPart, fractionalPart, -shiftRightOffset);
+				CharacterLinkedListMethods.ShiftLeft(integerPart, fractionalPart, -shiftRightOffset);
 
 			/// Remove padding from integer and fractional parts
-			CharacterLinkedListExtension.RemoveLeadingZeroes(integerPart);
-			CharacterLinkedListExtension.RemoveTrailingZeroes(fractionalPart);
+			CharacterLinkedListMethods.RemoveLeadingZeroes(integerPart);
+			CharacterLinkedListMethods.RemoveTrailingZeroes(fractionalPart);
 
 			return new Decimal(multiplicand._isPositive == multiplicator._isPositive, integerPart, fractionalPart);
 		}
@@ -246,17 +246,17 @@ namespace Calculator
             /// Convert decimals to division routine format
             LinkedList<char> dividendAsInteger = decimalToLinkedList(dividend);
             LinkedList<char> divisorAsInteger = decimalToLinkedList(divisor);
-            if (CharacterLinkedListExtension.IsAllZeroes(divisorAsInteger))
+            if (CharacterLinkedListMethods.IsAllZeroes(divisorAsInteger))
                 throw new DecimalDivisionError();
 
 			/// Determine shift right offset
 			int shiftRightOffset = 0;
-			CharacterLinkedListExtension.RemoveLeadingZeroes(dividendAsInteger);
-			CharacterLinkedListExtension.RemoveLeadingZeroes(divisorAsInteger);
-            shiftRightOffset -= CharacterLinkedListExtension.RemoveTrailingZeroes(dividendAsInteger); 
-            shiftRightOffset += CharacterLinkedListExtension.RemoveTrailingZeroes(divisorAsInteger);
-            shiftRightOffset += CharacterLinkedListExtension.IsAllZeroes(dividend._fractionalPart) ? 1 : dividend._fractionalPart.Count;
-            shiftRightOffset -= CharacterLinkedListExtension.IsAllZeroes(divisor._fractionalPart) ? 1 : divisor._fractionalPart.Count;
+			CharacterLinkedListMethods.RemoveLeadingZeroes(dividendAsInteger);
+			CharacterLinkedListMethods.RemoveLeadingZeroes(divisorAsInteger);
+            shiftRightOffset -= CharacterLinkedListMethods.RemoveTrailingZeroes(dividendAsInteger); 
+            shiftRightOffset += CharacterLinkedListMethods.RemoveTrailingZeroes(divisorAsInteger);
+            shiftRightOffset += CharacterLinkedListMethods.IsAllZeroes(dividend._fractionalPart) ? 1 : dividend._fractionalPart.Count;
+            shiftRightOffset -= CharacterLinkedListMethods.IsAllZeroes(divisor._fractionalPart) ? 1 : divisor._fractionalPart.Count;
 
 			/// Precompute first 10 multiples of divisor
 			LinkedList<char> divisorAsIntegerMultiple = new LinkedList<char>();
@@ -264,7 +264,7 @@ namespace Calculator
 			for (int divisorMultiplesIndex = 0; divisorMultiplesIndex < 10; divisorMultiplesIndex++)
 			{
 				divisorMultipleArray[divisorMultiplesIndex] = divisorAsIntegerMultiple;
-				divisorAsIntegerMultiple = CharacterLinkedListExtension.Add(divisorAsIntegerMultiple, divisorAsInteger);
+				divisorAsIntegerMultiple = CharacterLinkedListMethods.Add(divisorAsIntegerMultiple, divisorAsInteger);
 			}
 
 			/// Division routine
@@ -274,16 +274,16 @@ namespace Calculator
 			LinkedList<char> auxiliary = new LinkedList<char>();
 			bool quotientIsForIntegerPart = true;
 			int quotient, precision = shiftRightOffset;
-			while (dividendAsIntegerNode != null && CharacterLinkedListExtension.Compare(auxiliary, divisorAsInteger) < 0)
+			while (dividendAsIntegerNode != null && CharacterLinkedListMethods.Compare(auxiliary, divisorAsInteger) < 0)
 			{
 				auxiliary.AddLast(dividendAsIntegerNode.Value);
 				dividendAsIntegerNode = dividendAsIntegerNode.Next;
 			}
-			while ((dividendAsIntegerNode != null || CharacterLinkedListExtension.IsAllZeroes(auxiliary) == false) && (quotientIsForIntegerPart || precision <=  DivisionPrecision))
+			while ((dividendAsIntegerNode != null || CharacterLinkedListMethods.IsAllZeroes(auxiliary) == false) && (quotientIsForIntegerPart || precision <=  DivisionPrecision))
 			{
-				CharacterLinkedListExtension.RemoveLeadingZeroes(auxiliary);
-				quotient = CharacterLinkedListExtension.LessThanOrEqualBinarySearch(auxiliary, divisorMultipleArray);
-				auxiliary = CharacterLinkedListExtension.Subtract(auxiliary, divisorMultipleArray[quotient]);
+				CharacterLinkedListMethods.RemoveLeadingZeroes(auxiliary);
+				quotient = CharacterLinkedListMethods.LessThanOrEqualBinarySearch(auxiliary, divisorMultipleArray);
+				auxiliary = CharacterLinkedListMethods.Subtract(auxiliary, divisorMultipleArray[quotient]);
 				(quotientIsForIntegerPart ? integerPart : fractionalPart).AddLast((char)(quotient + '0'));
 				if (dividendAsIntegerNode == null)
 				{
@@ -298,9 +298,9 @@ namespace Calculator
 				}
 			}
 			if(shiftRightOffset > 0)
-				CharacterLinkedListExtension.ShiftRight(integerPart, fractionalPart, shiftRightOffset);
+				CharacterLinkedListMethods.ShiftRight(integerPart, fractionalPart, shiftRightOffset);
 			else
-				CharacterLinkedListExtension.ShiftLeft(integerPart, fractionalPart, -shiftRightOffset);
+				CharacterLinkedListMethods.ShiftLeft(integerPart, fractionalPart, -shiftRightOffset);
 			if (fractionalPart.Count == 0)
 				fractionalPart.AddLast('0');
 
@@ -308,8 +308,8 @@ namespace Calculator
 			/// It works, do not disturb the peace
 			while (fractionalPart.Count > DivisionPrecision)
 				fractionalPart.RemoveLast();
-			CharacterLinkedListExtension.RemoveLeadingZeroes(integerPart);
-			CharacterLinkedListExtension.RemoveTrailingZeroes(fractionalPart);
+			CharacterLinkedListMethods.RemoveLeadingZeroes(integerPart);
+			CharacterLinkedListMethods.RemoveTrailingZeroes(fractionalPart);
 
 			return new Decimal(dividend._isPositive == divisor._isPositive, integerPart, fractionalPart);
 		}

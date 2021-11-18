@@ -1,5 +1,15 @@
 ﻿namespace Calculator
 {
+    static class TokenRepresentation
+    {
+        public const string OpeningParenthesisToken =     "(";
+        public const string ClosingParenthesisToken =     ")";
+        public const string AdditionOperatorToken =       "+";
+        public const string SubtractionOperatorToken =    "-";
+        public const string MultiplicationOperatorToken = "×";
+        public const string DivisionOperatorToken =       "/";
+    }
+
     class Token
     {
         protected Token(TokenType tokenType)
