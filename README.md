@@ -1,6 +1,6 @@
 # Calculator
 
-![](Calculator.png)
+![](Calulator.png)
 
 A minimalist four-function calculator utility
 
