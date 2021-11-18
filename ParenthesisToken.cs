@@ -20,9 +20,9 @@
         public override string ToString()
         {
             if (_parenthesisTokenType == ParenthesisTokenType.OpeningParenthesis)
-                return TokenStringRepresentation.OpeningParenthesisToken;
+                return TokenRepresentation.OpeningParenthesisToken;
             else
-                return TokenStringRepresentation.ClosingParenthesisToken;
+                return TokenRepresentation.ClosingParenthesisToken;
         }
 
         private enum ParenthesisTokenType

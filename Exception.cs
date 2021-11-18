@@ -11,6 +11,7 @@ namespace Calculator
         public const string ExpressionParserNullError = "ExpressionParserNullError";
         public const string ExpressionParserSyntaxError = "ExpressionParserSyntaxError";
         public const string ExpressionParserTokenError = "ExpressionParserTokenError";
+        public const string ExpressionBuilderAppendError = "ExpressionBuilderAppendError";
     }
 
     /// <summary>
@@ -85,6 +86,17 @@ namespace Calculator
     class ExpressionParserTokenError : Exception
     {
         public ExpressionParserTokenError() : base(ErrorMessage.ExpressionParserTokenError)
+        {
+
+        }
+    }
+
+    /// <summary>
+    /// Occurs when the expression builder invalidates expression by using an append function
+    /// </summary>
+    class ExpressionBuilderAppendError : Exception
+    {
+        public ExpressionBuilderAppendError() : base(ErrorMessage.ExpressionBuilderAppendError)
         {
 
         }

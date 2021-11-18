@@ -30,16 +30,16 @@
 
         public override string ToString()
         {
-            switch(_operatorTokenType)
+            switch (_operatorTokenType)
             {
                 case OperatorTokenType.Addition:
-                    return TokenStringRepresentation.AdditionOperatorToken;
+                    return TokenRepresentation.AdditionOperatorToken;
                 case OperatorTokenType.Subtraction:
-                    return TokenStringRepresentation.SubtractionOperatorToken;
+                    return TokenRepresentation.SubtractionOperatorToken;
                 case OperatorTokenType.Multiplication:
-                    return TokenStringRepresentation.MultiplicationOperatorToken;
+                    return TokenRepresentation.MultiplicationOperatorToken;
                 case OperatorTokenType.Division:
-                    return TokenStringRepresentation.DivisionOperatorToken;
+                    return TokenRepresentation.DivisionOperatorToken;
                 default:
                     return "?";
             }
