@@ -83,10 +83,10 @@ namespace Calculator
 		{
 			/// Initialize string builder
 			bool fractionalPartIsZero = CharacterLinkedListMethods.IsAllZeroes(_fractionalPart);
-			int decimalStringLength = _integerPart.Count;
-			decimalStringLength += _isPositive ? 0 : 1;
-			decimalStringLength += fractionalPartIsZero ? 0 : _fractionalPart.Count + 1;
-			StringBuilder decimalStringBuilder = new StringBuilder(decimalStringLength);
+			int decimalStringBuilderCapacity = _integerPart.Count;
+			decimalStringBuilderCapacity += _isPositive ? 0 : 1;
+			decimalStringBuilderCapacity += fractionalPartIsZero ? 0 : _fractionalPart.Count + 1;
+			StringBuilder decimalStringBuilder = new StringBuilder(decimalStringBuilderCapacity);
 
 			/// Build string representation
 			if (_isPositive == false)

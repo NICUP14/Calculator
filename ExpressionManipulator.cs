@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Collections.Generic;
 
 namespace Calculator
 {
@@ -8,65 +9,39 @@ namespace Calculator
     /// </summary>
     class ExpressionManipulator : ExpressionParser
     {
-        public ExpressionManipulator(int expressionBuilderCapacity)
+        public ExpressionManipulator(string expression = "")
         {
-            _expressionStringBuilder = new StringBuilder(expressionBuilderCapacity);
+            _tokenList = new LinkedList<Token>();
+
+            /// Converts expression to an intermediate to a token linked list
+            if (!string.IsNullOrEmpty(expression))
+            {
+                Token[] tokenArray = ExpressionParser.ConvertExpressionToTokenArray(expression);
+                foreach (Token token in tokenArray)
+                    _tokenList.AddLast(token);
+            }
         }
 
         public override string ToString()
         {
-            return _expressionStringBuilder.ToString();
+            /// Initialize string builder
+            int expressionStringBuilderCapacity = 0;
+            foreach (Token token in _tokenList)
+                expressionStringBuilderCapacity += token.ToString().Length;
+            StringBuilder expressionStringBuilder = new StringBuilder(expressionStringBuilderCapacity);
+
+            /// Build string representation
+            foreach (Token token in _tokenList)
+                expressionStringBuilder.Append(token);
+
+            return expressionStringBuilder.ToString();
         }
 
-        public void Clear()
+        public void AppendToken(Token token)
         {
-            _expressionStringBuilder.Clear();
+
         }
 
-        public void AppendDigitOrPeriod(char chr)
-        {
-            if (_expressionStringBuilder.Length != 0)
-            {
-                Token[] tokenArray = ConvertExpressionToTokenArray(_expressionStringBuilder.ToString());
-                //Token lastToken = getLastToken(tokenArray);
-                //if (lastToken.IsParenthesisToken() && (lastToken as ParenthesisToken).IsClosingParenthesisToken())
-                    throw new ExpressionBuilderAppendError();
-            }
-            _expressionStringBuilder.Append(chr);
-        }
-
-        public void AppendOperator(OperatorToken operatorToken)
-        {
-            bool operatorTokenIsAdditionOrSubtractionOperatorToken = operatorToken.IsAdditionOperatorToken() || operatorToken.IsSubtractionOperatorToken();
-            if (_expressionStringBuilder.Length == 0)
-            {
-                if (operatorTokenIsAdditionOrSubtractionOperatorToken)
-                    throw new ExpressionBuilderAppendError();
-            }
-            else
-            {
-                Token[] tokenArray = ConvertExpressionToTokenArray(_expressionStringBuilder.ToString());
-                Token lastToken = tokenArray[tokenArray.Length - 1];
-                if (lastToken.IsOperatorToken())
-                    throw new ExpressionBuilderAppendError();
-                else
-                {
-                    if (lastToken.IsParenthesisToken() && (lastToken as ParenthesisToken).IsOpeningParenthesisToken() && !operatorTokenIsAdditionOrSubtractionOperatorToken)
-                        throw new ExpressionBuilderAppendError();
-                }
-            }
-            _expressionStringBuilder.Append(operatorToken);
-        }
-
-        private Token getLastNonNullToken(Token[] tokenArray)
-        {
-            Token lastToken = Token.Undefined;
-            foreach (Token token in tokenArray)
-                if (token != null)
-                    lastToken = token;
-            return lastToken;
-        }
-
-        StringBuilder _expressionStringBuilder;
+        readonly LinkedList<Token> _tokenList;
     }
 }
