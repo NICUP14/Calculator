@@ -29,6 +29,7 @@ namespace Calculator
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CalculatorForm));
             this.divisionButton = new System.Windows.Forms.Button();
             this.sevenButton = new System.Windows.Forms.Button();
             this.buttonTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
@@ -386,7 +387,6 @@ namespace Calculator
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.calculateResultButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(227)))), ((int)(((byte)(227)))));
-            this.calculateResultButton.Enabled = false;
             this.calculateResultButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(205)))), ((int)(((byte)(207)))), ((int)(((byte)(210)))));
             this.calculateResultButton.FlatAppearance.BorderSize = 5;
             this.calculateResultButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -560,6 +560,7 @@ namespace Calculator
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(205)))), ((int)(((byte)(207)))), ((int)(((byte)(210)))));
             this.ClientSize = new System.Drawing.Size(800, 1300);
             this.Controls.Add(this.InterfaceTableLayoutPanel);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(278, 467);
             this.Name = "CalculatorForm";
             this.Text = "Calculator";
