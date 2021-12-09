@@ -9,7 +9,30 @@ namespace Calculator
         public CalculatorForm()
         {
             InitializeComponent();
-            expressionStringBuilder = new StringBuilder(expressionStringBuilderCapacity);
+            expressionManipulator = new ExpressionBuilder();
+        }
+
+        private void FormLoad(object sender, EventArgs e)
+        {
+            this.clearButton.Tag = ButtonTag.Clear;
+            this.undoButton.Tag = ButtonTag.Delete;
+            this.signButton.Tag = ButtonTag.ChangeSign;
+            this.parenthesisButton.Tag = ButtonTag.InsertParenthesis;
+            this.divisionButton.Tag = ButtonTag.Division;
+            this.additionButton.Tag = ButtonTag.Addition;
+            this.subtractionButton.Tag = ButtonTag.Subtraction;
+            this.multiplicationButton.Tag = ButtonTag.Multiplication;
+            this.periodButton.Tag = ButtonTag.Period;
+            this.zeroButton.Tag = ButtonTag.Zero;
+            this.oneButton.Tag = ButtonTag.One;
+            this.twoButton.Tag = ButtonTag.Two;
+            this.threeButton.Tag = ButtonTag.Three;
+            this.fourButton.Tag = ButtonTag.Four;
+            this.fiveButton.Tag = ButtonTag.Five;
+            this.sixButton.Tag = ButtonTag.Six;
+            this.sevenButton.Tag = ButtonTag.Seven;
+            this.eightButton.Tag = ButtonTag.Eight;
+            this.nineButton.Tag = ButtonTag.Nine;
         }
 
         /// <summary>
@@ -24,139 +47,76 @@ namespace Calculator
                 case ButtonTag.Undefined:
                     return;
                 case ButtonTag.Clear:
-                    expressionStringBuilder.Clear();
+                    expressionManipulator.Clear();
                     break;
-                case ButtonTag.Sign:
-                    ChangeSign();
+                case ButtonTag.Delete:
                     break;
-                case ButtonTag.Parenthesis:
-                    InsertParenthesis();
+                case ButtonTag.ChangeSign:
                     break;
-                case ButtonTag.Multiplication:
-                    expressionStringBuilder.Append("×");
+                case ButtonTag.InsertParenthesis:
+                    expressionManipulator.InsertParenthesis();
                     break;
                 case ButtonTag.Division:
-                    expressionStringBuilder.Append("/");
+                    expressionManipulator.AppendOperatorToken(OperatorToken.Division);
                     break;
                 case ButtonTag.Addition:
-                    expressionStringBuilder.Append("+");
+                    expressionManipulator.AppendOperatorToken(OperatorToken.Addition);
                     break;
                 case ButtonTag.Subtraction:
-                    expressionStringBuilder.Append("-");
+                    expressionManipulator.AppendOperatorToken(OperatorToken.Subtraction);
+                    break;
+                case ButtonTag.Multiplication:
+                    expressionManipulator.AppendOperatorToken(OperatorToken.Multiplication);
+                    break;
+                case ButtonTag.CalculateResult:
                     break;
                 case ButtonTag.Period:
-                    expressionStringBuilder.Append(".");
+                    expressionManipulator.AppendDecimalToken(new DecimalToken("."));
                     break;
                 case ButtonTag.Zero:
-                    expressionStringBuilder.Append("0");
+                    expressionManipulator.AppendDecimalToken(new DecimalToken("0"));
                     break;
                 case ButtonTag.One:
-                    expressionStringBuilder.Append("1");
+                    expressionManipulator.AppendDecimalToken(new DecimalToken("1"));
                     break;
                 case ButtonTag.Two:
-                    expressionStringBuilder.Append("2");
+                    expressionManipulator.AppendDecimalToken(new DecimalToken("2"));
                     break;
                 case ButtonTag.Three:
-                    expressionStringBuilder.Append("3");
+                    expressionManipulator.AppendDecimalToken(new DecimalToken("3"));
                     break;
                 case ButtonTag.Four:
-                    expressionStringBuilder.Append("4");
+                    expressionManipulator.AppendDecimalToken(new DecimalToken("4"));
                     break;
                 case ButtonTag.Five:
-                    expressionStringBuilder.Append("5");
+                    expressionManipulator.AppendDecimalToken(new DecimalToken("5"));
                     break;
                 case ButtonTag.Six:
-                    expressionStringBuilder.Append("6");
+                    expressionManipulator.AppendDecimalToken(new DecimalToken("6"));
                     break;
                 case ButtonTag.Seven:
-                    expressionStringBuilder.Append("7");
+                    expressionManipulator.AppendDecimalToken(new DecimalToken("7"));
                     break;
                 case ButtonTag.Eight:
-                    expressionStringBuilder.Append("8");
+                    expressionManipulator.AppendDecimalToken(new DecimalToken("8"));
                     break;
                 case ButtonTag.Nine:
-                    expressionStringBuilder.Append("9");
+                    expressionManipulator.AppendDecimalToken(new DecimalToken("9"));
                     break;
             }
 
             UpdateLabels();
         }
 
-        private void ChangeSign()
-        {
-            if (expressionStringBuilder.Length == 0)
-                expressionStringBuilder.Append("-");
-            else
-            {
-                char lastExpressionParserChar = expressionStringBuilder[expressionStringBuilder.Length - 1];
-                if (lastExpressionParserChar == '(' || lastExpressionParserChar == ')')
-                    expressionStringBuilder.Append("-");
-                else if (lastExpressionParserChar == '.' || char.IsDigit(lastExpressionParserChar))
-                {
-                    int expressionIndex = expressionStringBuilder.Length - 1;
-                    while (expressionIndex > 0 && (expressionStringBuilder[expressionIndex] == '.' || char.IsDigit(expressionStringBuilder[expressionIndex])))
-                        expressionIndex--;
-                    char expressionChar = expressionStringBuilder[expressionIndex];
-                    if (expressionChar == '+' || expressionChar == '-')
-                        expressionStringBuilder[expressionIndex] = expressionChar == '+' ? '-' : '+';
-                    else
-                    {
-                        if (expressionIndex == 0)
-                            expressionStringBuilder.Insert(expressionIndex, "-");
-                        else
-                            expressionStringBuilder.Insert(expressionIndex + 1, "(-");
-                    }
-                }
-                else
-                {
-                    if (lastExpressionParserChar == '+' || lastExpressionParserChar == '-')
-                        expressionStringBuilder[expressionStringBuilder.Length - 1] = lastExpressionParserChar == '+' ? '-' : '+';
-                    else
-                        expressionStringBuilder.Append("(-");
-                }
-            }
-        }
-
-        private void InsertParenthesis()
-        {
-            int unclosedOpeningParenthesisCount = 0;
-            foreach (char expressionChar in expressionStringBuilder.ToString())
-            {
-                if (expressionChar == '(')
-                    unclosedOpeningParenthesisCount++;
-                else if (expressionChar == ')')
-                    unclosedOpeningParenthesisCount--;
-            }
-
-            int expressionLength = expressionStringBuilder.Length;
-            if (expressionLength == 0)
-                expressionStringBuilder.Append('(');
-            else
-            {
-                char lastExpressionParserChar = expressionStringBuilder[expressionStringBuilder.Length - 1];
-                if (lastExpressionParserChar == ')' || lastExpressionParserChar == '.' || char.IsDigit(lastExpressionParserChar))
-                    expressionStringBuilder.Append(unclosedOpeningParenthesisCount == 0 ? "×(" : ')');
-                else
-                    expressionStringBuilder.Append('(');
-            }
-        }
-
         private void UpdateLabels()
         {
-            string expression = expressionStringBuilder.ToString();
-            expressionLabel.Text = expression;
+            string uncompleteExpression = expressionManipulator.ToExpression();
+            expressionLabel.Text = uncompleteExpression;
+
             try
             {
-                int openParenthesisCount = 0;
-                foreach (char expressionChar in expression)
-                    if (expressionChar == '(')
-                        openParenthesisCount++;
-                    else if(expressionChar == ')')
-                        openParenthesisCount--;
-
-
-                string result = ExpressionParser.Calculate(expression + new string(')', openParenthesisCount));
-                resultLabel.Text = result;
+                string completeExpression = expressionManipulator.ToExpression(true);
+                resultLabel.Text = ExpressionParser.Calculate(completeExpression);
             }
             catch(Exception e)
             {
@@ -171,14 +131,14 @@ namespace Calculator
         {
             Undefined,
             Clear,
-            Undo,
-            Sign,
-            Parenthesis,
-            Multiplication,
+            Delete,
+            ChangeSign,
+            InsertParenthesis,
             Division,
             Addition,
             Subtraction,
-            Calculate,
+            Multiplication,
+            CalculateResult,
             Period,
             Zero,
             One,
@@ -192,7 +152,7 @@ namespace Calculator
             Nine
         }
 
-        private StringBuilder expressionStringBuilder;
-        private const int expressionStringBuilderCapacity = 500;
+        private ExpressionBuilder expressionManipulator;
+
     }
 }

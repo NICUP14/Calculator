@@ -4,19 +4,27 @@
     {
         public DecimalToken(string decimalString) : base(TokenType.Decimal)
         {
-            _decimalString = decimalString;
-        }
-
-        public Decimal ToDecimal()
-        {
-            return new Decimal(_decimalString);
+            _stringRepresentation = decimalString;
         }
 
         public override string ToString()
         {
-            return _decimalString;
+            return _stringRepresentation;
         }
 
-        private string _decimalString;
+        public Decimal ToDecimal()
+        {
+            return new Decimal(_stringRepresentation);
+        }
+
+        public bool EndsWithPeriod()
+        {
+            return string.IsNullOrEmpty(_stringRepresentation) && _stringRepresentation.EndsWith('.');
+        }
+
+        public static DecimalToken Concatenate(DecimalToken decimalToken, DecimalToken decimalToken2)
+        {
+            return new DecimalToken(decimalToken._stringRepresentation + decimalToken2._stringRepresentation);
+        }
     }
 }

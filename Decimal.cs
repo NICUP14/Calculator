@@ -6,12 +6,12 @@ using static System.Console;
 namespace Calculator
 {
 	/// <summary>
-	/// Arbitrary precision decimal implementation
+	/// Arbitrary precision dec implementation
 	/// </summary>
 	class Decimal
 	{
 		/// <summary>
-		/// Internal decimal constructor
+		/// Used by dec's internal logic
 		/// </summary>
 		/// <param name="isPositive"></param>
 		/// <param name="integerPart"></param>
@@ -25,7 +25,7 @@ namespace Calculator
 
 
 		/// <summary>
-		/// Construct decimal from string representation
+		/// Construct dec from its string representation
 		/// </summary>
 		/// <param name="decimalString"></param>
 		public Decimal(string decimalString = "0")
@@ -57,7 +57,7 @@ namespace Calculator
 			{
 				_isPositive = _integerPart.First.Value == '+';
 				_integerPart.RemoveFirst();
-				if (_integerPart.Count == 0)
+                if (_integerPart.Count == 0)
 					throw new DecimalPeriodError();
 			}
 			if (CharacterLinkedListMethods.IsAllZeroes(_integerPart) == true && CharacterLinkedListMethods.IsAllZeroes(_fractionalPart) == true)
@@ -76,7 +76,7 @@ namespace Calculator
 		}
 
 		/// <summary>
-		/// Returns decimal's string representation
+		/// Returns dec's string representation
 		/// </summary>
 		/// <returns></returns>
 		public override string ToString()
@@ -104,7 +104,7 @@ namespace Calculator
 		}
 
 		/// <summary>
-		/// Performs decimal addition operation; Adds addend2 to addend
+		/// Performs dec addition operation; Adds addend2 to addend
 		/// </summary>
 		/// <param name="addend"></param>
 		/// <param name="addend2"></param>
@@ -169,7 +169,7 @@ namespace Calculator
 		}
 
 		/// <summary>
-		/// Performs decimal subtraction operation; Subtracts subtrahend from minuend
+		/// Performs dec subtraction operation; Subtracts subtrahend from minuend
 		/// </summary>
 		/// <param name="minuend"></param>
 		/// <param name="subtrahend"></param>
@@ -181,7 +181,7 @@ namespace Calculator
 		}
 
 		/// <summary>
-		/// Performs decimal multiplication; Multiplies multiplicand by multiplicator
+		/// Performs dec multiplication; Multiplies multiplicand by multiplicator
 		/// </summary>
 		/// <param name="multiplicand"></param>
 		/// <param name="multiplicator"></param>
@@ -233,7 +233,7 @@ namespace Calculator
 		}
 
 		/// <summary>
-		/// Performs decimal division; Divides dividend by divisor
+		/// Performs dec division; Divides dividend by divisor
 		/// </summary>
 		/// <param name="dividend"></param>
 		/// <param name="divisor"></param>
@@ -305,7 +305,7 @@ namespace Calculator
 				fractionalPart.AddLast('0');
 
 			/// Remove padding from integer and fractional parts and trim fractional part
-			/// It works, do not disturb the peace
+			/// This could be considered a "small brain" implementation, please help me improve this
 			while (fractionalPart.Count > DivisionPrecision)
 				fractionalPart.RemoveLast();
 			CharacterLinkedListMethods.RemoveLeadingZeroes(integerPart);

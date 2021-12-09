@@ -6,6 +6,22 @@
         {
             _precedence = precedence;
             _operatorTokenType = operatorType;
+
+            switch (_operatorTokenType)
+            {
+                case OperatorTokenType.Addition:
+                    _stringRepresentation = TokenStringRepresentation.AdditionOperatorToken;
+                    break;
+                case OperatorTokenType.Subtraction:
+                    _stringRepresentation = TokenStringRepresentation.SubtractionOperatorToken;
+                    break;
+                case OperatorTokenType.Multiplication:
+                    _stringRepresentation = TokenStringRepresentation.MultiplicationOperatorToken;
+                    break;
+                case OperatorTokenType.Division:
+                    _stringRepresentation = TokenStringRepresentation.DivisionOperatorToken;
+                    break;
+            }
         }
 
         public bool IsAdditionOperatorToken()
@@ -26,23 +42,6 @@
         public bool IsDivisionOperatorToken()
         {
             return _operatorTokenType == OperatorTokenType.Division;
-        }
-
-        public override string ToString()
-        {
-            switch (_operatorTokenType)
-            {
-                case OperatorTokenType.Addition:
-                    return TokenRepresentation.AdditionOperatorToken;
-                case OperatorTokenType.Subtraction:
-                    return TokenRepresentation.SubtractionOperatorToken;
-                case OperatorTokenType.Multiplication:
-                    return TokenRepresentation.MultiplicationOperatorToken;
-                case OperatorTokenType.Division:
-                    return TokenRepresentation.DivisionOperatorToken;
-                default:
-                    return "?";
-            }
         }
 
         public static int Compare(OperatorToken operatorToken, OperatorToken operatorToken2)

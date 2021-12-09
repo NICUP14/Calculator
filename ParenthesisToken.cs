@@ -5,6 +5,16 @@
         private ParenthesisToken(ParenthesisTokenType parenthesisTokenType) : base(TokenType.Parenthesis)
         {
             _parenthesisTokenType = parenthesisTokenType;
+
+            switch(parenthesisTokenType)
+            {
+                case ParenthesisTokenType.OpeningParenthesis:
+                    _stringRepresentation = TokenStringRepresentation.OpeningParenthesisToken;
+                    break;
+                case ParenthesisTokenType.ClosingParenthesis:
+                    _stringRepresentation = TokenStringRepresentation.ClosingParenthesisToken;
+                    break;
+            }
         }
 
         public bool IsOpeningParenthesisToken()
@@ -17,12 +27,9 @@
             return _parenthesisTokenType == ParenthesisTokenType.ClosingParenthesis;
         }
 
-        public override string ToString()
+        public override bool Equals(object obj)
         {
-            if (_parenthesisTokenType == ParenthesisTokenType.OpeningParenthesis)
-                return TokenRepresentation.OpeningParenthesisToken;
-            else
-                return TokenRepresentation.ClosingParenthesisToken;
+            return base.Equals(obj) && this._parenthesisTokenType == (obj as ParenthesisToken)._parenthesisTokenType;
         }
 
         private enum ParenthesisTokenType

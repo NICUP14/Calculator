@@ -109,7 +109,7 @@ namespace Calculator
                         (operand, operand2) = (operand2, operand);
 
                         /// Push the reconstructed operation back onto the stack
-                        operandStack.Push(TokenRepresentation.OpeningParenthesisToken + operand + token + operand2 + TokenRepresentation.ClosingParenthesisToken);
+                        operandStack.Push(TokenStringRepresentation.OpeningParenthesisToken + operand + token + operand2 + TokenStringRepresentation.ClosingParenthesisToken);
                     }
                 }
             }
@@ -276,12 +276,12 @@ namespace Calculator
         /// </summary>
         private static readonly Dictionary<string, Token> tokenLookup = new Dictionary<string, Token>
         {
-            {TokenRepresentation.OpeningParenthesisToken,      ParenthesisToken.OpeningParenthesis},
-            {TokenRepresentation.ClosingParenthesisToken,      ParenthesisToken.ClosingParenthesis},
-            {TokenRepresentation.AdditionOperatorToken,        OperatorToken.Addition},
-            {TokenRepresentation.SubtractionOperatorToken,     OperatorToken.Subtraction},
-            {TokenRepresentation.MultiplicationOperatorToken,  OperatorToken.Multiplication},
-            {TokenRepresentation.DivisionOperatorToken,        OperatorToken.Division},
+            {TokenStringRepresentation.OpeningParenthesisToken,      ParenthesisToken.OpeningParenthesis},
+            {TokenStringRepresentation.ClosingParenthesisToken,      ParenthesisToken.ClosingParenthesis},
+            {TokenStringRepresentation.AdditionOperatorToken,        OperatorToken.Addition},
+            {TokenStringRepresentation.SubtractionOperatorToken,     OperatorToken.Subtraction},
+            {TokenStringRepresentation.MultiplicationOperatorToken,  OperatorToken.Multiplication},
+            {TokenStringRepresentation.DivisionOperatorToken,        OperatorToken.Division},
         };
     }
 }
