@@ -18,17 +18,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="CalculatorForm.Designer.cs~" />
+    <None Remove="src\CalculatorForm.Designer.cs~" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="src\CalculatorForm.resx">
+      <Generator></Generator>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
     <None Include="Calculator.sln" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="CalculatorForm.resx">
-      <Generator></Generator>
-    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

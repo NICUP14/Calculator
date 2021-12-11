@@ -1,6 +1,6 @@
 # Calculator
 
-<img width = 269 height = 463 src = "Calculator.png"></img>
+<img width = 269 height = 463 src = "docs/Images/CalculatorScreenshot.png"></img>
 
 The fast standard calculator written in C#.
 
