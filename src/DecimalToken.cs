@@ -2,9 +2,8 @@
 {
     class DecimalToken : Token
     {
-        public DecimalToken(string decimalString) : base(TokenType.Decimal)
+        public DecimalToken(string stringRepresentation = "") : base(TokenType.Decimal, stringRepresentation)
         {
-            _stringRepresentation = decimalString;
         }
 
         public override string ToString()

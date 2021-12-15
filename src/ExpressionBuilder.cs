@@ -61,6 +61,85 @@ namespace Calculator
             _tokenList.Clear();
         }
 
+        public void ChangeSign()
+        {
+            if (_tokenList.Count == 0)
+                _tokenList.AddLast(OperatorToken.Subtraction);
+            else
+            {
+                LinkedListNode<Token> lastTokenListNode = _tokenList.Last;
+                Token lastTokenListToken = lastTokenListNode.Value;
+
+                if (lastTokenListToken == ParenthesisToken.OpeningParenthesis)
+                    _tokenList.AddLast(OperatorToken.Subtraction);
+                else
+                {
+                    if(lastTokenListToken is OperatorToken)
+                    {
+                        if (lastTokenListToken != OperatorToken.Addition && lastTokenListToken != OperatorToken.Subtraction)
+                        {
+                            _tokenList.AddLast(ParenthesisToken.OpeningParenthesis);
+                            _tokenList.AddLast(OperatorToken.Subtraction);
+                        }
+                        else
+                            lastTokenListNode.Value = lastTokenListToken == OperatorToken.Addition ? OperatorToken.Subtraction : OperatorToken.Addition;
+                    }
+                    else if(lastTokenListToken is DecimalToken)
+                    {
+                        if(_tokenList.Count > 1)
+                        {
+                            LinkedListNode<Token> previousTokenListNode = lastTokenListNode.Previous;
+                            Token previousTokenListToken = previousTokenListNode.Value;
+
+                            if(previousTokenListToken == ParenthesisToken.OpeningParenthesis)
+                                _tokenList.AddAfter(previousTokenListNode, OperatorToken.Subtraction);
+                            else if (previousTokenListToken == OperatorToken.Addition || previousTokenListToken == OperatorToken.Subtraction)
+                                previousTokenListNode.Value = previousTokenListToken == OperatorToken.Addition ? OperatorToken.Subtraction : OperatorToken.Addition;
+                            else
+                            {
+                                _tokenList.AddAfter(previousTokenListNode, OperatorToken.Subtraction);
+                                _tokenList.AddAfter(previousTokenListNode, ParenthesisToken.OpeningParenthesis);
+                            }
+                        }
+                        else
+                            _tokenList.AddFirst(OperatorToken.Subtraction);
+                    }
+                    else if(lastTokenListToken is ParenthesisToken)
+                    {
+                        int nestedParenthesisLevel = 0;
+                        LinkedListNode<Token> tokenListNode = lastTokenListNode;
+
+                        do
+                        {
+                            if (tokenListNode.Value == ParenthesisToken.ClosingParenthesis)
+                                nestedParenthesisLevel++;
+                            else if (tokenListNode.Value == ParenthesisToken.OpeningParenthesis)
+                                nestedParenthesisLevel--;
+                            tokenListNode = tokenListNode.Previous;
+                        }
+                        while (tokenListNode != null && nestedParenthesisLevel != 0);
+
+                        if (tokenListNode == null)
+                            _tokenList.AddFirst(OperatorToken.Subtraction);
+                        else
+                        {
+                            Token tokenListToken = tokenListNode.Value;
+
+                            if (tokenListToken == ParenthesisToken.OpeningParenthesis)
+                                _tokenList.AddAfter(tokenListNode, OperatorToken.Subtraction);
+                            else if(tokenListToken == OperatorToken.Addition || tokenListToken == OperatorToken.Subtraction)
+                                tokenListNode.Value = tokenListToken == OperatorToken.Addition ? OperatorToken.Subtraction : OperatorToken.Addition;
+                            else
+                            {
+                                _tokenList.AddAfter(tokenListNode, OperatorToken.Subtraction);
+                                _tokenList.AddAfter(tokenListNode, ParenthesisToken.OpeningParenthesis);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         public void InsertParenthesis()
         {
             if (_tokenList.Count == 0)

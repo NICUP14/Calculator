@@ -21,12 +21,9 @@
             _stringRepresentation = stringRepresentation;
         }
 
-        public override bool Equals(object obj)
+        public bool HasTokenType(TokenType tokenType)
         {
-            if (obj == null || obj is not Token)
-                return false;
-
-            return this._tokenType == (obj as Token)._tokenType;
+            return this._tokenType == tokenType;
         }
 
         public bool IsUndefined()
@@ -74,8 +71,5 @@
         public string _stringRepresentation;
 
         public static readonly Token Undefined = new Token(TokenType.Undefined);
-        public static readonly Token Decimal = new Token(TokenType.Decimal);
-        public static readonly Token Operator = new Token(TokenType.Operator);
-        public static readonly Token Parenthesis = new Token(TokenType.Parenthesis);
     }
 }

@@ -52,6 +52,7 @@ namespace Calculator
                 case ButtonTag.Delete:
                     break;
                 case ButtonTag.ChangeSign:
+                    expressionManipulator.ChangeSign();
                     break;
                 case ButtonTag.InsertParenthesis:
                     expressionManipulator.InsertParenthesis();

@@ -6,12 +6,12 @@ using static System.Console;
 namespace Calculator
 {
 	/// <summary>
-	/// Arbitrary precision dec implementation
+	/// Arbitrary precision decimal implementation
 	/// </summary>
 	class Decimal
 	{
 		/// <summary>
-		/// Used by dec's internal logic
+		/// Used by decimal's internal logic
 		/// </summary>
 		/// <param name="isPositive"></param>
 		/// <param name="integerPart"></param>
@@ -25,7 +25,7 @@ namespace Calculator
 
 
 		/// <summary>
-		/// Construct dec from its string representation
+		/// Construct decimal from its string representation
 		/// </summary>
 		/// <param name="decimalString"></param>
 		public Decimal(string decimalString = "0")
@@ -76,7 +76,7 @@ namespace Calculator
 		}
 
 		/// <summary>
-		/// Returns dec's string representation
+		/// Returns decimal's string representation
 		/// </summary>
 		/// <returns></returns>
 		public override string ToString()
@@ -104,7 +104,7 @@ namespace Calculator
 		}
 
 		/// <summary>
-		/// Performs dec addition operation; Adds addend2 to addend
+		/// Performs decimal addition operation; Adds addend2 to addend
 		/// </summary>
 		/// <param name="addend"></param>
 		/// <param name="addend2"></param>
@@ -169,7 +169,7 @@ namespace Calculator
 		}
 
 		/// <summary>
-		/// Performs dec subtraction operation; Subtracts subtrahend from minuend
+		/// Performs decimal subtraction operation; Subtracts subtrahend from minuend
 		/// </summary>
 		/// <param name="minuend"></param>
 		/// <param name="subtrahend"></param>
@@ -181,14 +181,14 @@ namespace Calculator
 		}
 
 		/// <summary>
-		/// Performs dec multiplication; Multiplies multiplicand by multiplicator
+		/// Performs decimal multiplication; Multiplies multiplicand by multiplicator
 		/// </summary>
 		/// <param name="multiplicand"></param>
 		/// <param name="multiplicator"></param>
 		/// <returns></returns>
 		public static Decimal Multiply(Decimal multiplicand, Decimal multiplicator)
 		{
-			/// Convert decimals to multiplication routine format
+			/// Convert decimalimals to multiplication routine format
 			LinkedList<char> multiplicandAsInteger = decimalToLinkedList(multiplicand);
 			LinkedList<char> multiplicatorAsInteger = decimalToLinkedList(multiplicator);
 			CharacterLinkedListMethods.RemoveLeadingZeroes(multiplicandAsInteger);
@@ -233,7 +233,7 @@ namespace Calculator
 		}
 
 		/// <summary>
-		/// Performs dec division; Divides dividend by divisor
+		/// Performs decimal division; Divides dividend by divisor
 		/// </summary>
 		/// <param name="dividend"></param>
 		/// <param name="divisor"></param>

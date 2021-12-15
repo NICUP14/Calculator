@@ -2,26 +2,10 @@
 {
     class OperatorToken : Token
     {
-        private OperatorToken(int precedence, OperatorTokenType operatorType) : base(TokenType.Operator)
+        private OperatorToken(int precedence, OperatorTokenType operatorType, string stringRepresentation = "") : base(TokenType.Operator, stringRepresentation)
         {
             _precedence = precedence;
             _operatorTokenType = operatorType;
-
-            switch (_operatorTokenType)
-            {
-                case OperatorTokenType.Addition:
-                    _stringRepresentation = TokenStringRepresentation.AdditionOperatorToken;
-                    break;
-                case OperatorTokenType.Subtraction:
-                    _stringRepresentation = TokenStringRepresentation.SubtractionOperatorToken;
-                    break;
-                case OperatorTokenType.Multiplication:
-                    _stringRepresentation = TokenStringRepresentation.MultiplicationOperatorToken;
-                    break;
-                case OperatorTokenType.Division:
-                    _stringRepresentation = TokenStringRepresentation.DivisionOperatorToken;
-                    break;
-            }
         }
 
         public bool IsAdditionOperatorToken()
@@ -60,9 +44,9 @@
         private int _precedence;
         private OperatorTokenType _operatorTokenType;
 
-        public static readonly OperatorToken Addition = new OperatorToken(2, OperatorTokenType.Addition);
-        public static readonly OperatorToken Subtraction = new OperatorToken(2, OperatorTokenType.Subtraction);
-        public static readonly OperatorToken Division = new OperatorToken(3, OperatorTokenType.Division);
-        public static readonly OperatorToken Multiplication = new OperatorToken(3, OperatorTokenType.Multiplication);
+        public static readonly OperatorToken Addition = new OperatorToken(2, OperatorTokenType.Addition, TokenStringRepresentation.AdditionOperatorToken);
+        public static readonly OperatorToken Subtraction = new OperatorToken(2, OperatorTokenType.Subtraction, TokenStringRepresentation.SubtractionOperatorToken);
+        public static readonly OperatorToken Division = new OperatorToken(3, OperatorTokenType.Division, TokenStringRepresentation.DivisionOperatorToken);
+        public static readonly OperatorToken Multiplication = new OperatorToken(3, OperatorTokenType.Multiplication, TokenStringRepresentation.MultiplicationOperatorToken);
     }
 }

@@ -2,19 +2,9 @@
 {
     class ParenthesisToken : Token
     {
-        private ParenthesisToken(ParenthesisTokenType parenthesisTokenType) : base(TokenType.Parenthesis)
+        private ParenthesisToken(ParenthesisTokenType parenthesisTokenType, string stringRepresentation = "") : base(TokenType.Parenthesis, stringRepresentation)
         {
             _parenthesisTokenType = parenthesisTokenType;
-
-            switch(parenthesisTokenType)
-            {
-                case ParenthesisTokenType.OpeningParenthesis:
-                    _stringRepresentation = TokenStringRepresentation.OpeningParenthesisToken;
-                    break;
-                case ParenthesisTokenType.ClosingParenthesis:
-                    _stringRepresentation = TokenStringRepresentation.ClosingParenthesisToken;
-                    break;
-            }
         }
 
         public bool IsOpeningParenthesisToken()
@@ -40,7 +30,7 @@
 
         private ParenthesisTokenType _parenthesisTokenType;
 
-        public static readonly ParenthesisToken OpeningParenthesis = new ParenthesisToken(ParenthesisTokenType.OpeningParenthesis);
-        public static readonly ParenthesisToken ClosingParenthesis = new ParenthesisToken(ParenthesisTokenType.ClosingParenthesis);
+        public static readonly ParenthesisToken OpeningParenthesis = new ParenthesisToken(ParenthesisTokenType.OpeningParenthesis, TokenStringRepresentation.OpeningParenthesisToken);
+        public static readonly ParenthesisToken ClosingParenthesis = new ParenthesisToken(ParenthesisTokenType.ClosingParenthesis, TokenStringRepresentation.ClosingParenthesisToken);
     }
 }
