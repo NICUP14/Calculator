@@ -1,16 +1,13 @@
 ﻿namespace Calculator
 {
-    /// Rewrite the token type checking system (token.Equals(token2))
-    /// Instead of using functions, compare with predefined token constants
-
     static class TokenStringRepresentation
     {
-        public const string OpeningParenthesisToken =     "(";
-        public const string ClosingParenthesisToken =     ")";
-        public const string AdditionOperatorToken =       "+";
-        public const string SubtractionOperatorToken =    "-";
-        public const string MultiplicationOperatorToken = "×";
-        public const string DivisionOperatorToken =       "÷";
+        public const string Division =               "÷";
+        public const string Addition =               "+";
+        public const string Subtraction =            "-";
+        public const string Multiplication =         "×";
+        public const string OpeningParenthesis =     "(";
+        public const string ClosingParenthesis =     ")";
     }
 
     class Token
@@ -21,29 +18,11 @@
             _stringRepresentation = stringRepresentation;
         }
 
-        public bool HasTokenType(TokenType tokenType)
+        public override bool Equals(object obj)
         {
-            return this._tokenType == tokenType;
-        }
-
-        public bool IsUndefined()
-        {
-            return _tokenType == Token.TokenType.Undefined;
-        }
-
-        public bool IsDecimalToken()
-        {
-            return _tokenType == TokenType.Decimal;
-        }
-
-        public bool IsOperatorToken()
-        {
-            return _tokenType == TokenType.Operator;
-        }
-
-        public bool IsParenthesisToken()
-        {
-            return _tokenType == Token.TokenType.Parenthesis;
+            if (obj is not Token)
+                return false;
+            return _tokenType == (obj as Token)._tokenType;
         }
 
         public override string ToString()
@@ -53,9 +32,9 @@
 
         public enum TokenType
         {
-            Undefined,
             Decimal,
             Operator,
+            Undefined,
             Parenthesis
         }
 
@@ -70,6 +49,10 @@
         private TokenType _tokenType;
         public string _stringRepresentation;
 
+        /// Token constants
+        public static readonly Token Decimal = new Token(TokenType.Decimal);
+        public static readonly Token Operator = new Token(TokenType.Operator);
         public static readonly Token Undefined = new Token(TokenType.Undefined);
+        public static readonly Token Parenthesis = new Token(TokenType.Parenthesis);
     }
 }

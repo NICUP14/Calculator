@@ -14,25 +14,25 @@ namespace Calculator
 
         private void FormLoad(object sender, EventArgs e)
         {
-            this.clearButton.Tag = ButtonTag.Clear;
-            this.undoButton.Tag = ButtonTag.Delete;
-            this.signButton.Tag = ButtonTag.ChangeSign;
-            this.parenthesisButton.Tag = ButtonTag.InsertParenthesis;
-            this.divisionButton.Tag = ButtonTag.Division;
-            this.additionButton.Tag = ButtonTag.Addition;
-            this.subtractionButton.Tag = ButtonTag.Subtraction;
-            this.multiplicationButton.Tag = ButtonTag.Multiplication;
-            this.periodButton.Tag = ButtonTag.Period;
-            this.zeroButton.Tag = ButtonTag.Zero;
-            this.oneButton.Tag = ButtonTag.One;
-            this.twoButton.Tag = ButtonTag.Two;
-            this.threeButton.Tag = ButtonTag.Three;
-            this.fourButton.Tag = ButtonTag.Four;
-            this.fiveButton.Tag = ButtonTag.Five;
-            this.sixButton.Tag = ButtonTag.Six;
-            this.sevenButton.Tag = ButtonTag.Seven;
-            this.eightButton.Tag = ButtonTag.Eight;
-            this.nineButton.Tag = ButtonTag.Nine;
+            clearButton.Tag = ButtonTag.Clear;
+            undoButton.Tag = ButtonTag.Delete;
+            signButton.Tag = ButtonTag.ChangeSign;
+            parenthesisButton.Tag = ButtonTag.InsertParenthesis;
+            divisionButton.Tag = ButtonTag.Division;
+            additionButton.Tag = ButtonTag.Addition;
+            subtractionButton.Tag = ButtonTag.Subtraction;
+            multiplicationButton.Tag = ButtonTag.Multiplication;
+            periodButton.Tag = ButtonTag.Period;
+            zeroButton.Tag = ButtonTag.Zero;
+            oneButton.Tag = ButtonTag.One;
+            twoButton.Tag = ButtonTag.Two;
+            threeButton.Tag = ButtonTag.Three;
+            fourButton.Tag = ButtonTag.Four;
+            fiveButton.Tag = ButtonTag.Five;
+            sixButton.Tag = ButtonTag.Six;
+            sevenButton.Tag = ButtonTag.Seven;
+            eightButton.Tag = ButtonTag.Eight;
+            nineButton.Tag = ButtonTag.Nine;
         }
 
         /// <summary>
@@ -58,51 +58,51 @@ namespace Calculator
                     expressionManipulator.InsertParenthesis();
                     break;
                 case ButtonTag.Division:
-                    expressionManipulator.AppendOperatorToken(OperatorToken.Division);
+                    expressionManipulator.AppendToken(OperatorToken.Division);
                     break;
                 case ButtonTag.Addition:
-                    expressionManipulator.AppendOperatorToken(OperatorToken.Addition);
+                    expressionManipulator.AppendToken(OperatorToken.Addition);
                     break;
                 case ButtonTag.Subtraction:
-                    expressionManipulator.AppendOperatorToken(OperatorToken.Subtraction);
+                    expressionManipulator.AppendToken(OperatorToken.Subtraction);
                     break;
                 case ButtonTag.Multiplication:
-                    expressionManipulator.AppendOperatorToken(OperatorToken.Multiplication);
+                    expressionManipulator.AppendToken(OperatorToken.Multiplication);
                     break;
                 case ButtonTag.CalculateResult:
                     break;
                 case ButtonTag.Period:
-                    expressionManipulator.AppendDecimalToken(new DecimalToken("."));
+                    expressionManipulator.AppendToken(new DecimalToken("."));
                     break;
                 case ButtonTag.Zero:
-                    expressionManipulator.AppendDecimalToken(new DecimalToken("0"));
+                    expressionManipulator.AppendToken(new DecimalToken("0"));
                     break;
                 case ButtonTag.One:
-                    expressionManipulator.AppendDecimalToken(new DecimalToken("1"));
+                    expressionManipulator.AppendToken(new DecimalToken("1"));
                     break;
                 case ButtonTag.Two:
-                    expressionManipulator.AppendDecimalToken(new DecimalToken("2"));
+                    expressionManipulator.AppendToken(new DecimalToken("2"));
                     break;
                 case ButtonTag.Three:
-                    expressionManipulator.AppendDecimalToken(new DecimalToken("3"));
+                    expressionManipulator.AppendToken(new DecimalToken("3"));
                     break;
                 case ButtonTag.Four:
-                    expressionManipulator.AppendDecimalToken(new DecimalToken("4"));
+                    expressionManipulator.AppendToken(new DecimalToken("4"));
                     break;
                 case ButtonTag.Five:
-                    expressionManipulator.AppendDecimalToken(new DecimalToken("5"));
+                    expressionManipulator.AppendToken(new DecimalToken("5"));
                     break;
                 case ButtonTag.Six:
-                    expressionManipulator.AppendDecimalToken(new DecimalToken("6"));
+                    expressionManipulator.AppendToken(new DecimalToken("6"));
                     break;
                 case ButtonTag.Seven:
-                    expressionManipulator.AppendDecimalToken(new DecimalToken("7"));
+                    expressionManipulator.AppendToken(new DecimalToken("7"));
                     break;
                 case ButtonTag.Eight:
-                    expressionManipulator.AppendDecimalToken(new DecimalToken("8"));
+                    expressionManipulator.AppendToken(new DecimalToken("8"));
                     break;
                 case ButtonTag.Nine:
-                    expressionManipulator.AppendDecimalToken(new DecimalToken("9"));
+                    expressionManipulator.AppendToken(new DecimalToken("9"));
                     break;
             }
 

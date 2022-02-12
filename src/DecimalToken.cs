@@ -6,11 +6,6 @@
         {
         }
 
-        public override string ToString()
-        {
-            return _stringRepresentation;
-        }
-
         public Decimal ToDecimal()
         {
             return new Decimal(_stringRepresentation);
@@ -18,7 +13,7 @@
 
         public bool EndsWithPeriod()
         {
-            return string.IsNullOrEmpty(_stringRepresentation) && _stringRepresentation.EndsWith('.');
+            return !string.IsNullOrEmpty(_stringRepresentation) && _stringRepresentation.EndsWith('.');
         }
 
         public static DecimalToken Concatenate(DecimalToken decimalToken, DecimalToken decimalToken2)

@@ -41,9 +41,9 @@ namespace Calculator
             {
                 if (token != null)
                 {
-                    if (token.IsDecimalToken())
+                    if(token.Equals(Token.Decimal))
                         operandStack.Push((token as DecimalToken).ToDecimal());
-                    else if (token.IsOperatorToken())
+                    else if (token.Equals(Token.Operator))
                     {
                         if (operandStack.Count < 2)
                             throw new ExpressionParserSyntaxError();
@@ -56,14 +56,14 @@ namespace Calculator
 
                         /// Evaluate based on the token operator
                         OperatorToken operatorToken = token as OperatorToken;
-                        if (operatorToken.IsAdditionOperatorToken())
-                            operandResult = Decimal.Add(operand, operand2);
-                        else if (operatorToken.IsSubtractionOperatorToken())
-                            operandResult = Decimal.Subtract(operand, operand2);
-                        else if (operatorToken.IsMultiplicationOperatorToken())
-                            operandResult = Decimal.Multiply(operand, operand2);
-                        else if (operatorToken.IsDivisionOperatorToken())
+                        if (operatorToken.Equals(OperatorToken.Division))
                             operandResult = Decimal.Divide(operand, operand2);
+                        else if (operatorToken.Equals(OperatorToken.Addition))
+                            operandResult = Decimal.Add(operand, operand2);
+                        else if (operatorToken.Equals(OperatorToken.Subtraction))
+                            operandResult = Decimal.Subtract(operand, operand2);
+                        else if (operatorToken.Equals(OperatorToken.Multiplication))
+                            operandResult = Decimal.Multiply(operand, operand2);
                         operandStack.Push(operandResult);
                     }
                 }
@@ -76,7 +76,7 @@ namespace Calculator
         }
 
         /// <summary>
-        /// Reconstruct expression where the order of operations is explicitly defined
+        /// Reconstruct expression with an explicitly-defined order of operations
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
@@ -96,9 +96,9 @@ namespace Calculator
             {
                 if (token != null)
                 {
-                    if (token.IsDecimalToken())
+                    if (token.Equals(Token.Decimal))
                         operandStack.Push(token.ToString());
-                    else if (token.IsOperatorToken())
+                    else if (token.Equals(Token.Operator))
                     {
                         if (operandStack.Count < 2)
                             throw new ExpressionParserSyntaxError();
@@ -109,7 +109,7 @@ namespace Calculator
                         (operand, operand2) = (operand2, operand);
 
                         /// Push the reconstructed operation back onto the stack
-                        operandStack.Push(TokenStringRepresentation.OpeningParenthesisToken + operand + token + operand2 + TokenStringRepresentation.ClosingParenthesisToken);
+                        operandStack.Push(TokenStringRepresentation.OpeningParenthesis + operand + token + operand2 + TokenStringRepresentation.ClosingParenthesis);
                     }
                 }
             }
@@ -142,7 +142,7 @@ namespace Calculator
                 else
                     tokenType = Token.TokenType.Operator;
 
-                /// Adds the token to the array when the token type is parenthesis or it differs from the previous token type
+                /// Adds the token to the array when the token type is parenthesis or differs from the previous type
                 bool tokenTypeIsParenthesis = tokenType == Token.TokenType.Parenthesis;
                 bool previousTokenTypeIsUndefined = previousTokenType == Token.TokenType.Undefined;
                 bool previousTokenTypeIsParenthesis = previousTokenType == Token.TokenType.Parenthesis;
@@ -199,23 +199,23 @@ namespace Calculator
             {
                 if (token != null)
                 {
-                    if (token == Token.Undefined)
+                    if (token.Equals(Token.Undefined))
                         throw new ExpressionParserTokenError();
 
-                    if(token.IsDecimalToken())
+                    if(token.Equals(Token.Decimal))
                     {
                         /// Anti-function patch #1
-                        if (previousToken.IsParenthesisToken() && (previousToken as ParenthesisToken).IsClosingParenthesisToken())
+                        if(previousToken.Equals(ParenthesisToken.ClosingParenthesis))
                             throw new ExpressionParserSyntaxError();
 
                         postfixTokenArray[postfixTokenArrayIndex++] = token;
                     }
-                    else if(token.IsParenthesisToken())
+                    else if(token.Equals(Token.Parenthesis))
                     {
-                        if ((token as ParenthesisToken).IsOpeningParenthesisToken())
+                        if(token.Equals(ParenthesisToken.OpeningParenthesis))
                         {
                             /// Anti-function patch #2
-                            if (previousToken.IsDecimalToken() || (previousToken.IsParenthesisToken() && (previousToken as ParenthesisToken).IsClosingParenthesisToken()))
+                            if (previousToken.Equals(Token.Decimal) || previousToken.Equals(ParenthesisToken.ClosingParenthesis))
                                 throw new ExpressionParserSyntaxError();
 
                             operatorStack.Push(token);
@@ -223,28 +223,28 @@ namespace Calculator
                         else
                         {
                             /// Anti-function patch #3
-                            if (previousToken.IsParenthesisToken() && (previousToken as ParenthesisToken).IsOpeningParenthesisToken())
+                            if (previousToken.Equals(ParenthesisToken.OpeningParenthesis))
                                 throw new ExpressionParserSyntaxError();
 
-                            while (operatorStack.Count > 0 && !operatorStack.Peek().IsParenthesisToken())
+                            while (operatorStack.Count > 0 && !operatorStack.Peek().Equals(Token.Parenthesis))
                                 postfixTokenArray[postfixTokenArrayIndex++] = operatorStack.Pop();
                             if (operatorStack.Count == 0)
                                 throw new ExpressionParserSyntaxError();
                             operatorStack.Pop();
                         }
                     }
-                    else if(token.IsOperatorToken())
+                    else if(token.Equals(Token.Operator))
                     {
                         /// Unary sign operator patch
-                        if (previousToken.IsUndefined() || (previousToken.IsParenthesisToken() && (previousToken as ParenthesisToken).IsOpeningParenthesisToken()))
+                        if (previousToken.Equals(Token.Undefined) || previousToken.Equals(ParenthesisToken.OpeningParenthesis))
                         {
-                            if ((token as OperatorToken).IsAdditionOperatorToken())
+                            if(token.Equals(OperatorToken.Addition))
                                 continue;
-                            else if ((token as OperatorToken).IsSubtractionOperatorToken())
+                            else if (token.Equals(OperatorToken.Subtraction))
                                 postfixTokenArray[postfixTokenArrayIndex++] = new DecimalToken("0");
                         }
 
-                        while (operatorStack.Count > 0 && !operatorStack.Peek().IsParenthesisToken() && OperatorToken.Compare((token as OperatorToken), (operatorStack.Peek() as OperatorToken)) <= 0)
+                        while (operatorStack.Count > 0 && !operatorStack.Peek().Equals(Token.Parenthesis) && OperatorToken.Compare((token as OperatorToken), (operatorStack.Peek() as OperatorToken)) <= 0)
                             postfixTokenArray[postfixTokenArrayIndex++] = operatorStack.Pop();
                         operatorStack.Push(token);
                     }
@@ -255,7 +255,7 @@ namespace Calculator
 
             while(operatorStack.Count > 0)
             {
-                if (operatorStack.Peek().IsParenthesisToken())
+                if (operatorStack.Peek().Equals(Token.Parenthesis))
                     throw new ExpressionParserSyntaxError();
                 postfixTokenArray[postfixTokenArrayIndex++] = operatorStack.Pop();
             }
@@ -272,16 +272,16 @@ namespace Calculator
         }
 
         /// <summary>
-        /// Connects a token's string representation to its definition
+        /// Connects a token's string representation to its constant
         /// </summary>
         private static readonly Dictionary<string, Token> tokenLookup = new Dictionary<string, Token>
         {
-            {TokenStringRepresentation.OpeningParenthesisToken,      ParenthesisToken.OpeningParenthesis},
-            {TokenStringRepresentation.ClosingParenthesisToken,      ParenthesisToken.ClosingParenthesis},
-            {TokenStringRepresentation.AdditionOperatorToken,        OperatorToken.Addition},
-            {TokenStringRepresentation.SubtractionOperatorToken,     OperatorToken.Subtraction},
-            {TokenStringRepresentation.MultiplicationOperatorToken,  OperatorToken.Multiplication},
-            {TokenStringRepresentation.DivisionOperatorToken,        OperatorToken.Division},
+            {TokenStringRepresentation.Division,                OperatorToken.Division},
+            {TokenStringRepresentation.Addition,                OperatorToken.Addition},
+            {TokenStringRepresentation.Subtraction,             OperatorToken.Subtraction},
+            {TokenStringRepresentation.Multiplication,          OperatorToken.Multiplication},
+            {TokenStringRepresentation.OpeningParenthesis,      ParenthesisToken.OpeningParenthesis},
+            {TokenStringRepresentation.ClosingParenthesis,      ParenthesisToken.ClosingParenthesis},
         };
     }
 }

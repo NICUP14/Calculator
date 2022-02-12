@@ -4,22 +4,17 @@ using System.Collections.Generic;
 namespace Calculator
 {
     /// <summary>
-    /// Expression manipulator implementation
-    /// WARNING: This is still in development!
+    /// Builds and modifies expressions
     /// </summary>
     class ExpressionBuilder : ExpressionParser
     {
-        public ExpressionBuilder(string expression = "")
+        /// <summary>
+        /// Initialize expression builder
+        /// </summary>
+        /// <param name="expression"></param>
+        public ExpressionBuilder()
         {
             _tokenList = new LinkedList<Token>();
-
-            /// Converts expression to an intermediate to a token linked list
-            if (!string.IsNullOrEmpty(expression))
-            {
-                Token[] tokenArray = ExpressionParser.ConvertExpressionToTokenArray(expression);
-                foreach (Token token in tokenArray)
-                    _tokenList.AddLast(token);
-            }
         }
 
         public string ToExpression(bool autocompleteParentheses = false)
@@ -31,9 +26,9 @@ namespace Calculator
             {
                 foreach (Token token in _tokenList)
                 {
-                    if (token == ParenthesisToken.OpeningParenthesis)
+                    if (token.Equals(ParenthesisToken.OpeningParenthesis))
                         unclosedParenthesisCount++;
-                    else if (token == ParenthesisToken.ClosingParenthesis)
+                    else if (token.Equals(ParenthesisToken.ClosingParenthesis))
                         unclosedParenthesisCount--;
                 }
                 expressionStringBuilderCapacity += unclosedParenthesisCount * ParenthesisToken.ClosingParenthesis.Length;
@@ -41,7 +36,7 @@ namespace Calculator
 
             /// Initialize string builder
             foreach (Token token in _tokenList)
-                expressionStringBuilderCapacity += token.ToString().Length;
+                expressionStringBuilderCapacity += token.Length;
             StringBuilder expressionStringBuilder = new StringBuilder(expressionStringBuilderCapacity);
 
 
@@ -64,76 +59,87 @@ namespace Calculator
         public void ChangeSign()
         {
             if (_tokenList.Count == 0)
-                _tokenList.AddLast(OperatorToken.Subtraction);
-            else
             {
-                LinkedListNode<Token> lastTokenListNode = _tokenList.Last;
-                Token lastTokenListToken = lastTokenListNode.Value;
+                _tokenList.AddLast(OperatorToken.Subtraction);
+                return;
+            }
 
-                if (lastTokenListToken == ParenthesisToken.OpeningParenthesis)
+            LinkedListNode<Token> lastTokenListNode = _tokenList.Last;
+            Token lastTokenListToken = lastTokenListNode.Value;
+
+            /// Operator token
+            if (lastTokenListToken.Equals(Token.Operator))
+            {
+                /// Multiplication and division operator tokens
+                if (!lastTokenListToken.Equals(OperatorToken.Addition) && !lastTokenListToken.Equals(OperatorToken.Subtraction))
+                {
+                    _tokenList.AddLast(ParenthesisToken.OpeningParenthesis);
                     _tokenList.AddLast(OperatorToken.Subtraction);
+                }
+                else
+                    /// Adition and subtration operator tokens
+                    lastTokenListNode.Value = lastTokenListToken.Equals(OperatorToken.Addition) ? OperatorToken.Subtraction : OperatorToken.Addition;
+            }
+
+            /// Decimal token
+            else if (lastTokenListToken.Equals(Token.Decimal))
+            {
+                if (_tokenList.Count <= 1)
+                    _tokenList.AddFirst(OperatorToken.Subtraction);
                 else
                 {
-                    if(lastTokenListToken is OperatorToken)
+                    LinkedListNode<Token> previousTokenListNode = lastTokenListNode.Previous;
+                    Token previousTokenListToken = previousTokenListNode.Value;
+
+                    if (previousTokenListToken.Equals(ParenthesisToken.OpeningParenthesis))
+                        _tokenList.AddAfter(previousTokenListNode, OperatorToken.Subtraction);
+                    else if (previousTokenListToken.Equals(OperatorToken.Addition) || previousTokenListToken.Equals(OperatorToken.Subtraction))
+                        previousTokenListNode.Value = previousTokenListToken.Equals(OperatorToken.Addition) ? OperatorToken.Subtraction : OperatorToken.Addition;
+                    else
                     {
-                        if (lastTokenListToken != OperatorToken.Addition && lastTokenListToken != OperatorToken.Subtraction)
-                        {
-                            _tokenList.AddLast(ParenthesisToken.OpeningParenthesis);
-                            _tokenList.AddLast(OperatorToken.Subtraction);
-                        }
-                        else
-                            lastTokenListNode.Value = lastTokenListToken == OperatorToken.Addition ? OperatorToken.Subtraction : OperatorToken.Addition;
+                        _tokenList.AddAfter(previousTokenListNode, OperatorToken.Subtraction);
+                        _tokenList.AddAfter(previousTokenListNode, ParenthesisToken.OpeningParenthesis);
                     }
-                    else if(lastTokenListToken is DecimalToken)
-                    {
-                        if(_tokenList.Count > 1)
-                        {
-                            LinkedListNode<Token> previousTokenListNode = lastTokenListNode.Previous;
-                            Token previousTokenListToken = previousTokenListNode.Value;
+                }
+            }
 
-                            if(previousTokenListToken == ParenthesisToken.OpeningParenthesis)
-                                _tokenList.AddAfter(previousTokenListNode, OperatorToken.Subtraction);
-                            else if (previousTokenListToken == OperatorToken.Addition || previousTokenListToken == OperatorToken.Subtraction)
-                                previousTokenListNode.Value = previousTokenListToken == OperatorToken.Addition ? OperatorToken.Subtraction : OperatorToken.Addition;
-                            else
-                            {
-                                _tokenList.AddAfter(previousTokenListNode, OperatorToken.Subtraction);
-                                _tokenList.AddAfter(previousTokenListNode, ParenthesisToken.OpeningParenthesis);
-                            }
-                        }
-                        else
-                            _tokenList.AddFirst(OperatorToken.Subtraction);
+            /// Parenthesis token
+            else if (lastTokenListToken.Equals(Token.Parenthesis))
+            {
+                /// Opening parenthesis token
+                if (lastTokenListToken.Equals(ParenthesisToken.OpeningParenthesis))
+                    _tokenList.AddLast(OperatorToken.Subtraction);
+
+                /// Closing parenthesis token
+                else if (lastTokenListToken.Equals(ParenthesisToken.ClosingParenthesis))
+                {
+                    int nestedParenthesisLevel = 0;
+                    LinkedListNode<Token> tokenListNode = lastTokenListNode;
+
+                    do
+                    {
+                        if (tokenListNode.Value.Equals(ParenthesisToken.ClosingParenthesis))
+                            nestedParenthesisLevel++;
+                        if (tokenListNode.Value.Equals(ParenthesisToken.OpeningParenthesis))
+                            nestedParenthesisLevel--;
+                        tokenListNode = tokenListNode.Previous;
                     }
-                    else if(lastTokenListToken is ParenthesisToken)
+                    while (tokenListNode != null && nestedParenthesisLevel != 0);
+
+                    if (tokenListNode == null)
+                        _tokenList.AddFirst(OperatorToken.Subtraction);
+                    else
                     {
-                        int nestedParenthesisLevel = 0;
-                        LinkedListNode<Token> tokenListNode = lastTokenListNode;
+                        Token tokenListToken = tokenListNode.Value;
 
-                        do
-                        {
-                            if (tokenListNode.Value == ParenthesisToken.ClosingParenthesis)
-                                nestedParenthesisLevel++;
-                            else if (tokenListNode.Value == ParenthesisToken.OpeningParenthesis)
-                                nestedParenthesisLevel--;
-                            tokenListNode = tokenListNode.Previous;
-                        }
-                        while (tokenListNode != null && nestedParenthesisLevel != 0);
-
-                        if (tokenListNode == null)
-                            _tokenList.AddFirst(OperatorToken.Subtraction);
+                        if (tokenListToken.Equals(ParenthesisToken.OpeningParenthesis))
+                            _tokenList.AddAfter(tokenListNode, OperatorToken.Subtraction);
+                        else if (tokenListToken.Equals(OperatorToken.Addition) || tokenListToken.Equals(OperatorToken.Subtraction))
+                            tokenListNode.Value = tokenListToken.Equals(OperatorToken.Addition) ? OperatorToken.Subtraction : OperatorToken.Addition;
                         else
                         {
-                            Token tokenListToken = tokenListNode.Value;
-
-                            if (tokenListToken == ParenthesisToken.OpeningParenthesis)
-                                _tokenList.AddAfter(tokenListNode, OperatorToken.Subtraction);
-                            else if(tokenListToken == OperatorToken.Addition || tokenListToken == OperatorToken.Subtraction)
-                                tokenListNode.Value = tokenListToken == OperatorToken.Addition ? OperatorToken.Subtraction : OperatorToken.Addition;
-                            else
-                            {
-                                _tokenList.AddAfter(tokenListNode, OperatorToken.Subtraction);
-                                _tokenList.AddAfter(tokenListNode, ParenthesisToken.OpeningParenthesis);
-                            }
+                            _tokenList.AddAfter(tokenListNode, OperatorToken.Subtraction);
+                            _tokenList.AddAfter(tokenListNode, ParenthesisToken.OpeningParenthesis);
                         }
                     }
                 }
@@ -142,115 +148,132 @@ namespace Calculator
 
         public void InsertParenthesis()
         {
+            /// BUG: Function adds closing parenthesis after a decimal that ends with period
+
             if (_tokenList.Count == 0)
+            {
                 _tokenList.AddLast(ParenthesisToken.OpeningParenthesis);
+                return;
+            }
+
+            LinkedListNode<Token> lastTokenListNode = _tokenList.Last;
+            Token lastTokenListToken = lastTokenListNode.Value;
+
+            /// Operator token and opening parenthesis token
+            if (lastTokenListToken.Equals(Token.Operator) || lastTokenListToken.Equals(ParenthesisToken.OpeningParenthesis))
+            {
+                _tokenList.AddLast(ParenthesisToken.OpeningParenthesis);
+                return;
+            }
+
+            int unclosedParenthesisCount = 0;
+            foreach (Token token in _tokenList)
+            {
+                if (token.Equals(ParenthesisToken.OpeningParenthesis))
+                    unclosedParenthesisCount++;
+                if (token.Equals(ParenthesisToken.ClosingParenthesis))
+                    unclosedParenthesisCount--;
+            }
+
+            if (unclosedParenthesisCount > 0)
+                _tokenList.AddLast(ParenthesisToken.ClosingParenthesis);
             else
             {
-                LinkedListNode<Token> lastTokenListNode = _tokenList.Last;
-                Token lastTokenListToken = lastTokenListNode.Value;
+                /// Decimal token
+                if (lastTokenListToken.Equals(Token.Decimal))
+                    _tokenList.AddBefore(lastTokenListNode, ParenthesisToken.OpeningParenthesis);
 
-                if (lastTokenListToken is OperatorToken || lastTokenListToken == ParenthesisToken.OpeningParenthesis)
-                    _tokenList.AddLast(ParenthesisToken.OpeningParenthesis);
-                else
+                /// Closing parenthesis token
+                else if (lastTokenListToken.Equals(ParenthesisToken.ClosingParenthesis))
                 {
-                    int unclosedParenthesisCount = 0;
-                    foreach (Token token in _tokenList)
-                    {
-                        if (token == ParenthesisToken.OpeningParenthesis)
-                            unclosedParenthesisCount++;
-                        else if (token == ParenthesisToken.ClosingParenthesis)
-                            unclosedParenthesisCount--;
-                    }
+                    int nestedParenthesisLevel = 0;
+                    LinkedListNode<Token> tokenListNode = lastTokenListNode;
 
-                    if (unclosedParenthesisCount > 0)
-                        _tokenList.AddLast(ParenthesisToken.ClosingParenthesis);
-                    else
+                    do
                     {
-                        if (lastTokenListToken is DecimalToken)
-                            _tokenList.AddBefore(lastTokenListNode, ParenthesisToken.OpeningParenthesis);
-                        else if (lastTokenListToken == ParenthesisToken.ClosingParenthesis)
-                        {
-                            int nestedParenthesisLevel = 0;
-                            LinkedListNode<Token> tokenListNode = lastTokenListNode;
-
-                            do
-                            {
-                                if (tokenListNode.Value == ParenthesisToken.ClosingParenthesis)
-                                    nestedParenthesisLevel++;
-                                else if (tokenListNode.Value == ParenthesisToken.OpeningParenthesis)
-                                    nestedParenthesisLevel--;
-                                tokenListNode = tokenListNode.Previous;
-                            }
-                            while (tokenListNode != null && nestedParenthesisLevel != 0);
-                            _tokenList.AddAfter(tokenListNode ?? _tokenList.First, ParenthesisToken.OpeningParenthesis);
-                        }
+                        if (tokenListNode.Value.Equals(ParenthesisToken.ClosingParenthesis))
+                            nestedParenthesisLevel++;
+                        if (tokenListNode.Value.Equals(ParenthesisToken.OpeningParenthesis))
+                            nestedParenthesisLevel--;
+                        tokenListNode = tokenListNode.Previous;
                     }
+                    while (tokenListNode != null && nestedParenthesisLevel != 0);
+                    _tokenList.AddAfter(tokenListNode ?? _tokenList.First, ParenthesisToken.OpeningParenthesis);
                 }
-
             }
         }
 
-        public void AppendDecimalToken(DecimalToken decimalToken)
+        public void AppendToken(DecimalToken decimalToken)
+        {
+            ///  BUG: Function allows multiple periods inside decimal tokens
+
+            if (_tokenList.Count == 0)
+            {
+                if (decimalToken.EndsWithPeriod())
+                    return;
+                _tokenList.AddLast(decimalToken);
+                return;
+            }
+
+            Token lastToken = _tokenList.Last.Value;
+
+            /// Closing parenthesis token
+            if (lastToken.Equals(ParenthesisToken.ClosingParenthesis))
+                return;
+
+            /// Decimal token
+            if (lastToken.Equals(Token.Decimal))
+            {
+                _tokenList.Last.Value = DecimalToken.Concatenate(lastToken as DecimalToken, decimalToken);
+                return;
+            }
+
+            if (decimalToken.EndsWithPeriod())
+                return;
+
+            /// Any other token
+            _tokenList.AddLast(decimalToken);
+        }
+
+        public void AppendToken(OperatorToken operatorToken)
         {
             if (_tokenList.Count == 0)
-                _tokenList.AddLast(decimalToken);
-            else
             {
-                Token lastToken = _tokenList.Last.Value;
-
-                if (lastToken == ParenthesisToken.ClosingParenthesis)
-                    return;
-
-                if(lastToken is not DecimalToken)
-                    _tokenList.AddLast(decimalToken);
-                else
-                    _tokenList.Last.Value = DecimalToken.Concatenate(lastToken as DecimalToken, decimalToken);
-            }
-        }
-
-        public void AppendOperatorToken(OperatorToken operatorToken)
-        {
-            
-            bool operatorTokenIsNotAdditionOrSubtraction = operatorToken != OperatorToken.Addition && operatorToken != OperatorToken.Subtraction;
-
-            if(_tokenList.Count == 0)
-            {
-                if (operatorTokenIsNotAdditionOrSubtraction)
-                    return;
-
-                _tokenList.AddLast(operatorToken);
-            }
-            else
-            {
-                LinkedListNode<Token> lastTokenListNode = _tokenList.Last;
-                Token lastTokenFromList = lastTokenListNode.Value;
-
-                if (lastTokenFromList is OperatorToken)
-                {
-                    if(_tokenList.Count > 1)
-                    {
-                        Token previousTokenListToken = lastTokenListNode.Previous.Value;
-
-                        if (previousTokenListToken == ParenthesisToken.OpeningParenthesis && operatorTokenIsNotAdditionOrSubtraction)
-                            return;
-                    }    
-
-                    lastTokenListNode.Value = operatorToken;
-                }
-                else if (lastTokenFromList is DecimalToken)
-                {
-                    if ((lastTokenFromList as DecimalToken).EndsWithPeriod())
-                        return;
-
+                /// Addition and subtraction operator token (special case)
+                if (operatorToken.Equals(OperatorToken.Addition) && operatorToken.Equals(OperatorToken.Subtraction))
                     _tokenList.AddLast(operatorToken);
-                }
-                else if(lastTokenFromList is ParenthesisToken)
-                {
-                    if (lastTokenFromList == ParenthesisToken.OpeningParenthesis && operatorTokenIsNotAdditionOrSubtraction)
-                        return;
+                return;
+            }
 
-                    _tokenList.AddLast(operatorToken);
+            bool operatorTokenIsNotAdditionOrSubtraction = !operatorToken.Equals(OperatorToken.Addition) && !operatorToken.Equals(OperatorToken.Subtraction);
+            LinkedListNode<Token> lastTokenListNode = _tokenList.Last;
+            Token lastTokenFromList = lastTokenListNode.Value;
+
+            /// Operator token
+            if (lastTokenFromList.Equals(Token.Operator))
+            {
+                if (_tokenList.Count > 1)
+                {
+                    Token previousTokenListToken = lastTokenListNode.Previous.Value;
+                    if (previousTokenListToken.Equals(ParenthesisToken.OpeningParenthesis) && operatorTokenIsNotAdditionOrSubtraction)
+                        return;
                 }
+
+                lastTokenListNode.Value = operatorToken;
+            }
+
+            /// Decimal token
+            else if (lastTokenFromList.Equals(Token.Decimal))
+            {
+                if (!(lastTokenFromList as DecimalToken).EndsWithPeriod())
+                    _tokenList.AddLast(operatorToken);
+            }
+
+            /// Parenthesis token
+            else if (lastTokenFromList.Equals(Token.Parenthesis))
+            {
+                if (!lastTokenFromList.Equals(ParenthesisToken.OpeningParenthesis) || !operatorTokenIsNotAdditionOrSubtraction)
+                    _tokenList.AddLast(operatorToken);
             }
         }
 

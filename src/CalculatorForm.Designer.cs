@@ -507,7 +507,7 @@ namespace Calculator
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.expressionLabel.BackColor = System.Drawing.Color.Transparent;
-            this.expressionLabel.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.expressionLabel.Font = new System.Drawing.Font("Segoe UI", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.expressionLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(78)))), ((int)(((byte)(78)))));
             this.expressionLabel.Location = new System.Drawing.Point(0, 0);
             this.expressionLabel.Margin = new System.Windows.Forms.Padding(0);

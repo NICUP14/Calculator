@@ -7,19 +7,11 @@
             _parenthesisTokenType = parenthesisTokenType;
         }
 
-        public bool IsOpeningParenthesisToken()
-        {
-            return _parenthesisTokenType == ParenthesisTokenType.OpeningParenthesis;
-        }
-
-        public bool IsClosingParenthesisToken()
-        {
-            return _parenthesisTokenType == ParenthesisTokenType.ClosingParenthesis;
-        }
-
         public override bool Equals(object obj)
         {
-            return base.Equals(obj) && this._parenthesisTokenType == (obj as ParenthesisToken)._parenthesisTokenType;
+            if (obj is not ParenthesisToken)
+                return base.Equals(obj);
+            return _parenthesisTokenType == (obj as ParenthesisToken)._parenthesisTokenType;
         }
 
         private enum ParenthesisTokenType
@@ -30,7 +22,8 @@
 
         private ParenthesisTokenType _parenthesisTokenType;
 
-        public static readonly ParenthesisToken OpeningParenthesis = new ParenthesisToken(ParenthesisTokenType.OpeningParenthesis, TokenStringRepresentation.OpeningParenthesisToken);
-        public static readonly ParenthesisToken ClosingParenthesis = new ParenthesisToken(ParenthesisTokenType.ClosingParenthesis, TokenStringRepresentation.ClosingParenthesisToken);
+        /// Parenthesis token constants
+        public static readonly ParenthesisToken OpeningParenthesis = new ParenthesisToken(ParenthesisTokenType.OpeningParenthesis, TokenStringRepresentation.OpeningParenthesis);
+        public static readonly ParenthesisToken ClosingParenthesis = new ParenthesisToken(ParenthesisTokenType.ClosingParenthesis, TokenStringRepresentation.ClosingParenthesis);
     }
 }

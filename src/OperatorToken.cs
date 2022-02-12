@@ -8,26 +8,19 @@
             _operatorTokenType = operatorType;
         }
 
-        public bool IsAdditionOperatorToken()
+        public override bool Equals(object obj)
         {
-            return _operatorTokenType == OperatorTokenType.Addition;
+            if(obj is not OperatorToken)
+                return base.Equals(obj);
+            return _operatorTokenType == (obj as OperatorToken)._operatorTokenType;
         }
 
-        public bool IsSubtractionOperatorToken()
-        {
-            return _operatorTokenType == OperatorTokenType.Subtraction;
-        }
-
-        public bool IsMultiplicationOperatorToken()
-        {
-            return _operatorTokenType == OperatorTokenType.Multiplication;
-        }
-
-        public bool IsDivisionOperatorToken()
-        {
-            return _operatorTokenType == OperatorTokenType.Division;
-        }
-
+        /// <summary>
+        /// Compare operator precedence
+        /// </summary>
+        /// <param name="operatorToken"></param>
+        /// <param name="operatorToken2"></param>
+        /// <returns></returns>
         public static int Compare(OperatorToken operatorToken, OperatorToken operatorToken2)
         {
             return operatorToken._precedence.CompareTo(operatorToken2._precedence);
@@ -35,18 +28,19 @@
 
         public enum OperatorTokenType
         {
+            Division,
             Addition,
             Subtraction,
-            Division,
             Multiplication,
         };
 
         private int _precedence;
         private OperatorTokenType _operatorTokenType;
 
-        public static readonly OperatorToken Addition = new OperatorToken(2, OperatorTokenType.Addition, TokenStringRepresentation.AdditionOperatorToken);
-        public static readonly OperatorToken Subtraction = new OperatorToken(2, OperatorTokenType.Subtraction, TokenStringRepresentation.SubtractionOperatorToken);
-        public static readonly OperatorToken Division = new OperatorToken(3, OperatorTokenType.Division, TokenStringRepresentation.DivisionOperatorToken);
-        public static readonly OperatorToken Multiplication = new OperatorToken(3, OperatorTokenType.Multiplication, TokenStringRepresentation.MultiplicationOperatorToken);
+        ///  Operator token constants
+        public static readonly OperatorToken Division =       new OperatorToken(3, OperatorTokenType.Division, TokenStringRepresentation.Division);
+        public static readonly OperatorToken Addition =       new OperatorToken(2, OperatorTokenType.Addition, TokenStringRepresentation.Addition);
+        public static readonly OperatorToken Subtraction =    new OperatorToken(2, OperatorTokenType.Subtraction, TokenStringRepresentation.Subtraction);
+        public static readonly OperatorToken Multiplication = new OperatorToken(3, OperatorTokenType.Multiplication, TokenStringRepresentation.Multiplication);
     }
 }

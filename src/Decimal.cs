@@ -304,10 +304,11 @@ namespace Calculator
 			if (fractionalPart.Count == 0)
 				fractionalPart.AddLast('0');
 
-			/// Remove padding from integer and fractional parts and trim fractional part
-			/// This could be considered a "small brain" implementation, please help me improve this
+			/// Trim fractional part to match division precision
 			while (fractionalPart.Count > DivisionPrecision)
 				fractionalPart.RemoveLast();
+
+			/// Remove padding from integer and fractional parts
 			CharacterLinkedListMethods.RemoveLeadingZeroes(integerPart);
 			CharacterLinkedListMethods.RemoveTrailingZeroes(fractionalPart);
 
@@ -323,17 +324,19 @@ namespace Calculator
 		private static LinkedList<char> decimalToLinkedList(Decimal dec, int fractionalPartCount = 0)
 		{
 			LinkedList<char> newList = new LinkedList<char>();
+
 			foreach (char integerChar in dec._integerPart)
 				newList.AddLast(integerChar);
             foreach (char fractionalChar in dec._fractionalPart)
                 newList.AddLast(fractionalChar);
+
             for (int fractionalPartRange = dec._fractionalPart.Count; fractionalPartRange < fractionalPartCount; fractionalPartRange++)
                 newList.AddLast('0');
 
 			return newList;
 		}
 
-		public static int DivisionPrecision = 15;
+		public static int DivisionPrecision = 20;
 		private bool _isPositive = true;
 		private LinkedList<char> _integerPart, _fractionalPart;
 	}
