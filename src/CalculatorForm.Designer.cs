@@ -515,7 +515,7 @@ namespace Calculator
             this.expressionLabel.Size = new System.Drawing.Size(800, 195);
             this.expressionLabel.TabIndex = 9;
             this.expressionLabel.Text = "Expression";
-            this.expressionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.expressionLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // resultLabel
             // 
@@ -531,7 +531,7 @@ namespace Calculator
             this.resultLabel.Size = new System.Drawing.Size(800, 195);
             this.resultLabel.TabIndex = 10;
             this.resultLabel.Text = "Result";
-            this.resultLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.resultLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // InterfaceTableLayoutPanel
             // 

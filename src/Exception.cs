@@ -4,14 +4,15 @@ namespace Calculator
 {
     class ErrorMessage
     {
-        public const string DecimalNullError = "DecimalNullError";
-        public const string DecimalPeriodError = "DecimalPeriodError";
-        public const string DecimalInvalidError = "DecimalInvalidError";
-        public const string DecimalDivisionError = "DecimalDivisiorError";
-        public const string ExpressionParserNullError = "ExpressionParserNullError";
-        public const string ExpressionParserSyntaxError = "ExpressionParserSyntaxError";
-        public const string ExpressionParserTokenError = "ExpressionParserTokenError";
-        public const string ExpressionManipulatorAppendError = "ExpressionManipulatorAppendError";
+        public const string DecimalNullError =                   "DecimalNullError";
+        public const string DecimalPeriodError =                 "DecimalPeriodError";
+        public const string DecimalInvalidError =                "DecimalInvalidError";
+        public const string DecimalDivisionError =               "DecimalDivisionError";
+        public const string ExpressionParserNullError =          "ExpressionParserNullError";
+        public const string ExpressionParserSyntaxError =        "ExpressionParserSyntaxError";
+        public const string ExpressionParserTokenError =         "ExpressionParserTokenError";
+        public const string ExpressionBuilderAppendTokenError =  "ExpressionBuilderAppendTokenError";
+        public const string ExpressionBuilderInsertParenthesis = "ExpressionBuilderInsertTokenError";
     }
 
     /// <summary>
@@ -92,11 +93,22 @@ namespace Calculator
     }
 
     /// <summary>
-    /// Occurs when the expression manipulator would break the validity of expression by using an append function
+    /// Occurs when the expression builder detects the call to AppendToken that would break expression validity
     /// </summary>
-    class ExpressionManipulatorAppendError : Exception
+    class ExpressionBuilderAppendTokenError : Exception
     {
-        public ExpressionManipulatorAppendError() : base(ErrorMessage.ExpressionManipulatorAppendError)
+        public ExpressionBuilderAppendTokenError() : base(ErrorMessage.ExpressionBuilderAppendTokenError)
+        {
+
+        }
+    }
+
+    /// <summary>
+    /// Occurs when the expression builder detects the call to InsertParenthesis that would break expression validity
+    /// </summary>
+    class ExpressionBuilderInsertParenthesisError : Exception
+    {
+        public ExpressionBuilderInsertParenthesisError() : base(ErrorMessage.ExpressionBuilderInsertParenthesis)
         {
 
         }

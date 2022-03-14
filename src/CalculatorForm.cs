@@ -111,13 +111,13 @@ namespace Calculator
 
         private void UpdateLabels()
         {
-            string uncompleteExpression = expressionManipulator.ToExpression();
-            expressionLabel.Text = uncompleteExpression;
+            string expression = expressionManipulator.ToExpression();
+            expressionLabel.Text = expression;
 
             try
             {
-                string completeExpression = expressionManipulator.ToExpression(true);
-                resultLabel.Text = ExpressionParser.Calculate(completeExpression);
+                string autocompletedExpression = expressionManipulator.ToExpression(true);
+                resultLabel.Text = ExpressionParser.Calculate(autocompletedExpression);
             }
             catch(Exception e)
             {
