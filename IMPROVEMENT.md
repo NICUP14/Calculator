@@ -2,13 +2,12 @@
 
 ## ExpressionBuilder.cs
 
-- [ ] Reformat entire class
-- [ ] Use predefined Count method
-- [ ] Use IsAdditionOrSubtraction
+- [X] Reformat entire class
+- [X] Use predefined Count method
 
 ## OperatorToken.cs
 
-- [X] Implement IsAdditionOrSubtraction
+- [ ] Remove unused IsAdditionOrSubtraction
 
 ## ExpressionParser.cs
 

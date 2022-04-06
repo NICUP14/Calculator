@@ -20,17 +20,6 @@
             return new OperatorToken(_precedence, _operatorTokenType, _stringRepresentation);
         }
 
-        public bool IsAdditionOrSubtraction()
-        {
-            return _operatorTokenType == OperatorTokenType.Addition || _operatorTokenType == OperatorTokenType.Subtraction;
-        }
-
-        /// <summary>
-        /// Compare operator precedence
-        /// </summary>
-        /// <param name="operatorToken"></param>
-        /// <param name="operatorToken2"></param>
-        /// <returns></returns>
         public static int Compare(OperatorToken operatorToken, OperatorToken operatorToken2)
         {
             return operatorToken._precedence.CompareTo(operatorToken2._precedence);
