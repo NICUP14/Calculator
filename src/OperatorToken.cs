@@ -15,6 +15,16 @@
             return _operatorTokenType == (obj as OperatorToken)._operatorTokenType;
         }
 
+        public override OperatorToken Clone()
+        {
+            return new OperatorToken(_precedence, _operatorTokenType, _stringRepresentation);
+        }
+
+        public bool IsAdditionOrSubtraction()
+        {
+            return _operatorTokenType == OperatorTokenType.Addition || _operatorTokenType == OperatorTokenType.Subtraction;
+        }
+
         /// <summary>
         /// Compare operator precedence
         /// </summary>

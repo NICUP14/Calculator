@@ -14,6 +14,11 @@
             return _parenthesisTokenType == (obj as ParenthesisToken)._parenthesisTokenType;
         }
 
+        public override ParenthesisToken Clone()
+        {
+            return new ParenthesisToken(_parenthesisTokenType, _stringRepresentation);
+        }
+
         private enum ParenthesisTokenType
         {
             OpeningParenthesis,

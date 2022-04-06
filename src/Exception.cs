@@ -4,15 +4,17 @@ namespace Calculator
 {
     class ErrorMessage
     {
-        public const string DecimalNullError =                   "DecimalNullError";
-        public const string DecimalPeriodError =                 "DecimalPeriodError";
-        public const string DecimalInvalidError =                "DecimalInvalidError";
-        public const string DecimalDivisionError =               "DecimalDivisionError";
-        public const string ExpressionParserNullError =          "ExpressionParserNullError";
-        public const string ExpressionParserSyntaxError =        "ExpressionParserSyntaxError";
-        public const string ExpressionParserTokenError =         "ExpressionParserTokenError";
-        public const string ExpressionBuilderAppendTokenError =  "ExpressionBuilderAppendTokenError";
-        public const string ExpressionBuilderInsertParenthesis = "ExpressionBuilderInsertTokenError";
+        public const string DecimalNullError =                                 "DecimalNullError";
+        public const string DecimalPeriodError =                               "DecimalPeriodError";
+        public const string DecimalInvalidError =                              "DecimalInvalidError";
+        public const string DecimalDivisionError =                             "DecimalDivisionError";
+        public const string ExpressionParserNullError =                        "ExpressionParserNullError";
+        public const string ExpressionParserSyntaxError =                      "ExpressionParserSyntaxError";
+        public const string ExpressionParserTokenError =                       "ExpressionParserTokenError";
+        public const string ExpressionBuilderInsertParenthesis =               "ExpressionBuilderInsertTokenError";
+        public const string ExpressionBuilderAppendDecimalTokenError =         "ExpressionBuilderAppendDecimalTokenError";
+        public const string ExpressionBuilderAppendOperatorTokenError =        "ExpressionBuilderAppendOperatorTokenError";
+        public const string ExpressionBuilderAppendPeriodDecimalTokenError =   "ExpressionBuilderAppendPeriodDecimalTokenError";
     }
 
     /// <summary>
@@ -93,22 +95,44 @@ namespace Calculator
     }
 
     /// <summary>
-    /// Occurs when the expression builder detects the call to AppendToken that would break expression validity
+    /// Occurs when the expression builder detects the call to InsertParenthesis that would break expression validity
     /// </summary>
-    class ExpressionBuilderAppendTokenError : Exception
+    class ExpressionBuilderInsertParenthesisError : Exception
     {
-        public ExpressionBuilderAppendTokenError() : base(ErrorMessage.ExpressionBuilderAppendTokenError)
+        public ExpressionBuilderInsertParenthesisError() : base(ErrorMessage.ExpressionBuilderInsertParenthesis)
         {
 
         }
     }
 
     /// <summary>
-    /// Occurs when the expression builder detects the call to InsertParenthesis that would break expression validity
+    /// Occurs when the expression builder detects the call to AppendToken that would break expression validity
     /// </summary>
-    class ExpressionBuilderInsertParenthesisError : Exception
+    class ExpressionBuilderAppendDecimalTokenError : Exception
     {
-        public ExpressionBuilderInsertParenthesisError() : base(ErrorMessage.ExpressionBuilderInsertParenthesis)
+        public ExpressionBuilderAppendDecimalTokenError() : base(ErrorMessage.ExpressionBuilderAppendDecimalTokenError)
+        {
+
+        }
+    }
+
+    /// <summary>
+    /// Occurs when the expression builder detects the call to AppendToken that would break expression validity
+    /// </summary>
+    class ExpressionBuilderAppendOperatorTokenError : Exception
+    {
+        public ExpressionBuilderAppendOperatorTokenError() : base(ErrorMessage.ExpressionBuilderAppendOperatorTokenError)
+        {
+
+        }
+    }
+
+    /// <summary>
+    /// Occurs when the expression builder detects the call to AppendToken that would break expression validity
+    /// </summary>
+    class ExpressionBuilderAppendPeriodDecimalTokenError : Exception
+    {
+        public ExpressionBuilderAppendPeriodDecimalTokenError() : base(ErrorMessage.ExpressionBuilderAppendPeriodDecimalTokenError)
         {
 
         }

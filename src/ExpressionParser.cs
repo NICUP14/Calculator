@@ -10,7 +10,7 @@ namespace Calculator
     class ExpressionParser
     {
         /// <summary>
-        /// Returns result of expression in decimal format
+        /// Returns result of expression in string format
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
@@ -268,7 +268,7 @@ namespace Calculator
             if (tokenType == Token.TokenType.Decimal)
                 return new DecimalToken(str);
             else
-                return tokenLookup.ContainsKey(str) ? tokenLookup[str] : Token.Undefined;
+                return (tokenLookup.ContainsKey(str) ? tokenLookup[str] : Token.Undefined).Clone();
         }
 
         /// <summary>

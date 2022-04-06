@@ -30,6 +30,11 @@
             return _stringRepresentation;
         }
 
+        public virtual Token Clone()
+        {
+            return new Token(_tokenType, _stringRepresentation);
+        }
+
         public enum TokenType
         {
             Decimal,

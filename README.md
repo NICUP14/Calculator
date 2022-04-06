@@ -14,8 +14,9 @@ docs      | Project-related documentation folder
 * Real-time expression calculation
 * Infinite precision arithmetic operations
 * Expression calculation following the order of operations
-* Smart expression manipulations
+* Smart expression manipulation functions
 * Keyboard shortcut support
+* Colored warning support
 * History buffer support
 
 ## Roadmap
@@ -23,13 +24,16 @@ docs      | Project-related documentation folder
 - [X] Implement infinite precision arithmetic operations
 - [X] Implement expression calculation following the order of operations
 - [ ] Implement smart expression manipulation capabilities
+- [ ] Implement colored warning support
+- [ ] Implement history buffer support
+- [ ] Implement shortcut support
 - [X] Design the application's user interface
-- [ ] Implement text overflow protection label
-- [ ] Link the frontend to backend components
-- [ ] Resize the application's user interface
+- [X] Link frontend to backend components
+- [X] Resize the application's user interface
 - [ ] Provide project-related documentation
+- [ ] Licence project under the MIT licence
 
-Project is approximately 70% complete.
+Project is approximately 80% complete.
 
 ## License
 
