@@ -23,17 +23,17 @@ docs      | Project-related documentation folder
 
 - [X] Implement infinite precision arithmetic operations
 - [X] Implement expression calculation following the order of operations
-- [ ] Implement smart expression manipulation capabilities
-- [ ] Implement colored warning support
+- [X] Implement smart expression manipulation capabilities
+- [X] Implement colored warning support
 - [ ] Implement history buffer support
-- [ ] Implement shortcut support
+- [X] Implement shortcut support
 - [X] Design the application's user interface
 - [X] Link frontend to backend components
 - [X] Resize the application's user interface
 - [ ] Provide project-related documentation
 - [ ] Licence project under the MIT licence
 
-Project is approximately 80% complete.
+Project is approximately 85% complete.
 
 ## License
 

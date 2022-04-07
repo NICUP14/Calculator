@@ -4,17 +4,18 @@ namespace Calculator
 {
     class ErrorMessage
     {
-        public const string DecimalNullError =                                 "DecimalNullError";
-        public const string DecimalPeriodError =                               "DecimalPeriodError";
-        public const string DecimalInvalidError =                              "DecimalInvalidError";
-        public const string DecimalDivisionError =                             "DecimalDivisionError";
-        public const string ExpressionParserNullError =                        "ExpressionParserNullError";
-        public const string ExpressionParserSyntaxError =                      "ExpressionParserSyntaxError";
-        public const string ExpressionParserTokenError =                       "ExpressionParserTokenError";
-        public const string ExpressionBuilderInsertParenthesis =               "ExpressionBuilderInsertTokenError";
-        public const string ExpressionBuilderAppendDecimalTokenError =         "ExpressionBuilderAppendDecimalTokenError";
-        public const string ExpressionBuilderAppendOperatorTokenError =        "ExpressionBuilderAppendOperatorTokenError";
-        public const string ExpressionBuilderAppendPeriodDecimalTokenError =   "ExpressionBuilderAppendPeriodDecimalTokenError";
+        public const string DecimalNullError =                                                  "DecimalNullError";
+        public const string DecimalPeriodError =                                                "DecimalPeriodError";
+        public const string DecimalInvalidError =                                               "DecimalInvalidError";
+        public const string DecimalDivisionError =                                              "DecimalDivisionError";
+        public const string ExpressionParserNullError =                                         "ExpressionParserNullError";
+        public const string ExpressionParserSyntaxError =                                       "ExpressionParserSyntaxError";
+        public const string ExpressionParserTokenError =                                        "ExpressionParserTokenError";
+        public const string ExpressionBuilderInsertParenthesis =                                "ExpressionBuilderInsertTokenError";
+        public const string ExpressionBuilderAppendDecimalTokenError =                          "ExpressionBuilderAppendDecimalTokenError";
+        public const string ExpressionBuilderAppendOperatorTokenError =                         "ExpressionBuilderAppendOperatorTokenError";
+        public const string ExpressionBuilderAppendPeriodDecimalTokenError =                    "ExpressionBuilderAppendPeriodDecimalTokenError";
+        public const string ExpressionBuilderAppendMultiplicationOrDivisionOperatorTokenError = "ExpressionBuilderAppendMultiplicationOrDivisionError";
     }
 
     /// <summary>
@@ -133,6 +134,14 @@ namespace Calculator
     class ExpressionBuilderAppendPeriodDecimalTokenError : Exception
     {
         public ExpressionBuilderAppendPeriodDecimalTokenError() : base(ErrorMessage.ExpressionBuilderAppendPeriodDecimalTokenError)
+        {
+
+        }
+    }
+
+    class ExpressionBuilderAppendMultiplicationOrDivisionOperatorTokenError : Exception
+    {
+        public ExpressionBuilderAppendMultiplicationOrDivisionOperatorTokenError() : base(ErrorMessage.ExpressionBuilderAppendMultiplicationOrDivisionOperatorTokenError)
         {
 
         }

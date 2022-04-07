@@ -11,18 +11,17 @@ namespace Calculator
         public CalculatorForm()
         {
             InitializeComponent();
+            _buttonArray = new Button[20];
             _expressionBuilder = new ExpressionBuilder();
         }
 
-        private void FormLoad(object sender, EventArgs e)
+        private void CalculatorForm_FormLoad(object sender, EventArgs e)
         {
-            errorBackColor = expressionLabel.BackColor;
-
             /// Configure button unique identifiers
             clearButton.Tag = ButtonTag.Clear;
-            undoButton.Tag = ButtonTag.Delete;
+            deleteButton.Tag = ButtonTag.Delete;
             signButton.Tag = ButtonTag.ChangeSign;
-            paranthesisButton.Tag = ButtonTag.InsertParenthesis;
+            paranthesisButton.Tag = ButtonTag.InsertParanthesis;
             divisionButton.Tag = ButtonTag.Division;
             additionButton.Tag = ButtonTag.Addition;
             subtractionButton.Tag = ButtonTag.Subtraction;
@@ -42,7 +41,7 @@ namespace Calculator
 
             /// Add button references to button array
             _buttonArray[0] = clearButton;
-            _buttonArray[1] = undoButton;
+            _buttonArray[1] = deleteButton;
             _buttonArray[2] = signButton;
             _buttonArray[3] = paranthesisButton;
             _buttonArray[4] = divisionButton;
@@ -66,16 +65,29 @@ namespace Calculator
                 _buttonDefaultBackColorLookup.Add((ButtonTag)button.Tag, button.BackColor);
         }
 
-        /// <summary>
-        /// Button click handler
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ButtonClick(object sender, EventArgs e)
+        private void CalculatorForm_ButtonClick(object sender, EventArgs e)
+        {
+            ButtonTag senderButtonTag = (ButtonTag)(sender as Button).Tag;
+            UpdateExpressionBuilder(senderButtonTag);
+            UpdateLabels();
+        }
+        
+        private void CalculatorForm_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            char keyChar = e.KeyChar;
+            if(_keyCharLookup.ContainsKey(keyChar))
+            {
+                ButtonTag senderButtonTag = _keyCharLookup[keyChar];
+                UpdateExpressionBuilder(senderButtonTag);
+                UpdateLabels();
+            }
+        }
+
+        private void UpdateExpressionBuilder(ButtonTag senderButtonTag)
         {
             try
             {
-                switch ((ButtonTag)(sender as Button).Tag)
+                switch (senderButtonTag)
                 {
                     case ButtonTag.Undefined:
                         return;
@@ -83,11 +95,12 @@ namespace Calculator
                         _expressionBuilder.Clear();
                         break;
                     case ButtonTag.Delete:
+                        _expressionBuilder.RemoveLastCharacter();
                         break;
                     case ButtonTag.ChangeSign:
                         _expressionBuilder.ChangeSign();
                         break;
-                    case ButtonTag.InsertParenthesis:
+                    case ButtonTag.InsertParanthesis:
                         _expressionBuilder.InsertParenthesis();
                         break;
                     case ButtonTag.Division:
@@ -100,7 +113,7 @@ namespace Calculator
                         _expressionBuilder.AppendToken(OperatorToken.Subtraction);
                         break;
                     case ButtonTag.Multiplication:
-                        _expressionBuilder.AppendToken(OperatorToken.Multiplication);
+                        _expressionBuilder.AppendToken(OperatorToken.Multiplication.Clone());
                         break;
                     case ButtonTag.CalculateResult:
                         break;
@@ -141,35 +154,40 @@ namespace Calculator
 
                 foreach (Button button in _buttonArray)
                 {
-                    button.Enabled   = true;
+                    button.Enabled = true;
                     button.BackColor = _buttonDefaultBackColorLookup[(ButtonTag)button.Tag];
                 }
             }
-            catch(Exception ex)
+
+            /// Coloured warning handler
+            catch (Exception ex)
             {
                 if (ex is ExpressionBuilderInsertParenthesisError)
                 {
                     paranthesisButton.Enabled = false;
-                    paranthesisButton.BackColor = errorBackColor;
-
-                    // paranthesisButton.BackColor = _buttonErrorBackColor[(ButtonTag)paranthesisButton.Tag];
+                    paranthesisButton.BackColor = _buttonErrorBackColor;
                 }
                 else if (ex is ExpressionBuilderAppendPeriodDecimalTokenError)
                 {
-
                     periodButton.Enabled = false;
-                    periodButton.BackColor = _buttonErrorBackColor[(ButtonTag)periodButton.Tag];
+                    periodButton.BackColor = _buttonErrorBackColor;
                 }
                 else if (ex is ExpressionBuilderAppendOperatorTokenError)
                 {
                     divisionButton.Enabled = false;
-                    divisionButton.BackColor = _buttonErrorBackColor[(ButtonTag)divisionButton.Tag];
-
+                    additionButton.Enabled = false;
+                    subtractionButton.Enabled = false;
                     multiplicationButton.Enabled = false;
-                    multiplicationButton.BackColor = _buttonErrorBackColor[(ButtonTag)multiplicationButton.Tag];
+
+                    divisionButton.BackColor = _buttonErrorBackColor;
+                    additionButton.BackColor = _buttonErrorBackColor;
+                    subtractionButton.BackColor = _buttonErrorBackColor;
+                    multiplicationButton.BackColor = _buttonErrorBackColor;
+
                 }
                 else if (ex is ExpressionBuilderAppendDecimalTokenError)
                 {
+                    periodButton.Enabled = false;
                     zeroButton.Enabled = false;
                     oneButton.Enabled = false;
                     twoButton.Enabled = false;
@@ -181,32 +199,27 @@ namespace Calculator
                     eightButton.Enabled = false;
                     nineButton.Enabled = false;
 
-                    zeroButton.BackColor  = errorBackColor;
-                    oneButton.BackColor   = errorBackColor;
-                    twoButton.BackColor   = errorBackColor;
-                    threeButton.BackColor = errorBackColor;
-                    fourButton.BackColor  = errorBackColor;
-                    fiveButton.BackColor  = errorBackColor;
-                    sixButton.BackColor   = errorBackColor;
-                    sevenButton.BackColor = errorBackColor;
-                    eightButton.BackColor = errorBackColor;
-                    nineButton.BackColor  = errorBackColor;
+                    periodButton.BackColor = _buttonErrorBackColor;
+                    zeroButton.BackColor = _buttonErrorBackColor;
+                    oneButton.BackColor = _buttonErrorBackColor;
+                    twoButton.BackColor = _buttonErrorBackColor;
+                    threeButton.BackColor = _buttonErrorBackColor;
+                    fourButton.BackColor = _buttonErrorBackColor;
+                    fiveButton.BackColor = _buttonErrorBackColor;
+                    sixButton.BackColor = _buttonErrorBackColor;
+                    sevenButton.BackColor = _buttonErrorBackColor;
+                    eightButton.BackColor = _buttonErrorBackColor;
+                    nineButton.BackColor = _buttonErrorBackColor;
+                }
+                else if (ex is ExpressionBuilderAppendMultiplicationOrDivisionOperatorTokenError)
+                {
+                    divisionButton.Enabled = false;
+                    multiplicationButton.Enabled = false;
 
-                    // zeroButton.BackColor = _buttonErrorBackColor[(ButtonTag)zeroButton.Tag];
-                    // oneButton.BackColor = _buttonErrorBackColor[(ButtonTag)oneButton.Tag];
-                    // twoButton.BackColor = _buttonErrorBackColor[(ButtonTag)twoButton.Tag];
-                    // threeButton.BackColor = _buttonErrorBackColor[(ButtonTag)zeroButton.Tag];
-                    // fourButton.BackColor = _buttonErrorBackColor[(ButtonTag)fourButton.Tag];
-                    // fiveButton.BackColor = _buttonErrorBackColor[(ButtonTag)fiveButton.Tag];
-                    // sixButton.BackColor = _buttonErrorBackColor[(ButtonTag)sixButton.Tag];
-                    // sevenButton.BackColor = _buttonErrorBackColor[(ButtonTag)sevenButton.Tag];
-                    // eightButton.BackColor = _buttonErrorBackColor[(ButtonTag)eightButton.Tag];
-                    // nineButton.BackColor = _buttonErrorBackColor[(ButtonTag)nineButton.Tag];
+                    divisionButton.BackColor = _buttonErrorBackColor;
+                    multiplicationButton.BackColor = _buttonErrorBackColor;
                 }
             }
-
-
-            UpdateLabels();
         }
 
         private void UpdateLabels()
@@ -234,7 +247,7 @@ namespace Calculator
             Clear,
             Delete,
             ChangeSign,
-            InsertParenthesis,
+            InsertParanthesis,
             Division,
             Addition,
             Subtraction,
@@ -253,33 +266,37 @@ namespace Calculator
             Nine
         }
 
-        Color errorBackColor;
-        Dictionary<ButtonTag, Color> _buttonDefaultBackColorLookup = new Dictionary<ButtonTag, Color>();
-        Dictionary<ButtonTag, Color> _buttonErrorBackColor = new Dictionary<ButtonTag, Color>
-        {
-            {ButtonTag.Clear,             Color.FromArgb(0, 105, 105, 105)},
-            {ButtonTag.Delete,            Color.FromArgb(0,  105, 105, 105)},
-            {ButtonTag.ChangeSign,        Color.FromArgb(0, 105, 105, 105)},
-            {ButtonTag.InsertParenthesis, Color.FromArgb(0, 105, 105, 105)},
-            {ButtonTag.Division,          Color.FromArgb(0, 105, 105, 105)},
-            {ButtonTag.Addition,          Color.FromArgb(0, 105, 105, 105)},
-            {ButtonTag.Subtraction,       Color.FromArgb(0, 105, 105, 105)},
-            {ButtonTag.Multiplication,    Color.FromArgb(0, 105, 105, 105)},
-            {ButtonTag.CalculateResult,   Color.FromArgb(0, 105, 105, 105)},
-            {ButtonTag.Period,            Color.FromArgb(0, 169, 169, 169)},
-            {ButtonTag.Zero,              Color.FromArgb(0, 169, 169, 169)},
-            {ButtonTag.One,               Color.FromArgb(0, 169, 169, 169)},
-            {ButtonTag.Two,               Color.FromArgb(0, 169, 169, 169)},
-            {ButtonTag.Three,             Color.FromArgb(0, 169, 169, 169)},
-            {ButtonTag.Four,              Color.FromArgb(0, 169, 169, 169)},
-            {ButtonTag.Five,              Color.FromArgb(0, 169, 169, 169)},
-            {ButtonTag.Six,               Color.FromArgb(0, 169, 169, 169)},
-            {ButtonTag.Seven,             Color.FromArgb(0, 169, 169, 169)},
-            {ButtonTag.Eight,             Color.FromArgb(0, 169, 169, 169)},
-            {ButtonTag.Nine,              Color.FromArgb(0, 169, 169, 169)}
-        };
-
-        private Button[] _buttonArray = new Button[20];
+        private Button[] _buttonArray;
         private ExpressionBuilder _expressionBuilder;
+        private readonly Color _buttonErrorBackColor = Color.FromArgb(255, 105, 97);
+        private Dictionary<ButtonTag, Color> _buttonDefaultBackColorLookup = new Dictionary<ButtonTag, Color>();
+
+        private static readonly Dictionary<char, ButtonTag> _keyCharLookup = new Dictionary<char, ButtonTag>
+        {
+            {(char)27, ButtonTag.Clear},
+            {'\b',     ButtonTag.Delete},
+            {'!',      ButtonTag.ChangeSign},
+            {'s',      ButtonTag.ChangeSign},
+            {'(',      ButtonTag.InsertParanthesis},
+            {')',      ButtonTag.InsertParanthesis},
+            {'p',      ButtonTag.InsertParanthesis},
+            {'/',      ButtonTag.Division},
+            {'+',      ButtonTag.Addition},
+            {'-',      ButtonTag.Subtraction},
+            {'*',      ButtonTag.Multiplication},
+            {(char)13, ButtonTag.CalculateResult},
+            {'=',      ButtonTag.CalculateResult},
+            {'.',      ButtonTag.Period},
+            {'0',      ButtonTag.Zero},
+            {'1',      ButtonTag.One},
+            {'2',      ButtonTag.Two},
+            {'3',      ButtonTag.Three},
+            {'4',      ButtonTag.Four},
+            {'5',      ButtonTag.Five},
+            {'6',      ButtonTag.Six},
+            {'7',      ButtonTag.Seven},
+            {'8',      ButtonTag.Eight},
+            {'9',      ButtonTag.Nine},
+        };
     }
 }

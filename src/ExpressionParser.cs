@@ -268,7 +268,7 @@ namespace Calculator
             if (tokenType == Token.TokenType.Decimal)
                 return new DecimalToken(str);
             else
-                return (tokenLookup.ContainsKey(str) ? tokenLookup[str] : Token.Undefined).Clone();
+                return tokenLookup.ContainsKey(str) ? tokenLookup[str] : Token.Undefined;
         }
 
         /// <summary>

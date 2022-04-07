@@ -1,13 +1,18 @@
 # Calculator-related improvements
 
+## CalculatorForm.cs
+
+- [ ] Add useful comments
+
 ## ExpressionBuilder.cs
 
-- [X] Reformat entire class
+- [X] Reformat methods
+- [ ] Add useful comments
 - [X] Use predefined Count method
 
 ## OperatorToken.cs
 
-- [ ] Remove unused IsAdditionOrSubtraction
+- [X] Remove unused IsAdditionOrSubtraction
 
 ## ExpressionParser.cs
 
