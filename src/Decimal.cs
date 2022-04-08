@@ -336,8 +336,8 @@ namespace Calculator
 			return newList;
 		}
 
-		public static int DivisionPrecision = 20;
 		private bool _isPositive = true;
+		public static int DivisionPrecision = 10;
 		private LinkedList<char> _integerPart, _fractionalPart;
 	}
 }

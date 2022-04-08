@@ -14,24 +14,26 @@ namespace Calculator
             _tokenList = new LinkedList<Token>();
         }
 
+        public Token[] ToTokenArray()
+        {
+            int tokenArrayLength = _tokenList.Count;
+            tokenArrayLength += _tokenList.Count(token => token.Equals(ParanthesisToken.OpeningParenthesis));
+            tokenArrayLength -= _tokenList.Count(token => token.Equals(ParanthesisToken.ClosingParenthesis));
+            Token[] tokenArray = new Token[tokenArrayLength];
+
+            _tokenList.CopyTo(tokenArray, 0);
+            for (int tokenArrayRange = _tokenList.Count; tokenArrayRange < tokenArray.Length; tokenArrayRange++)
+                tokenArray[tokenArrayRange] = ParanthesisToken.ClosingParenthesis;
+
+            return tokenArray;
+        }
+
         /// <summary>
         /// Returns built expression in string format
         /// </summary>
-        /// <param name="completeParentheses"></param>
-        /// <returns></returns>
-        public string ToExpression(bool completeParentheses = false)
+        public override string ToString()
         {
             int expressionStringBuilderCapacity = 0;
-            int unmatchedParenthesisCount = 0;
-
-            if (completeParentheses)
-            {
-                unmatchedParenthesisCount += _tokenList.Count(token => token.Equals(ParanthesisToken.OpeningParenthesis));
-                unmatchedParenthesisCount -= _tokenList.Count(token => token.Equals(ParanthesisToken.ClosingParenthesis));
-
-                /// Determine the length of the required closing parenthesis tokens
-                expressionStringBuilderCapacity += unmatchedParenthesisCount * ParanthesisToken.ClosingParenthesis.Length;
-            }
 
             foreach (Token token in _tokenList)
                 expressionStringBuilderCapacity += token.Length;
@@ -40,10 +42,6 @@ namespace Calculator
 
             foreach (Token token in _tokenList)
                 expressionStringBuilder.Append(token);
-
-            /// Append required parenthesis to the string builder instance
-            for (int parenthesisCount = 0; parenthesisCount < unmatchedParenthesisCount; parenthesisCount++)
-                expressionStringBuilder.Append(ParanthesisToken.ClosingParenthesis);
 
             return expressionStringBuilder.ToString();
         }
@@ -56,7 +54,7 @@ namespace Calculator
         public void RemoveLastCharacter()
         {
             if (_tokenList.Count == 0)
-                return; // Exception placeholder
+                throw new ExpressionBuilderRemoveLastCharacterError();
 
             Token lastTokenListToken = _tokenList.Last.Value;
             lastTokenListToken.RemoveLastCharacter();

@@ -2,7 +2,7 @@
 
 <img width = 269 height = 463 src = "docs/Images/CalculatorScreenshot.png"></img>
 
-A smart calculator utility written in C#
+A smart, fast and lightweight calculator utility written in C#
 
 Directory | Role
 ----------|-----
@@ -15,7 +15,7 @@ docs      | Project-related documentation folder
 * Infinite precision arithmetic operations
 * Expression calculation following the order of operations
 * Smart expression manipulation functions
-* Keyboard shortcut support
+* Keyboard hotkey support
 * Colored warning support
 * History buffer support
 
@@ -26,14 +26,15 @@ docs      | Project-related documentation folder
 - [X] Implement smart expression manipulation capabilities
 - [X] Implement colored warning support
 - [ ] Implement history buffer support
-- [X] Implement shortcut support
+- [X] Implement hotkey support
 - [X] Design the application's user interface
 - [X] Link frontend to backend components
 - [X] Resize the application's user interface
-- [ ] Provide project-related documentation
+- [ ] End-of-project general refactoring
 - [ ] Licence project under the MIT licence
+- [ ] Provide project-related documentation
 
-Project is approximately 85% complete.
+Project is approximately 90% complete.
 
 ## License
 

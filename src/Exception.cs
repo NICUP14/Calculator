@@ -14,6 +14,7 @@ namespace Calculator
         public const string ExpressionBuilderInsertParenthesis =                                "ExpressionBuilderInsertTokenError";
         public const string ExpressionBuilderAppendDecimalTokenError =                          "ExpressionBuilderAppendDecimalTokenError";
         public const string ExpressionBuilderAppendOperatorTokenError =                         "ExpressionBuilderAppendOperatorTokenError";
+        public const string ExpressionBuilderRemoveLastCharacterError =                         "ExpressionBuilderRemoveLastCharacterError";
         public const string ExpressionBuilderAppendPeriodDecimalTokenError =                    "ExpressionBuilderAppendPeriodDecimalTokenError";
         public const string ExpressionBuilderAppendMultiplicationOrDivisionOperatorTokenError = "ExpressionBuilderAppendMultiplicationOrDivisionError";
     }
@@ -123,6 +124,14 @@ namespace Calculator
     class ExpressionBuilderAppendOperatorTokenError : Exception
     {
         public ExpressionBuilderAppendOperatorTokenError() : base(ErrorMessage.ExpressionBuilderAppendOperatorTokenError)
+        {
+
+        }
+    }
+
+    class ExpressionBuilderRemoveLastCharacterError : Exception
+    {
+        public ExpressionBuilderRemoveLastCharacterError() : base(ErrorMessage.ExpressionBuilderRemoveLastCharacterError)
         {
 
         }

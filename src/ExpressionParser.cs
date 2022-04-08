@@ -10,11 +10,43 @@ namespace Calculator
     class ExpressionParser
     {
         /// <summary>
-        /// Returns result of expression in string format
+        /// Returns result of expression in decimal format
+        /// </summary>
+        /// <param name="tokenArray"></param>
+        /// <returns></returns>
+        /// <exception cref="ExpressionParserNullError"></exception>
+        public static Decimal Calculate(Token[] tokenArray)
+        {
+            if (tokenArray == null || tokenArray.Length == 0)
+                throw new ExpressionParserNullError();
+
+            ChangeTokenArrayOrder(ref tokenArray);
+            return CalculateTokenArray(tokenArray);
+        }
+
+        /// <summary>
+        /// Returns result of expression in decimal format
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
-        public static string Calculate(string expression)
+        public static Decimal Calculate(string expression)
+        {
+            if (string.IsNullOrEmpty(expression))
+                throw new ExpressionParserNullError();
+
+            /// Convert expression to a token array in postfix order
+            Token[] tokenArray = ConvertExpressionToTokenArray(expression);
+
+            ChangeTokenArrayOrder(ref tokenArray);
+            return CalculateTokenArray(tokenArray);
+        }
+
+        /// <summary>
+        /// Reconstruct expression with an explicitly-defined order of operations
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public static string OrderOfOperationsOf(string expression)
         {
             if (string.IsNullOrEmpty(expression))
                 throw new ExpressionParserNullError();
@@ -23,6 +55,39 @@ namespace Calculator
             Token[] tokenArray = ConvertExpressionToTokenArray(expression);
             ChangeTokenArrayOrder(ref tokenArray);
 
+            /// Evaluate postfix expression by using a stack
+            /// This approach resconstructs the initial expression instead of calculating its result
+            Stack<string> operandStack = new Stack<string>();
+            foreach(Token token in tokenArray)
+            {
+                if (token != null)
+                {
+                    if (token.Equals(Token.Decimal))
+                        operandStack.Push(token.ToString());
+                    else if (token.Equals(Token.Operator))
+                    {
+                        if (operandStack.Count < 2)
+                            throw new ExpressionParserSyntaxError();
+
+                        /// Extract operands from the stack
+                        string operand = operandStack.Pop();
+                        string operand2 = operandStack.Pop();
+                        (operand, operand2) = (operand2, operand);
+
+                        /// Push the reconstructed operation back onto the stack
+                        operandStack.Push(TokenStringRepresentation.OpeningParenthesis + operand + token + operand2 + TokenStringRepresentation.ClosingParenthesis);
+                    }
+                }
+            }
+
+            if (operandStack.Count > 1)
+                throw new ExpressionParserSyntaxError();
+
+            return operandStack.Peek();
+        }
+
+        private static Decimal CalculateTokenArray(Token[] tokenArray)
+        {
             /// Evaluate postfix expression by using a stack
 
             /*
@@ -65,51 +130,6 @@ namespace Calculator
                         else if (operatorToken.Equals(OperatorToken.Multiplication))
                             operandResult = Decimal.Multiply(operand, operand2);
                         operandStack.Push(operandResult);
-                    }
-                }
-            }
-
-            if (operandStack.Count > 1)
-                throw new ExpressionParserSyntaxError();
-
-            return operandStack.Peek().ToString();
-        }
-
-        /// <summary>
-        /// Reconstruct expression with an explicitly-defined order of operations
-        /// </summary>
-        /// <param name="expression"></param>
-        /// <returns></returns>
-        public static string OrderOfOperationsOf(string expression)
-        {
-            if (string.IsNullOrEmpty(expression))
-                throw new ExpressionParserNullError();
-
-            /// Convert expression to a token array in postfix order
-            Token[] tokenArray = ConvertExpressionToTokenArray(expression);
-            ChangeTokenArrayOrder(ref tokenArray);
-
-            /// Evaluate postfix expression by using a stack
-            /// This approach resconstructs the initial expression instead of calculating its result
-            Stack<string> operandStack = new Stack<string>();
-            foreach(Token token in tokenArray)
-            {
-                if (token != null)
-                {
-                    if (token.Equals(Token.Decimal))
-                        operandStack.Push(token.ToString());
-                    else if (token.Equals(Token.Operator))
-                    {
-                        if (operandStack.Count < 2)
-                            throw new ExpressionParserSyntaxError();
-
-                        /// Extract operands from the stack
-                        string operand = operandStack.Pop();
-                        string operand2 = operandStack.Pop();
-                        (operand, operand2) = (operand2, operand);
-
-                        /// Push the reconstructed operation back onto the stack
-                        operandStack.Push(TokenStringRepresentation.OpeningParenthesis + operand + token + operand2 + TokenStringRepresentation.ClosingParenthesis);
                     }
                 }
             }
