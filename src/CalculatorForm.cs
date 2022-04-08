@@ -13,6 +13,7 @@ namespace Calculator
             InitializeComponent();
             _buttonArray = new Button[20];
             _expressionBuilder = new ExpressionBuilder();
+            _buttonDefaultBackColorLookup = new Dictionary<FunctionTag, Color>();
         }
 
         private void CalculatorForm_FormLoad(object sender, EventArgs e)
@@ -26,7 +27,7 @@ namespace Calculator
             additionButton.Tag = FunctionTag.Addition;
             subtractionButton.Tag = FunctionTag.Subtraction;
             multiplicationButton.Tag = FunctionTag.Multiplication;
-            calculateResultButton.Tag = FunctionTag.CalculateResult;
+            calculateButton.Tag = FunctionTag.Calculate;
             periodButton.Tag = FunctionTag.Period;
             zeroButton.Tag = FunctionTag.Zero;
             oneButton.Tag = FunctionTag.One;
@@ -48,7 +49,7 @@ namespace Calculator
             _buttonArray[5] = additionButton;
             _buttonArray[6] = subtractionButton;
             _buttonArray[7] = multiplicationButton;
-            _buttonArray[8] = calculateResultButton;
+            _buttonArray[8] = calculateButton;
             _buttonArray[9] = periodButton;
             _buttonArray[10] = zeroButton;
             _buttonArray[11] = oneButton;
@@ -68,7 +69,7 @@ namespace Calculator
         private void CalculatorForm_ButtonClick(object sender, EventArgs e)
         {
             FunctionTag senderButtonTag = (FunctionTag)(sender as Button).Tag;
-            ProcessFunction(senderButtonTag);
+            ProcessFunctionTag(senderButtonTag);
             UpdateLabels();
             Focus();
         }
@@ -80,18 +81,19 @@ namespace Calculator
                 return;
 
             FunctionTag senderButtonTag = _hotkeyLookup[keyChar];
-            ProcessFunction(senderButtonTag);
+            ProcessFunctionTag(senderButtonTag);
             UpdateLabels();
         }
 
-        private void ProcessFunction(FunctionTag senderButtonTag)
+        private void ProcessFunctionTag(FunctionTag senderButtonTag)
         {
+            if (senderButtonTag == FunctionTag.Undefined)
+                return;
+
             try
             {
                 switch (senderButtonTag)
                 {
-                    case FunctionTag.Undefined:
-                        return;
                     case FunctionTag.Clear:
                         _expressionBuilder.Clear();
                         break;
@@ -116,7 +118,8 @@ namespace Calculator
                     case FunctionTag.Multiplication:
                         _expressionBuilder.AppendToken(OperatorToken.Multiplication.Clone());
                         break;
-                    case FunctionTag.CalculateResult:
+                    case FunctionTag.Calculate:
+                        CalculateResult();
                         break;
                     case FunctionTag.Period:
                         _expressionBuilder.AppendToken(new DecimalToken("."));
@@ -225,7 +228,23 @@ namespace Calculator
                     divisionButton.BackColor = ButtonErrorBackColor;
                     multiplicationButton.BackColor = ButtonErrorBackColor;
                 }
+                else if(ex is ExpressionParserSyntaxError || ex is DecimalPeriodError || ex is DecimalDivisionError)
+                {
+                    calculateButton.Enabled = false;
+                    calculateButton.BackColor = ButtonErrorBackColor;
+                }
             }
+        }
+
+        private void CalculateResult()
+        {
+            Token[] tokenArray = _expressionBuilder.ToTokenArray();
+            DecimalToken decimalToken = new DecimalToken(ExpressionParser.Calculate(tokenArray).ToString());
+
+            _expressionBuilder.Clear();
+            _expressionBuilder.AppendToken(decimalToken);
+
+            UpdateLabels();
         }
 
         private void UpdateLabels()
@@ -258,7 +277,7 @@ namespace Calculator
             Addition,
             Subtraction,
             Multiplication,
-            CalculateResult,
+            Calculate,
             Period,
             Zero,
             One,
@@ -274,33 +293,32 @@ namespace Calculator
 
         private Button[] _buttonArray;
         private ExpressionBuilder _expressionBuilder;
-        private Dictionary<FunctionTag, Color> _buttonDefaultBackColorLookup = new Dictionary<FunctionTag, Color>();
-        private static readonly Dictionary<char, FunctionTag> _hotkeyLookup  = new Dictionary<char, FunctionTag>
+        private Dictionary<FunctionTag, Color> _buttonDefaultBackColorLookup;
+        private readonly Dictionary<char, FunctionTag> _hotkeyLookup  = new Dictionary<char, FunctionTag>
         {
-            {(char)27, FunctionTag.Clear},
-            {'\b',     FunctionTag.Delete},
-            {'!',      FunctionTag.ChangeSign},
-            {'s',      FunctionTag.ChangeSign},
-            {'(',      FunctionTag.InsertParanthesis},
-            {')',      FunctionTag.InsertParanthesis},
-            {'p',      FunctionTag.InsertParanthesis},
-            {'/',      FunctionTag.Division},
-            {'+',      FunctionTag.Addition},
-            {'-',      FunctionTag.Subtraction},
-            {'*',      FunctionTag.Multiplication},
-            {(char)13, FunctionTag.CalculateResult},
-            {'=',      FunctionTag.CalculateResult},
-            {'.',      FunctionTag.Period},
-            {'0',      FunctionTag.Zero},
-            {'1',      FunctionTag.One},
-            {'2',      FunctionTag.Two},
-            {'3',      FunctionTag.Three},
-            {'4',      FunctionTag.Four},
-            {'5',      FunctionTag.Five},
-            {'6',      FunctionTag.Six},
-            {'7',      FunctionTag.Seven},
-            {'8',      FunctionTag.Eight},
-            {'9',      FunctionTag.Nine},
+            {(char)Keys.Escape, FunctionTag.Clear},
+            {(char)Keys.Back,   FunctionTag.Delete},
+            {'!',               FunctionTag.ChangeSign},
+            {'s',               FunctionTag.ChangeSign},
+            {'(',               FunctionTag.InsertParanthesis},
+            {')',               FunctionTag.InsertParanthesis},
+            {'p',               FunctionTag.InsertParanthesis},
+            {'/',               FunctionTag.Division},
+            {'+',               FunctionTag.Addition},
+            {'-',               FunctionTag.Subtraction},
+            {'*',               FunctionTag.Multiplication},
+            {(char)Keys.Enter,  FunctionTag.Calculate},
+            {'.',               FunctionTag.Period},
+            {'0',               FunctionTag.Zero},
+            {'1',               FunctionTag.One},
+            {'2',               FunctionTag.Two},
+            {'3',               FunctionTag.Three},
+            {'4',               FunctionTag.Four},
+            {'5',               FunctionTag.Five},
+            {'6',               FunctionTag.Six},
+            {'7',               FunctionTag.Seven},
+            {'8',               FunctionTag.Eight},
+            {'9',               FunctionTag.Nine},
         };
 
         public static Color ButtonErrorBackColor = Color.FromArgb(255, 105, 97);

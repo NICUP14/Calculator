@@ -15,9 +15,9 @@ docs      | Project-related documentation folder
 * Infinite precision arithmetic operations
 * Expression calculation following the order of operations
 * Smart expression manipulation functions
+* Label expression cropping
 * Keyboard hotkey support
 * Colored warning support
-* History buffer support
 
 ## Roadmap
 
@@ -25,8 +25,8 @@ docs      | Project-related documentation folder
 - [X] Implement expression calculation following the order of operations
 - [X] Implement smart expression manipulation capabilities
 - [X] Implement colored warning support
-- [ ] Implement history buffer support
 - [X] Implement hotkey support
+- [ ] Implement label expression cropping
 - [X] Design the application's user interface
 - [X] Link frontend to backend components
 - [X] Resize the application's user interface

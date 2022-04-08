@@ -4,8 +4,8 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
-    <ApplicationIcon />
     <StartupObject />
+    <PackageIcon>CalculatorLogo.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,6 +22,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="docs\Images\CalculatorLog.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Update="src\CalculatorForm.resx">
       <Generator></Generator>
     </EmbeddedResource>
@@ -29,6 +33,13 @@
 
   <ItemGroup>
     <None Include="Calculator.sln" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="docs\Images\CalculatorLogo.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
