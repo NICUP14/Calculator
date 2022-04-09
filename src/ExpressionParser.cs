@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using static System.Console;
 using System.Collections.Generic;
@@ -107,7 +108,19 @@ namespace Calculator
                 if (token != null)
                 {
                     if(token.Equals(Token.Decimal))
-                        operandStack.Push((token as DecimalToken).ToDecimal());
+                    {
+                        try 
+                        {
+                            operandStack.Push((token as DecimalToken).ToDecimal());
+                        }
+                        catch (Exception ex)
+                        {
+                            if (ex is DecimalNullError || ex is DecimalInvalidError || ex is DecimalPeriodError)
+                                throw new ExpressionParserSyntaxError();
+
+                            throw;
+                        }
+                    }
                     else if (token.Equals(Token.Operator))
                     {
                         if (operandStack.Count < 2)
@@ -122,7 +135,19 @@ namespace Calculator
                         /// Evaluate based on the token operator
                         OperatorToken operatorToken = token as OperatorToken;
                         if (operatorToken.Equals(OperatorToken.Division))
-                            operandResult = Decimal.Divide(operand, operand2);
+                        {
+                            try
+                            {
+                                operandResult = Decimal.Divide(operand, operand2);
+                            }
+                            catch(Exception ex)
+                            {
+                                if(ex is DecimalDivisionError)
+                                    throw new ExpressionParserSyntaxError();
+
+                                throw;
+                            }
+                        }
                         else if (operatorToken.Equals(OperatorToken.Addition))
                             operandResult = Decimal.Add(operand, operand2);
                         else if (operatorToken.Equals(OperatorToken.Subtraction))

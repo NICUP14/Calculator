@@ -9,7 +9,7 @@
 - [X] Reformat methods
 - [ ] Add useful comments
 - [X] Use predefined Count method
-- [ ] Fix "123+" + "Insert Paranthesis => Unresponsive
+- [X] Fix "123+" + "Insert Paranthesis => Unresponsive
 
 ## OperatorToken.cs
 

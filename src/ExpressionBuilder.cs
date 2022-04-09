@@ -61,6 +61,9 @@ namespace Calculator
 
             if (lastTokenListToken.Length == 0)
                 _tokenList.RemoveLast();
+
+            previousOperatorToken = null;
+            previousDecimalConstant = null;
         }
 
         /// <summary>
@@ -143,6 +146,45 @@ namespace Calculator
                     }
                 }
             }
+
+            previousOperatorToken = null;
+            previousDecimalConstant = null;
+        }
+
+        public Decimal Calculate()
+        {
+            Token[] tokenArray = ToTokenArray();
+
+            if (tokenArray.Length == 0)
+                throw new ExpressionBuilderNullError();
+
+            Token lastTokenArrayToken = tokenArray[tokenArray.Length - 1];
+            if(lastTokenArrayToken.Equals(Token.Operator))
+                tokenArray[tokenArray.Length - 1] = null;
+
+            Decimal expressionResult = ExpressionParser.Calculate(tokenArray);
+
+            if (lastTokenArrayToken.Equals(Token.Operator))
+            {
+                previousOperatorToken = lastTokenArrayToken;
+                previousDecimalConstant = expressionResult;
+            }
+
+            if(previousOperatorToken is not null)
+            {
+                if (previousOperatorToken.Equals(OperatorToken.Division))
+                    expressionResult = Decimal.Divide(expressionResult, previousDecimalConstant);
+                else if (previousOperatorToken.Equals(OperatorToken.Addition))
+                    expressionResult = Decimal.Add(expressionResult, previousDecimalConstant);
+                else if (previousOperatorToken.Equals(OperatorToken.Subtraction))
+                    expressionResult = Decimal.Subtract(expressionResult, previousDecimalConstant);
+                else if (previousOperatorToken.Equals(OperatorToken.Multiplication))
+                    expressionResult = Decimal.Multiply(expressionResult, previousDecimalConstant);
+            }
+
+            tokenArray[tokenArray.Length - 1] = lastTokenArrayToken;
+
+            return expressionResult;
         }
 
         /// <summary>
@@ -188,13 +230,16 @@ namespace Calculator
                     }
                 }
             }
+
+            previousOperatorToken = null;
+            previousDecimalConstant = null;
         }
 
         /// <summary>
         /// Appends specified decimal token to the expression
         /// </summary>
         /// <param name="decimalToken"></param>
-        public void AppendToken(DecimalToken decimalToken)
+        public void AppendToken(DecimalToken decimalToken, bool changePreviousOperatorToken = true)
         {
             if (_tokenList.Count == 0)
             {
@@ -226,6 +271,12 @@ namespace Calculator
 
                     _tokenList.AddLast(decimalToken);
                 }
+            }
+
+            if(changePreviousOperatorToken == true)
+            {
+                previousOperatorToken = null;
+                previousDecimalConstant = null;
             }
         }
 
@@ -282,6 +333,9 @@ namespace Calculator
                     _tokenList.AddLast(operatorToken.Clone());
                 }
             }
+
+            previousOperatorToken = null;
+            previousDecimalConstant = null;
         }
 
         /// <summary>
@@ -311,6 +365,8 @@ namespace Calculator
             return previousTokenListNode;
         }
 
+        Token previousOperatorToken;
+        Decimal previousDecimalConstant;
         readonly LinkedList<Token> _tokenList;
     }
 }

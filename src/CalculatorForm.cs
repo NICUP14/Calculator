@@ -13,7 +13,7 @@ namespace Calculator
             InitializeComponent();
             _buttonArray = new Button[20];
             _expressionBuilder = new ExpressionBuilder();
-            _buttonDefaultBackColorLookup = new Dictionary<FunctionTag, Color>();
+            _buttonDefaultBackColorLookup = new Dictionary<FunctionTag, ButtonDefaultProperty>();
         }
 
         private void CalculatorForm_FormLoad(object sender, EventArgs e)
@@ -63,15 +63,21 @@ namespace Calculator
             _buttonArray[19] = nineButton;
 
             foreach (Button button in _buttonArray)
-                _buttonDefaultBackColorLookup.Add((FunctionTag)button.Tag, button.BackColor);
+            {
+                ButtonDefaultProperty buttonDefaultProperty = new ButtonDefaultProperty();
+                buttonDefaultProperty.BackColor = button.BackColor;
+                buttonDefaultProperty.BorderColor = button.FlatAppearance.BorderColor;
+                _buttonDefaultBackColorLookup.Add((FunctionTag)button.Tag, buttonDefaultProperty);
+            }
         }
-
         private void CalculatorForm_ButtonClick(object sender, EventArgs e)
         {
             FunctionTag senderButtonTag = (FunctionTag)(sender as Button).Tag;
             ProcessFunctionTag(senderButtonTag);
             UpdateLabels();
-            Focus();
+
+            /// This is why I have WinForms
+            calculateButton.Focus();
         }
         
         private void CalculatorForm_KeyPress(object sender, KeyPressEventArgs e)
@@ -83,6 +89,8 @@ namespace Calculator
             FunctionTag senderButtonTag = _hotkeyLookup[keyChar];
             ProcessFunctionTag(senderButtonTag);
             UpdateLabels();
+
+            e.Handled = true;
         }
 
         private void ProcessFunctionTag(FunctionTag senderButtonTag)
@@ -159,7 +167,8 @@ namespace Calculator
                 foreach (Button button in _buttonArray)
                 {
                     button.Enabled = true;
-                    button.BackColor = _buttonDefaultBackColorLookup[(FunctionTag)button.Tag];
+                    button.BackColor = _buttonDefaultBackColorLookup[(FunctionTag)button.Tag].BackColor;
+                    button.FlatAppearance.BorderColor = _buttonDefaultBackColorLookup[(FunctionTag)button.Tag].BorderColor;
                 }
             }
 
@@ -170,16 +179,19 @@ namespace Calculator
                 {
                     paranthesisButton.Enabled = false;
                     paranthesisButton.BackColor = ButtonErrorBackColor;
+                    paranthesisButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
                 }
                 else if(ex is ExpressionBuilderRemoveLastCharacterError)
                 {
                     deleteButton.Enabled = false;
                     deleteButton.BackColor = ButtonErrorBackColor;
+                    deleteButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
                 }
                 else if (ex is ExpressionBuilderAppendPeriodDecimalTokenError)
                 {
                     periodButton.Enabled = false;
                     periodButton.BackColor = ButtonErrorBackColor;
+                    periodButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
                 }
                 else if (ex is ExpressionBuilderAppendOperatorTokenError)
                 {
@@ -192,6 +204,11 @@ namespace Calculator
                     additionButton.BackColor = ButtonErrorBackColor;
                     subtractionButton.BackColor = ButtonErrorBackColor;
                     multiplicationButton.BackColor = ButtonErrorBackColor;
+
+                    divisionButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
+                    additionButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
+                    subtractionButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
+                    multiplicationButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
 
                 }
                 else if (ex is ExpressionBuilderAppendDecimalTokenError)
@@ -219,6 +236,18 @@ namespace Calculator
                     sevenButton.BackColor = ButtonErrorBackColor;
                     eightButton.BackColor = ButtonErrorBackColor;
                     nineButton.BackColor = ButtonErrorBackColor;
+
+                    periodButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
+                    zeroButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
+                    oneButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
+                    twoButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
+                    threeButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
+                    fourButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
+                    fiveButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
+                    sixButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
+                    sevenButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
+                    eightButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
+                    nineButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
                 }
                 else if (ex is ExpressionBuilderAppendMultiplicationOrDivisionOperatorTokenError)
                 {
@@ -227,22 +256,27 @@ namespace Calculator
 
                     divisionButton.BackColor = ButtonErrorBackColor;
                     multiplicationButton.BackColor = ButtonErrorBackColor;
+
+                    divisionButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
+                    multiplicationButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
                 }
-                else if(ex is ExpressionParserSyntaxError || ex is DecimalPeriodError || ex is DecimalDivisionError)
+                //else if(ex is ExpressionParserSyntaxError || ex is DecimalPeriodError || ex is DecimalDivisionError)
+                else if(ex is ExpressionParserSyntaxError)
                 {
                     calculateButton.Enabled = false;
                     calculateButton.BackColor = ButtonErrorBackColor;
+                    calculateButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
                 }
             }
         }
 
         private void CalculateResult()
         {
-            Token[] tokenArray = _expressionBuilder.ToTokenArray();
-            DecimalToken decimalToken = new DecimalToken(ExpressionParser.Calculate(tokenArray).ToString());
+            // Token[] tokenArray = _expressionBuilder.ToTokenArray();
+            DecimalToken decimalToken = new DecimalToken(_expressionBuilder.Calculate().ToString());
 
             _expressionBuilder.Clear();
-            _expressionBuilder.AppendToken(decimalToken);
+            _expressionBuilder.AppendToken(decimalToken, false);
 
             UpdateLabels();
         }
@@ -254,15 +288,23 @@ namespace Calculator
 
             try
             {
-                Token[] tokenArray = _expressionBuilder.ToTokenArray();
-                resultLabel.Text = ExpressionParser.Calculate(tokenArray).ToString();
+                // Token[] tokenArray = _expressionBuilder.ToTokenArray();
+                resultLabel.Text = _expressionBuilder.Calculate().ToString();
             }
             catch(Exception ex)
             {
-                if (ex is not ExpressionParserNullError)
-                    resultLabel.Text = "Error";
-                else
+                if (ex is ExpressionBuilderNullError)
+                {
                     expressionLabel.Text = resultLabel.Text = string.Empty;
+                    return;
+                }
+                else if(ex is ExpressionParserSyntaxError)
+                {
+                    resultLabel.Text = "Error";
+                    return;
+                }
+
+                throw;
             }
         }
 
@@ -292,8 +334,13 @@ namespace Calculator
         }
 
         private Button[] _buttonArray;
-        private ExpressionBuilder _expressionBuilder;
-        private Dictionary<FunctionTag, Color> _buttonDefaultBackColorLookup;
+        private Dictionary<FunctionTag, ButtonDefaultProperty> _buttonDefaultBackColorLookup;
+        private struct ButtonDefaultProperty
+        {
+            public Color BackColor;
+            public Color BorderColor;
+        }
+
         private readonly Dictionary<char, FunctionTag> _hotkeyLookup  = new Dictionary<char, FunctionTag>
         {
             {(char)Keys.Escape, FunctionTag.Clear},
@@ -321,6 +368,7 @@ namespace Calculator
             {'9',               FunctionTag.Nine},
         };
 
+        private ExpressionBuilder _expressionBuilder;
         public static Color ButtonErrorBackColor = Color.FromArgb(255, 105, 97);
     }
 }

@@ -53,9 +53,9 @@ namespace Calculator
             this.deleteButton = new System.Windows.Forms.Button();
             this.expressionLabel = new System.Windows.Forms.Label();
             this.resultLabel = new System.Windows.Forms.Label();
-            this.InterfaceTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
+            this.labelTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.buttonTableLayoutPanel.SuspendLayout();
-            this.InterfaceTableLayoutPanel.SuspendLayout();
+            this.labelTableLayoutPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // divisionButton
@@ -533,33 +533,33 @@ namespace Calculator
             this.resultLabel.Text = "Result";
             this.resultLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // InterfaceTableLayoutPanel
+            // labelTableLayoutPanel
             // 
-            this.InterfaceTableLayoutPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.labelTableLayoutPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.InterfaceTableLayoutPanel.ColumnCount = 1;
-            this.InterfaceTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.InterfaceTableLayoutPanel.Controls.Add(this.resultLabel, 0, 1);
-            this.InterfaceTableLayoutPanel.Controls.Add(this.buttonTableLayoutPanel, 0, 2);
-            this.InterfaceTableLayoutPanel.Controls.Add(this.expressionLabel, 0, 0);
-            this.InterfaceTableLayoutPanel.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
-            this.InterfaceTableLayoutPanel.Location = new System.Drawing.Point(0, 0);
-            this.InterfaceTableLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
-            this.InterfaceTableLayoutPanel.Name = "InterfaceTableLayoutPanel";
-            this.InterfaceTableLayoutPanel.RowCount = 3;
-            this.InterfaceTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 15F));
-            this.InterfaceTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 15F));
-            this.InterfaceTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 70F));
-            this.InterfaceTableLayoutPanel.Size = new System.Drawing.Size(348, 429);
-            this.InterfaceTableLayoutPanel.TabIndex = 11;
+            this.labelTableLayoutPanel.ColumnCount = 1;
+            this.labelTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.labelTableLayoutPanel.Controls.Add(this.resultLabel, 0, 1);
+            this.labelTableLayoutPanel.Controls.Add(this.buttonTableLayoutPanel, 0, 2);
+            this.labelTableLayoutPanel.Controls.Add(this.expressionLabel, 0, 0);
+            this.labelTableLayoutPanel.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+            this.labelTableLayoutPanel.Location = new System.Drawing.Point(0, 0);
+            this.labelTableLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.labelTableLayoutPanel.Name = "labelTableLayoutPanel";
+            this.labelTableLayoutPanel.RowCount = 3;
+            this.labelTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 15F));
+            this.labelTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 15F));
+            this.labelTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 70F));
+            this.labelTableLayoutPanel.Size = new System.Drawing.Size(348, 429);
+            this.labelTableLayoutPanel.TabIndex = 11;
             // 
             // CalculatorForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(205)))), ((int)(((byte)(207)))), ((int)(((byte)(210)))));
             this.ClientSize = new System.Drawing.Size(348, 428);
-            this.Controls.Add(this.InterfaceTableLayoutPanel);
+            this.Controls.Add(this.labelTableLayoutPanel);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.MinimumSize = new System.Drawing.Size(278, 467);
@@ -568,7 +568,7 @@ namespace Calculator
             this.Load += new System.EventHandler(this.CalculatorForm_FormLoad);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CalculatorForm_KeyPress);
             this.buttonTableLayoutPanel.ResumeLayout(false);
-            this.InterfaceTableLayoutPanel.ResumeLayout(false);
+            this.labelTableLayoutPanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -597,7 +597,7 @@ namespace Calculator
         private System.Windows.Forms.Button subtractionButton;
         private System.Windows.Forms.Label expressionLabel;
         private System.Windows.Forms.Label resultLabel;
-        private System.Windows.Forms.TableLayoutPanel InterfaceTableLayoutPanel;
+        private System.Windows.Forms.TableLayoutPanel labelTableLayoutPanel;
     }
 }
 

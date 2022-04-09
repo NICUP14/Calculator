@@ -11,7 +11,8 @@ namespace Calculator
         public const string ExpressionParserNullError =                                         "ExpressionParserNullError";
         public const string ExpressionParserSyntaxError =                                       "ExpressionParserSyntaxError";
         public const string ExpressionParserTokenError =                                        "ExpressionParserTokenError";
-        public const string ExpressionBuilderInsertParenthesis =                                "ExpressionBuilderInsertTokenError";
+        public const string ExpressionBuilderNullError =                                        "ExpressionBuilderNullError";
+        public const string ExpressionBuilderInsertParenthesisError =                                "ExpressionBuilderInsertTokenError";
         public const string ExpressionBuilderAppendDecimalTokenError =                          "ExpressionBuilderAppendDecimalTokenError";
         public const string ExpressionBuilderAppendOperatorTokenError =                         "ExpressionBuilderAppendOperatorTokenError";
         public const string ExpressionBuilderRemoveLastCharacterError =                         "ExpressionBuilderRemoveLastCharacterError";
@@ -96,12 +97,20 @@ namespace Calculator
         }
     }
 
+    class ExpressionBuilderNullError : Exception
+    {
+        public ExpressionBuilderNullError() : base(ErrorMessage.ExpressionBuilderNullError)
+        {
+
+        }
+    }
+
     /// <summary>
     /// Occurs when the expression builder detects the call to InsertParenthesis that would break expression validity
     /// </summary>
     class ExpressionBuilderInsertParenthesisError : Exception
     {
-        public ExpressionBuilderInsertParenthesisError() : base(ErrorMessage.ExpressionBuilderInsertParenthesis)
+        public ExpressionBuilderInsertParenthesisError() : base(ErrorMessage.ExpressionBuilderInsertParenthesisError)
         {
 
         }
