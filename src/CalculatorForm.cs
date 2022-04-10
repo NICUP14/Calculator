@@ -74,7 +74,6 @@ namespace Calculator
         {
             FunctionTag senderButtonTag = (FunctionTag)(sender as Button).Tag;
             ProcessFunctionTag(senderButtonTag);
-            UpdateLabels();
 
             /// This is why I have WinForms
             calculateButton.Focus();
@@ -88,7 +87,6 @@ namespace Calculator
 
             FunctionTag senderButtonTag = _hotkeyLookup[keyChar];
             ProcessFunctionTag(senderButtonTag);
-            UpdateLabels();
 
             e.Handled = true;
         }
@@ -104,6 +102,7 @@ namespace Calculator
                 {
                     case FunctionTag.Clear:
                         _expressionBuilder.Clear();
+                        UpdateResultLabel();
                         break;
                     case FunctionTag.Delete:
                         _expressionBuilder.RemoveLastCharacter();
@@ -127,7 +126,7 @@ namespace Calculator
                         _expressionBuilder.AppendToken(OperatorToken.Multiplication.Clone());
                         break;
                     case FunctionTag.Calculate:
-                        CalculateResult();
+                        UpdateResultLabel();
                         break;
                     case FunctionTag.Period:
                         _expressionBuilder.AppendToken(new DecimalToken("."));
@@ -170,6 +169,8 @@ namespace Calculator
                     button.BackColor = _buttonDefaultBackColorLookup[(FunctionTag)button.Tag].BackColor;
                     button.FlatAppearance.BorderColor = _buttonDefaultBackColorLookup[(FunctionTag)button.Tag].BorderColor;
                 }
+
+                UpdateExpressionLabel();
             }
 
             /// Coloured warning handler
@@ -181,7 +182,7 @@ namespace Calculator
                     paranthesisButton.BackColor = ButtonErrorBackColor;
                     paranthesisButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
                 }
-                else if(ex is ExpressionBuilderRemoveLastCharacterError)
+                else if (ex is ExpressionBuilderRemoveLastCharacterError)
                 {
                     deleteButton.Enabled = false;
                     deleteButton.BackColor = ButtonErrorBackColor;
@@ -260,51 +261,36 @@ namespace Calculator
                     divisionButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
                     multiplicationButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
                 }
-                //else if(ex is ExpressionParserSyntaxError || ex is DecimalPeriodError || ex is DecimalDivisionError)
-                else if(ex is ExpressionParserSyntaxError)
+                else if (ex is ExpressionParserSyntaxError)
                 {
                     calculateButton.Enabled = false;
                     calculateButton.BackColor = ButtonErrorBackColor;
                     calculateButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
                 }
+                else
+                    throw;
             }
         }
 
-        private void CalculateResult()
-        {
-            // Token[] tokenArray = _expressionBuilder.ToTokenArray();
-            DecimalToken decimalToken = new DecimalToken(_expressionBuilder.Calculate().ToString());
-
-            _expressionBuilder.Clear();
-            _expressionBuilder.AppendToken(decimalToken, false);
-
-            UpdateLabels();
-        }
-
-        private void UpdateLabels()
+        private void UpdateExpressionLabel()
         {
             string expression = _expressionBuilder.ToString();
             expressionLabel.Text = expression;
+        }
 
+        private void UpdateResultLabel()
+        {
             try
             {
-                // Token[] tokenArray = _expressionBuilder.ToTokenArray();
-                resultLabel.Text = _expressionBuilder.Calculate().ToString();
+                string expressionResult = _expressionBuilder.Calculate().ToString();
+                resultLabel.Text = expressionResult;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                if (ex is ExpressionBuilderNullError)
-                {
-                    expressionLabel.Text = resultLabel.Text = string.Empty;
-                    return;
-                }
-                else if(ex is ExpressionParserSyntaxError)
-                {
-                    resultLabel.Text = "Error";
-                    return;
-                }
-
-                throw;
+                if(ex is ExpressionBuilderNullError)
+                    resultLabel.Text = string.Empty;
+                else
+                    throw;
             }
         }
 

@@ -530,7 +530,6 @@ namespace Calculator
             this.resultLabel.Name = "resultLabel";
             this.resultLabel.Size = new System.Drawing.Size(348, 64);
             this.resultLabel.TabIndex = 10;
-            this.resultLabel.Text = "Result";
             this.resultLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // labelTableLayoutPanel
