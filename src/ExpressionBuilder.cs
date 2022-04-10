@@ -14,16 +14,27 @@ namespace Calculator
             _tokenList = new LinkedList<Token>();
         }
 
+        public void CompleteParantheses()
+        {
+            int unmatchedParanthesisCount = 0;
+            unmatchedParanthesisCount += _tokenList.Count(token => token.Equals(ParanthesisToken.OpeningParenthesis));
+            unmatchedParanthesisCount -= _tokenList.Count(token => token.Equals(ParanthesisToken.ClosingParenthesis));
+
+            for (int tokenListRange = 0; tokenListRange < unmatchedParanthesisCount; tokenListRange++)
+                _tokenList.AddLast(ParanthesisToken.ClosingParenthesis.Clone());
+        }
+
         public Token[] ToTokenArray()
         {
             int tokenArrayLength = _tokenList.Count;
             tokenArrayLength += _tokenList.Count(token => token.Equals(ParanthesisToken.OpeningParenthesis));
             tokenArrayLength -= _tokenList.Count(token => token.Equals(ParanthesisToken.ClosingParenthesis));
+
             Token[] tokenArray = new Token[tokenArrayLength];
 
             _tokenList.CopyTo(tokenArray, 0);
-            for (int tokenArrayRange = _tokenList.Count; tokenArrayRange < tokenArray.Length; tokenArrayRange++)
-                tokenArray[tokenArrayRange] = ParanthesisToken.ClosingParenthesis;
+            for (int tokenListRange = _tokenList.Count; tokenListRange < tokenArrayLength; tokenListRange++)
+                tokenArray[tokenListRange] = ParanthesisToken.ClosingParenthesis;
 
             return tokenArray;
         }
@@ -380,7 +391,6 @@ namespace Calculator
 
         Token savedOperatorToken;
         DecimalToken savedDecimalToken;
-        DecimalToken previousExpressionResult;
         readonly LinkedList<Token> _tokenList;
     }
 }

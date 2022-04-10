@@ -10,6 +10,8 @@
 - [ ] Add useful comments
 - [X] Use predefined Count method
 - [X] Fix "123+" + "Insert Paranthesis => Unresponsive
+- [ ] Implement CompleteParantheses method
+- [ ] Call CompleteParantheses inside Calculate method
 
 ## OperatorToken.cs
 

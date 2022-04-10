@@ -11,7 +11,6 @@ namespace Calculator
         [STAThread]
         static void Main()
         {
-            // Application.SetHighDpiMode(HighDpiMode.DpiUnaware);
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

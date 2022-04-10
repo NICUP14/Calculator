@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Collections.Generic;
@@ -21,8 +20,8 @@ namespace Calculator
             /// Configure button unique identifiers
             clearButton.Tag = FunctionTag.Clear;
             deleteButton.Tag = FunctionTag.Delete;
-            signButton.Tag = FunctionTag.ChangeSign;
-            paranthesisButton.Tag = FunctionTag.InsertParanthesis;
+            changeSignButton.Tag = FunctionTag.ChangeSign;
+            insertParanthesisButton.Tag = FunctionTag.InsertParanthesis;
             divisionButton.Tag = FunctionTag.Division;
             additionButton.Tag = FunctionTag.Addition;
             subtractionButton.Tag = FunctionTag.Subtraction;
@@ -43,8 +42,8 @@ namespace Calculator
             /// Add button references to button array
             _buttonArray[0] = clearButton;
             _buttonArray[1] = deleteButton;
-            _buttonArray[2] = signButton;
-            _buttonArray[3] = paranthesisButton;
+            _buttonArray[2] = changeSignButton;
+            _buttonArray[3] = insertParanthesisButton;
             _buttonArray[4] = divisionButton;
             _buttonArray[5] = additionButton;
             _buttonArray[6] = subtractionButton;
@@ -70,6 +69,7 @@ namespace Calculator
                 _buttonDefaultBackColorLookup.Add((FunctionTag)button.Tag, buttonDefaultProperty);
             }
         }
+
         private void CalculatorForm_ButtonClick(object sender, EventArgs e)
         {
             FunctionTag senderButtonTag = (FunctionTag)(sender as Button).Tag;
@@ -102,7 +102,7 @@ namespace Calculator
                 {
                     case FunctionTag.Clear:
                         _expressionBuilder.Clear();
-                        UpdateResultLabel();
+                        UpdateExpressionResultLabel();
                         break;
                     case FunctionTag.Delete:
                         _expressionBuilder.RemoveLastCharacter();
@@ -126,7 +126,7 @@ namespace Calculator
                         _expressionBuilder.AppendToken(OperatorToken.Multiplication.Clone());
                         break;
                     case FunctionTag.Calculate:
-                        UpdateResultLabel();
+                        UpdateExpressionResultLabel();
                         break;
                     case FunctionTag.Period:
                         _expressionBuilder.AppendToken(new DecimalToken("."));
@@ -176,11 +176,17 @@ namespace Calculator
             /// Coloured warning handler
             catch (Exception ex)
             {
-                if (ex is ExpressionBuilderInsertParenthesisError)
+                if (ex is ExpressionParserSyntaxError)
                 {
-                    paranthesisButton.Enabled = false;
-                    paranthesisButton.BackColor = ButtonErrorBackColor;
-                    paranthesisButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
+                    calculateButton.Enabled = false;
+                    calculateButton.BackColor = ButtonErrorBackColor;
+                    calculateButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
+                }
+                else if (ex is ExpressionBuilderInsertParenthesisError)
+                {
+                    insertParanthesisButton.Enabled = false;
+                    insertParanthesisButton.BackColor = ButtonErrorBackColor;
+                    insertParanthesisButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
                 }
                 else if (ex is ExpressionBuilderRemoveLastCharacterError)
                 {
@@ -261,14 +267,7 @@ namespace Calculator
                     divisionButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
                     multiplicationButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
                 }
-                else if (ex is ExpressionParserSyntaxError)
-                {
-                    calculateButton.Enabled = false;
-                    calculateButton.BackColor = ButtonErrorBackColor;
-                    calculateButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
-                }
-                else
-                    throw;
+                else throw;
             }
         }
 
@@ -278,19 +277,20 @@ namespace Calculator
             expressionLabel.Text = expression;
         }
 
-        private void UpdateResultLabel()
+        private void UpdateExpressionResultLabel()
         {
             try
             {
                 string expressionResult = _expressionBuilder.Calculate().ToString();
-                resultLabel.Text = expressionResult;
+                expressionResultLabel.Text = expressionResult;
+
+                _expressionBuilder.CompleteParantheses();
             }
             catch (Exception ex)
             {
                 if(ex is ExpressionBuilderNullError)
-                    resultLabel.Text = string.Empty;
-                else
-                    throw;
+                    expressionResultLabel.Text = string.Empty;
+                else throw;
             }
         }
 
