@@ -35,7 +35,7 @@
             return new Token(_tokenType, _stringRepresentation);
         }
 
-        public void RemoveLastCharacter()
+        public virtual void RemoveLastCharacter()
         {
             _stringRepresentation = _stringRepresentation.Remove(_stringRepresentation.Length - 1);
         }

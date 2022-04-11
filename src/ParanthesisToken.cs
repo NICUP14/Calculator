@@ -2,7 +2,7 @@
 {
     class ParanthesisToken : Token
     {
-        private ParanthesisToken(ParenthesisTokenType parenthesisTokenType, string stringRepresentation = "") : base(TokenType.Parenthesis, stringRepresentation)
+        private ParanthesisToken(ParenthesisTokenType parenthesisTokenType, string stringRepresentation) : base(TokenType.Parenthesis, stringRepresentation)
         {
             _parenthesisTokenType = parenthesisTokenType;
         }

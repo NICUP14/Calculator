@@ -102,7 +102,6 @@ namespace Calculator
                 {
                     case FunctionTag.Clear:
                         _expressionBuilder.Clear();
-                        UpdateExpressionResultLabel();
                         break;
                     case FunctionTag.Delete:
                         _expressionBuilder.RemoveLastCharacter();
@@ -123,10 +122,7 @@ namespace Calculator
                         _expressionBuilder.AppendToken(OperatorToken.Subtraction);
                         break;
                     case FunctionTag.Multiplication:
-                        _expressionBuilder.AppendToken(OperatorToken.Multiplication.Clone());
-                        break;
-                    case FunctionTag.Calculate:
-                        UpdateExpressionResultLabel();
+                        _expressionBuilder.AppendToken(OperatorToken.Multiplication);
                         break;
                     case FunctionTag.Period:
                         _expressionBuilder.AppendToken(new DecimalToken("."));
@@ -163,6 +159,7 @@ namespace Calculator
                         break;
                 }
 
+
                 foreach (Button button in _buttonArray)
                 {
                     button.Enabled = true;
@@ -170,25 +167,26 @@ namespace Calculator
                     button.FlatAppearance.BorderColor = _buttonDefaultBackColorLookup[(FunctionTag)button.Tag].BorderColor;
                 }
 
+                UpdateExpressionResultLabel(senderButtonTag != FunctionTag.Calculate);
                 UpdateExpressionLabel();
             }
 
             /// Coloured warning handler
             catch (Exception ex)
             {
-                if (ex is ExpressionParserSyntaxError)
-                {
-                    calculateButton.Enabled = false;
-                    calculateButton.BackColor = ButtonErrorBackColor;
-                    calculateButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
-                }
-                else if (ex is ExpressionBuilderInsertParenthesisError)
-                {
-                    insertParanthesisButton.Enabled = false;
-                    insertParanthesisButton.BackColor = ButtonErrorBackColor;
-                    insertParanthesisButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
-                }
-                else if (ex is ExpressionBuilderRemoveLastCharacterError)
+                // if (ex is ExpressionParserSyntaxError)
+                // {
+                //     calculateButton.Enabled = false;
+                //     calculateButton.BackColor = ButtonErrorBackColor;
+                //     calculateButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
+                // }
+                // else if (ex is ExpressionBuilderInsertParenthesisError)
+                // {
+                //     insertParanthesisButton.Enabled = false;
+                //     insertParanthesisButton.BackColor = ButtonErrorBackColor;
+                //     insertParanthesisButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
+                // }
+                if (ex is ExpressionBuilderRemoveLastCharacterError)
                 {
                     deleteButton.Enabled = false;
                     deleteButton.BackColor = ButtonErrorBackColor;
@@ -277,8 +275,14 @@ namespace Calculator
             expressionLabel.Text = expression;
         }
 
-        private void UpdateExpressionResultLabel()
+        private void UpdateExpressionResultLabel(bool clearExpressionResultLabel = false)
         {
+            if(clearExpressionResultLabel == true)
+            {
+                expressionResultLabel.Text = "";
+                return;
+            }
+
             try
             {
                 string expressionResult = _expressionBuilder.Calculate().ToString();

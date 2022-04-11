@@ -2,23 +2,25 @@
 {
     class DecimalToken : Token
     {
-        public DecimalToken(string stringRepresentation = "") : base(TokenType.Decimal, stringRepresentation)
+        public DecimalToken(string stringRepresentation) : base(TokenType.Decimal)
         {
+            _stringRepresentation  = stringRepresentation;
+            _decimalRepresentation = new Decimal(stringRepresentation);
+        }
+
+        public override string ToString()
+        {
+            return _stringRepresentation;
         }
 
         public Decimal ToDecimal()
         {
-            return new Decimal(_stringRepresentation);
+            return _decimalRepresentation;
         }
 
-        public bool EndsWithPeriod()
+        public void Reformat()
         {
-            return !string.IsNullOrEmpty(_stringRepresentation) && _stringRepresentation.EndsWith('.');
-        }
-
-        public bool StartsWithPeriod()
-        {
-            return !string.IsNullOrEmpty(_stringRepresentation) && _stringRepresentation.StartsWith('.');
+            _stringRepresentation = _decimalRepresentation.ToString();
         }
 
         public static DecimalToken Concatenate(DecimalToken decimalToken, DecimalToken decimalToken2)
@@ -38,5 +40,7 @@
                 return periodCount;
             }
         }
+
+        private Decimal _decimalRepresentation;
     }
 }

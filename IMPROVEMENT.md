@@ -1,17 +1,26 @@
 # Calculator-related improvements
 
+# Decimal.cs
+
+- [X] Support multiple decimal formats
+
+# DecimalToken.cs
+
+- [X] Implement Reformat method
+
 ## CalculatorForm.cs
 
 - [ ] Add useful comments
 
 ## ExpressionBuilder.cs
 
-- [X] Reformat methods
 - [ ] Add useful comments
+- [X] Call DecimalToken.Reformat
+- [X] Reformat methods
 - [X] Use predefined Count method
 - [X] Fix "123+" + "Insert Paranthesis => Unresponsive
-- [ ] Implement CompleteParantheses method
-- [ ] Call CompleteParantheses inside Calculate method
+- [X] Implement CompleteParantheses method
+- [X] Call CompleteParantheses inside Calculate method
 
 ## OperatorToken.cs
 

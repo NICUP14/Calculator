@@ -164,6 +164,10 @@ namespace Calculator
 
         public Decimal Calculate()
         {
+            Token lastTokenListToken = _tokenList.Last();
+            if (lastTokenListToken.Equals(Token.Decimal))
+                (lastTokenListToken as DecimalToken).Reformat();
+
             Token[] tokenArray = ToTokenArray();
 
             if (tokenArray.Length == 0)
@@ -231,10 +235,14 @@ namespace Calculator
 
                     if (unmatchedParenthesisCount > 0)
                     {
-                        if (lastTokenListToken.Equals(Token.Decimal) && (lastTokenListToken as DecimalToken).EndsWithPeriod())
-                            throw new ExpressionBuilderInsertParenthesisError();
+                        // if (lastTokenListToken.Equals(Token.Decimal) && (lastTokenListToken as DecimalToken).EndsWithPeriod())
+                        //      new ExpressionBuilderInsertParenthesisError();
+
+                        if(lastTokenListToken.Equals(Token.Decimal))
+                            (lastTokenListToken as DecimalToken).Reformat();
 
                         _tokenList.AddLast(ParanthesisToken.ClosingParenthesis.Clone());
+
                     }
                     else
                     {
@@ -264,18 +272,14 @@ namespace Calculator
         {
             if (_tokenList.Count == 0)
             {
-                if (decimalToken.EndsWithPeriod())
-                    throw new ExpressionBuilderAppendPeriodDecimalTokenError();
+                //if (decimalToken.EndsWithPeriod())
+                //    throw new ExpressionBuilderAppendPeriodDecimalTokenError();
 
                 _tokenList.AddLast(decimalToken);
             }
             else
             {
                 Token lastToken = _tokenList.Last.Value;
-
-                /// Closing parenthesis token mark
-                if (lastToken.Equals(ParanthesisToken.ClosingParenthesis))
-                    throw new ExpressionBuilderAppendDecimalTokenError();
 
                 /// Decimal token mark
                 if (lastToken.Equals(Token.Decimal))
@@ -287,8 +291,9 @@ namespace Calculator
 
                 else
                 {
-                    if (decimalToken.EndsWithPeriod())
-                        throw new ExpressionBuilderAppendPeriodDecimalTokenError();
+                    /// Closing parenthesis token mark
+                    if (lastToken.Equals(ParanthesisToken.ClosingParenthesis))
+                        throw new ExpressionBuilderAppendDecimalTokenError();
 
                     _tokenList.AddLast(decimalToken);
                 }
@@ -339,8 +344,11 @@ namespace Calculator
                 /// Decimal token mark
                 else if (lastTokenListToken.Equals(Token.Decimal))
                 {
-                    if ((lastTokenListToken as DecimalToken).EndsWithPeriod())
-                        throw new ExpressionBuilderAppendOperatorTokenError();
+                    // if ((lastTokenListToken as DecimalToken).EndsWithPeriod())
+                    //     throw new ExpressionBuilderAppendOperatorTokenError();
+
+                    if (lastTokenListToken.Equals(Token.Decimal))
+                        (lastTokenListToken as DecimalToken).Reformat();
 
                     _tokenList.AddLast(operatorToken.Clone());
                 }

@@ -2,7 +2,7 @@
 {
     class OperatorToken : Token
     {
-        private OperatorToken(int precedence, OperatorTokenType operatorType, string stringRepresentation = "") : base(TokenType.Operator, stringRepresentation)
+        private OperatorToken(int precedence, OperatorTokenType operatorType, string stringRepresentation) : base(TokenType.Operator, stringRepresentation)
         {
             _precedence = precedence;
             _operatorTokenType = operatorType;
