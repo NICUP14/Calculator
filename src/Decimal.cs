@@ -67,19 +67,22 @@ namespace Calculator
             if (_fractionalPart.Count == 0)
                 _fractionalPart.AddLast('0');
 
-            if (CharacterLinkedListMethods.IsAllZeroes(_integerPart) == true && CharacterLinkedListMethods.IsAllZeroes(_fractionalPart) == true)
+            if (CharacterLinkedListMethods.IsAllZeroes(_integerPart) && CharacterLinkedListMethods.IsAllZeroes(_fractionalPart))
                 _isPositive = true;
 
             /// Remove and validate integer and fractional parts
+            if (!CharacterLinkedListMethods.IsAllZeroes(_integerPart))
+                CharacterLinkedListMethods.RemoveLeadingZeroes(_integerPart);
+
+            if(!CharacterLinkedListMethods.IsAllZeroes(_fractionalPart))
+                CharacterLinkedListMethods.RemoveTrailingZeroes(_fractionalPart);
+
             if (_integerPart.Count > 1 && _integerPart.First.Value == '0')
                 throw new DecimalInvalidError();
 
             foreach (char integerChar in _integerPart)
                 if (!char.IsDigit(integerChar))
                     throw new DecimalInvalidError();
-
-            if(!CharacterLinkedListMethods.IsAllZeroes(_fractionalPart))
-                CharacterLinkedListMethods.RemoveTrailingZeroes(_fractionalPart);
 
             foreach(char fractionalChar in _fractionalPart)
                 if(!char.IsDigit(fractionalChar))
