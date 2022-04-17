@@ -164,42 +164,28 @@ namespace Calculator
 
         public Decimal Calculate()
         {
+            if (_tokenList.Count == 0)
+                throw new ExpressionBuilderNullError();
+
             Token lastTokenListToken = _tokenList.Last();
+
             if (lastTokenListToken.Equals(Token.Decimal))
                 (lastTokenListToken as DecimalToken).Reformat();
 
-            Token[] tokenArray = ToTokenArray();
-
-            if (tokenArray.Length == 0)
-                throw new ExpressionBuilderNullError();
-
-            Token lastTokenArrayToken = tokenArray[tokenArray.Length - 1];
-            if(lastTokenArrayToken.Equals(Token.Operator))
-                tokenArray[tokenArray.Length - 1] = null;
-
-            Decimal expressionResult = ExpressionParser.Calculate(tokenArray);
-
-            if (lastTokenArrayToken.Equals(Token.Operator))
+            if (lastTokenListToken.Equals(Token.Operator))
             {
-                savedOperatorToken = lastTokenArrayToken;
-                savedDecimalToken = new DecimalToken(expressionResult.ToString());
+                _tokenList.RemoveLast();
+
+                savedOperatorToken = lastTokenListToken;
+
+                Decimal savedDecimal = ExpressionParser.Calculate(ToTokenArray());
+                savedDecimalToken = new DecimalToken(savedDecimal.ToString());
             }
 
             if(savedOperatorToken is not null && savedDecimalToken is not null)
             {
-                Decimal previousExpressionResult = expressionResult;
-
-                if (savedOperatorToken.Equals(OperatorToken.Division))
-                    expressionResult = Decimal.Divide(expressionResult, savedDecimalToken.ToDecimal());
-                else if (savedOperatorToken.Equals(OperatorToken.Addition))
-                    expressionResult = Decimal.Add(expressionResult, savedDecimalToken.ToDecimal());
-                else if (savedOperatorToken.Equals(OperatorToken.Subtraction))
-                    expressionResult = Decimal.Subtract(expressionResult, savedDecimalToken.ToDecimal());
-                else if (savedOperatorToken.Equals(OperatorToken.Multiplication))
-                    expressionResult = Decimal.Multiply(expressionResult, savedDecimalToken.ToDecimal());
-
-                DecimalToken expressionResultDecimalToken = new DecimalToken(expressionResult.ToString());
-                DecimalToken previousExpressionResultDecimalToken = new DecimalToken(previousExpressionResult.ToString());
+                string previousExpressionResult = ExpressionParser.Calculate(ToTokenArray()).ToString();
+                DecimalToken previousExpressionResultDecimalToken = new DecimalToken(previousExpressionResult);
 
                 Clear();
                 AppendToken(previousExpressionResultDecimalToken, false);
@@ -207,9 +193,7 @@ namespace Calculator
                 AppendToken(savedDecimalToken, false);
             }
 
-            tokenArray[tokenArray.Length - 1] = lastTokenArrayToken;
-
-            return expressionResult;
+            return ExpressionParser.Calculate(ToTokenArray());
         }
 
         /// <summary>
@@ -268,7 +252,7 @@ namespace Calculator
         /// Appends specified decimal token to the expression
         /// </summary>
         /// <param name="decimalToken"></param>
-        public void AppendToken(DecimalToken decimalToken, bool changePreviousOperatorToken = true)
+        public void AppendToken(DecimalToken decimalToken, bool changeSavedOperatorToken = true)
         {
             if (_tokenList.Count == 0)
             {
@@ -299,7 +283,7 @@ namespace Calculator
                 }
             }
 
-            if(changePreviousOperatorToken == true)
+            if(changeSavedOperatorToken == true)
             {
                 savedOperatorToken = null;
                 savedDecimalToken = null;
@@ -310,7 +294,7 @@ namespace Calculator
         /// Appends specified decimal token to the expression
         /// </summary>
         /// <param name="operatorToken"></param>
-        public void AppendToken(OperatorToken operatorToken, bool changePreviousOperatorToken = true)
+        public void AppendToken(OperatorToken operatorToken, bool changeSavedOperatorToken = true)
         {
             if (_tokenList.Count == 0)
             {
@@ -363,7 +347,7 @@ namespace Calculator
                 }
             }
 
-            if(changePreviousOperatorToken == true)
+            if(changeSavedOperatorToken == true)
             {
                 savedOperatorToken = null;
                 savedDecimalToken = null;

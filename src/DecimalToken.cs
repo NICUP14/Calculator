@@ -8,9 +8,26 @@
             _decimalRepresentation = new Decimal(stringRepresentation);
         }
 
+        public DecimalToken(Decimal decimalRepresentation) : base(TokenType.Decimal)
+        {
+            _decimalRepresentation = decimalRepresentation;
+            _stringRepresentation = decimalRepresentation.ToString();
+        }
+
         public override string ToString()
         {
             return _stringRepresentation;
+        }
+
+        public override DecimalToken Clone()
+        {
+            return new DecimalToken(_stringRepresentation);
+        }
+
+        public override void RemoveLastCharacter()
+        {
+            base.RemoveLastCharacter();
+            _decimalRepresentation = new Decimal(_stringRepresentation);
         }
 
         public Decimal ToDecimal()
