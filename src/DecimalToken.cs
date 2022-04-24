@@ -4,7 +4,7 @@
     {
         public DecimalToken(string stringRepresentation) : base(TokenType.Decimal)
         {
-            _stringRepresentation  = stringRepresentation;
+            _stringRepresentation = stringRepresentation;
             _decimalRepresentation = new Decimal(stringRepresentation);
         }
 
@@ -40,7 +40,7 @@
             _stringRepresentation = _decimalRepresentation.ToString();
         }
 
-        public static DecimalToken Concatenate(DecimalToken decimalToken, DecimalToken decimalToken2)
+        public static DecimalToken Concat(DecimalToken decimalToken, DecimalToken decimalToken2)
         {
             return new DecimalToken(decimalToken._stringRepresentation + decimalToken2._stringRepresentation);
         }
@@ -59,5 +59,18 @@
         }
 
         private Decimal _decimalRepresentation;
+
+        ///  Decimal token constants
+        public static readonly DecimalToken Zero = new("0");
+        public static readonly DecimalToken One = new("1");
+        public static readonly DecimalToken Two = new("2");
+        public static readonly DecimalToken Three = new("3");
+        public static readonly DecimalToken Four = new("4");
+        public static readonly DecimalToken Five = new("5");
+        public static readonly DecimalToken Six = new("6");
+        public static readonly DecimalToken Seven = new("7");
+        public static readonly DecimalToken Eight = new("8");
+        public static readonly DecimalToken Nine = new("9");
+        public static readonly DecimalToken Period = new(".");
     }
 }

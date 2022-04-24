@@ -1,278 +1,340 @@
 using System;
-using System.Text;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Calculator
 {
     /// <summary>
-    ///	Additional methods for linked lists containing characters
+    ///	Implements additional methods for linked lists 
     /// </summary>
 	static class CharacterLinkedListMethods
-	{
-		public static LinkedList<char> ConvertStringToLinkedList(string str)
-		{
-			LinkedList<char> list = new LinkedList<char>();
-			foreach (char strChar in str)
-				list.AddLast(strChar);
-			return list;
-		}
+    {
 
-		public static string ConvertLinkedListToString(LinkedList<char> list)
-		{
-			StringBuilder strBuilder = new StringBuilder(list.Count);
-			foreach (char listChar in list)
-				strBuilder.Append(listChar);
-			return strBuilder.ToString();
-		}
+        /// <summary>
+        /// Indicates whether the specified list contains only the "zero" character
+        /// </summary>
+        /// <param name="linkedList"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static bool ContainsOnlyZeroes(LinkedList<char> linkedList)
+        {
+            if (linkedList is null)
+                throw new ArgumentNullException(nameof(linkedList));
 
-		public static LinkedList<char> Clone(LinkedList<char> list)
-		{
-			LinkedList<char> newList = new LinkedList<char>();
-			foreach (char listChar in list)
-				newList.AddLast(listChar);
-			return newList;
-		}
+            return Enumerable.Count(linkedList, linkedListChar => linkedListChar == '0') == linkedList.Count;
+        }
 
-		public static bool IsAllDigits(LinkedList<char> list)
-		{
-			if (list.Count == 0)
-				return false;
-			foreach (char listChar in list)
-				if (!char.IsDigit(listChar))
-					return false;
-			return true;
-		}
+        /// <summary>
+        // Removes all occurrences of the "zero" characters from the beginning of a list.
+        /// </summary>
+        /// <param name="linkedList"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static int TrimLeadingZeroes(LinkedList<char> linkedList)
+        {
+            if (linkedList is null)
+                throw new ArgumentNullException(nameof(linkedList));
 
-		public static bool IsAllZeroes(LinkedList<char> list)
-		{
-			if (list.Count == 0)
-				return false;
-			foreach (char listChar in list)
-				if (listChar != '0')
-					return false;
-			return true;
-		}
+            int trimCount = 0;
+            while (linkedList.Count > 1 && linkedList.First.Value == '0')
+            {
+                trimCount++;
+                linkedList.RemoveFirst();
+            }
 
-		public static int RemoveLeadingZeroes(LinkedList<char> list)
-		{
-			LinkedListNode<char> listNode = list.First, auxiliaryNode;
-			int nodeCount = 0;
-			while (list.Count > 1 && listNode.Value == '0')
-			{
-				auxiliaryNode = listNode.Next;
-				list.Remove(listNode);
-				listNode = auxiliaryNode;
-				nodeCount++;
-			}
-			return nodeCount;
-		}
+            return trimCount;
+        }
 
-		public static int RemoveTrailingZeroes(LinkedList<char> list)
-		{
-			LinkedListNode<char> listNode = list.Last, auxiliaryNode;
-			int nodeCount = 0;
-			while (list.Count > 1 && listNode.Value == '0')
-			{
-				auxiliaryNode = listNode.Previous;
-				list.Remove(listNode);
-				listNode = auxiliaryNode;
-				nodeCount++;
-			}
-			return nodeCount;
-		}
+        /// <summary>
+        // Removes all occurrences of the "zero" characters from the end of a list
+        /// </summary>
+        /// <param name="linkedList"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static int TrimTrailingZeroes(LinkedList<char> linkedList)
+        {
+            if (linkedList is null)
+                throw new ArgumentNullException(nameof(linkedList));
 
-		/// <summary>
-		/// Transfer the specified number of nodes from the first list to the other
-		/// </summary>
-		/// <param name="list"></param>
-		/// <param name="list2"></param>
-		/// <param name="nodeCount"></param>
-		public static void ShiftRight(LinkedList<char> list, LinkedList<char> list2, int nodeCount)
-		{
-			LinkedListNode<char> listNode = list.Last, auxiliaryNode;
-			while (nodeCount > 0)
-			{
-				if (listNode != null)
-				{
-					auxiliaryNode = listNode.Previous;
-					list.Remove(listNode);
-					list2.AddFirst(listNode);
-					listNode = auxiliaryNode;
-				}
-				else
-					list2.AddFirst('0');
-				nodeCount--;
-			}
-			if (listNode == null)
-				list.AddLast('0');
-		}
+            int trimCount = 0;
+            while (linkedList.Count > 1 && linkedList.Last.Value == '0')
+            {
+                linkedList.RemoveLast();
+                trimCount++;
+            }
+            return trimCount;
+        }
 
-		/// <summary>
-		/// Transfer the specified number of nodes from the second list to the other
-		/// </summary>
-		/// <param name="list"></param>
-		/// <param name="list2"></param>
-		/// <param name="nodeCount"></param>
-		public static void ShiftLeft(LinkedList<char> list, LinkedList<char> list2, int nodeCount)
-		{
-			LinkedListNode<char> listNode2 = list2.First, auxiliaryNode;
-			while (nodeCount > 0)
-			{
-				if (listNode2 != null)
-				{
-					auxiliaryNode = listNode2.Next;
-					list2.Remove(listNode2);
-					list.AddLast(listNode2);
-					listNode2 = auxiliaryNode;
-				}
-				else
-					list.AddLast('0');
-				nodeCount--;
-			}
-			if (listNode2 == null)
-				list2.AddFirst('0');
-		}
+        /// <summary>
+        /// Transfers the specified number of nodes from the beginning of the first LinkedList to the end of the other
+        /// </summary>
+        /// <param name="firstLinkedList"></param>
+        /// <param name="secondLinkedList"></param>
+        /// <param name="nodeCount"></param>
+        public static void TransferRight(LinkedList<char> firstLinkedList, LinkedList<char> secondLinkedList, int nodeCount)
+        {
+            if (firstLinkedList is null)
+                throw new ArgumentNullException(nameof(firstLinkedList));
 
-		public static int Compare(LinkedList<char> comparand, LinkedList<char> comparator, bool respectCount = true)
-		{
-			if (respectCount)
-			{
-				if (comparand.Count > comparator.Count)
-					return 1;
-				else if (comparand.Count < comparator.Count)
-					return -1;
-			}
-			LinkedListNode<char> comparandNode = comparand.First, comparatorNode = comparator.First;
-			while (comparandNode != null && comparatorNode != null)
-			{
-				if (comparandNode.Value > comparatorNode.Value)
-					return 1;
-				else if (comparandNode.Value < comparatorNode.Value)
-					return -1;
-				comparandNode = comparandNode.Next;
-				comparatorNode = comparatorNode.Next;
-			}
-			return 0;
-		}
+            if (secondLinkedList is null)
+                throw new ArgumentNullException(nameof(secondLinkedList));
 
-		public static LinkedList<char> Add(LinkedList<char> addend, LinkedList<char> addend2)
-		{
-			LinkedList<char> result = new LinkedList<char>();
-			LinkedListNode<char> addendNode = addend.Last;
-			LinkedListNode<char> addend2Node = addend2.Last;
-			int sum = 0, carry = 0;
-			while (addendNode != null || addend2Node != null)
-			{
-				sum = 0;
-				if (addendNode != null)
-				{
-					sum += addendNode.Value - '0';
-					addendNode = addendNode.Previous;
-				}
-				if (addend2Node != null)
-				{
-					sum += addend2Node.Value - '0';
-					addend2Node = addend2Node.Previous;
-				}
-				sum += carry;
-				carry = sum / 10;
-				result.AddFirst((char)(sum % 10 + '0'));
-			}
-			if (carry != 0)
-				result.AddFirst((char)(carry + '0'));
-			return result;
-		}
+            LinkedListNode<char> firstLinkedListNode = firstLinkedList.Last;
+            for (int nodeRange = 0; nodeRange < nodeCount; nodeRange++)
+            {
+                if (firstLinkedListNode is null)
+                    secondLinkedList.AddFirst('0');
+                else
+                {
+                    firstLinkedList.Remove(firstLinkedListNode);
+                    secondLinkedList.AddFirst(firstLinkedListNode);
+                    firstLinkedListNode = firstLinkedList.Last;
+                }
+            }
 
-		public static LinkedList<char> Multiply(LinkedList<char> multiplicand, LinkedList<char> multiplicator)
-		{
-			// Preallocate space for new list
-			LinkedList<char> result = new LinkedList<char>();
-			for (int resultRange = 0; resultRange < multiplicand.Count + multiplicator.Count; resultRange++)
-				result.AddLast('0');
+            if (firstLinkedListNode is null)
+                firstLinkedList.AddLast('0');
+        }
 
-			LinkedListNode<char> multiplicandNode = multiplicand.Last, multiplicatorNode, resultNode;
-			int resultNodeSkipCount = 0, product, carry = 0;
-			while (multiplicandNode != null)
-			{
-				if (multiplicandNode.Value != '0')
-				{
-					resultNode = result.Last;
-					for (int resultRange = 0; resultRange < resultNodeSkipCount; resultRange++)
-						resultNode = resultNode.Previous;
-					multiplicatorNode = multiplicator.Last;
-					carry = 0;
-					while (multiplicatorNode != null)
-					{
-						product = (resultNode.Value - '0') + (multiplicandNode.Value - '0') * (multiplicatorNode.Value - '0') + carry;
-						carry = product / 10;
-						resultNode.Value = (char)(product % 10 + '0');
-						resultNode = resultNode.Previous;
-						multiplicatorNode = multiplicatorNode.Previous;
-					}
-					if (carry != 0)
-						resultNode.Value = (char)(carry + '0');
-				}
-				resultNodeSkipCount++;
-				multiplicandNode = multiplicandNode.Previous;
-			}
-			return result;
-		}
+        /// <summary>
+        /// Transfer the specified number of nodes from the beginning of the second list to the end of the other
+        /// </summary>
+        /// <param name="firstLinkedList"></param>
+        /// <param name="secondLinkedList"></param>
+        /// <param name="nodeCount"></param>
+        public static void TransferLeft(LinkedList<char> firstLinkedList, LinkedList<char> secondLinkedList, int nodeCount)
+        {
+            if (firstLinkedList is null)
+                throw new ArgumentNullException(nameof(firstLinkedList));
 
-		public static LinkedList<char> Subtract(LinkedList<char> minuend, LinkedList<char> subtrahend)
-		{
-			LinkedList<char> result = new LinkedList<char>();
-			LinkedListNode<char> minuendNode = minuend.Last;
-			LinkedListNode<char> subtrahendNode = subtrahend.Last;
-			int difference, carry = 0;
-			while (minuendNode != null || subtrahendNode != null)
-			{
-				difference = 0;
-				if (minuendNode != null)
-				{
-					difference += minuendNode.Value - '0';
-					minuendNode = minuendNode.Previous;
-				}
-				if (subtrahendNode != null)
-				{
-					difference -= subtrahendNode.Value - '0';
-					subtrahendNode = subtrahendNode.Previous;
-				}
-				difference -= carry;
-				if (difference < 0)
-				{
-					difference += 10;
-					carry = 1;
-				}
-				else
-					carry = 0;
-				result.AddFirst((char)(difference + '0'));
-			}
-			return result;
-		}
+            if (secondLinkedList is null)
+                throw new ArgumentNullException(nameof(secondLinkedList));
 
-		/// <summary>
-		// Efficiently searches index of linked list from a array that is smaller than or equal than the specified list
-		/// </summary>
-		/// <param name="list"></param>
-		/// <param name="array"></param>
-		/// <returns></returns>
-		public static int LessThanOrEqualBinarySearch(LinkedList<char> list, LinkedList<char>[] array)
-		{
-			int leftIndex = 0;
-			int rightIndex = array.Length - 1;
-			while (leftIndex <= rightIndex)
-			{
-				int midIndex = (leftIndex + rightIndex) / 2;
-				if (Compare(list, array[midIndex]) > 0)
-					leftIndex = midIndex + 1;
-				else if (Compare(list, array[midIndex]) < 0)
-					rightIndex = midIndex - 1;
-				else
-					return midIndex;
-			}
-			if (leftIndex > array.Length - 1)
-				return array.Length - 1;
-			return rightIndex;
-		}
-	}
+            LinkedListNode<char> secondLinkedListNode = secondLinkedList.First;
+            for (int nodeRange = 0; nodeRange < nodeCount; nodeRange++)
+            {
+                if (secondLinkedListNode is null)
+                    firstLinkedList.AddLast('0');
+                else
+                {
+                    secondLinkedList.RemoveFirst();
+                    firstLinkedList.AddLast(secondLinkedListNode);
+                    secondLinkedListNode = secondLinkedList.First;
+                }
+            }
+
+            if (secondLinkedListNode is null)
+                secondLinkedList.AddLast('0');
+        }
+
+        /// <summary>
+        /// Compares specified lists representing unsigned integers and returns an indication of their relative values
+        /// </summary>
+        /// <param name="comparand"></param>
+        /// <param name="comparator"></param>
+        /// <param name="respectCount"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static int Compare(LinkedList<char> comparand, LinkedList<char> comparator, bool respectCount = true)
+        {
+            if (comparand is null)
+                throw new ArgumentNullException(nameof(comparand));
+
+            if (comparator is null)
+                throw new ArgumentNullException(nameof(comparator));
+
+            if (respectCount && comparand.Count != comparator.Count)
+                return comparand.Count.CompareTo(comparator.Count);
+
+            LinkedListNode<char> comparandNode = comparand.First, comparatorNode = comparator.First;
+            while (comparandNode is not null && comparatorNode is not null && comparandNode.Value == comparatorNode.Value)
+            {
+                comparandNode = comparandNode.Next;
+                comparatorNode = comparatorNode.Next;
+            }
+
+            if (comparandNode is null || comparatorNode is null)
+                return 0;
+
+            return comparandNode.Value.CompareTo(comparatorNode.Value);
+        }
+
+        /// <summary>
+        /// Adds specified lists representing unsigned integers
+        /// </summary>
+        /// <param name="firstAddend"></param>
+        /// <param name="secondAddend"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static LinkedList<char> Add(LinkedList<char> firstAddend, LinkedList<char> secondAddend)
+        {
+            if (firstAddend is null)
+                throw new ArgumentNullException(nameof(firstAddend));
+
+            if (secondAddend is null)
+                throw new ArgumentNullException(nameof(secondAddend));
+
+            LinkedList<char> result = new();
+            LinkedListNode<char> firstAddendNode = firstAddend.Last, secondAddendNode = secondAddend.Last;
+
+            int sum, carry = 0;
+            while (firstAddendNode is not null || secondAddendNode is not null)
+            {
+                sum = 0;
+                if (firstAddendNode is not null)
+                {
+                    sum += firstAddendNode.Value - '0';
+                    firstAddendNode = firstAddendNode.Previous;
+                }
+                if (secondAddendNode is not null)
+                {
+                    sum += secondAddendNode.Value - '0';
+                    secondAddendNode = secondAddendNode.Previous;
+                }
+
+                sum += carry;
+                carry = sum / 10;
+                result.AddFirst((char)(sum % 10 + '0'));
+            }
+
+            if (carry != 0)
+                result.AddFirst((char)(carry + '0'));
+
+            return result;
+        }
+
+        /// <summary>
+        /// Multiplies specified lists representing unsigned integers
+        /// </summary>
+        /// <param name="multiplicand"></param>
+        /// <param name="multiplicator"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static LinkedList<char> Multiply(LinkedList<char> multiplicand, LinkedList<char> multiplicator)
+        {
+            if (multiplicand is null)
+                throw new ArgumentNullException(nameof(multiplicand));
+
+            if (multiplicator is null)
+                throw new ArgumentNullException(nameof(multiplicator));
+
+
+            // Fills the result list with zero numeric characters
+            LinkedList<char> result = new(new string('0', multiplicand.Count + multiplicator.Count));
+
+            LinkedListNode<char> multiplicandNode = multiplicand.Last, multiplicatorNode, resultNode;
+
+            int resultNodeSkipCount = 0, product, carry;
+            while (multiplicandNode is not null)
+            {
+                if (multiplicandNode.Value != '0')
+                {
+                    resultNode = result.Last;
+                    multiplicatorNode = multiplicator.Last;
+
+                    for (int resultRange = 0; resultRange < resultNodeSkipCount; resultRange++)
+                        resultNode = resultNode.Previous;
+
+                    carry = 0;
+                    while (multiplicatorNode is not null)
+                    {
+                        product = (resultNode.Value - '0') + (multiplicandNode.Value - '0') * (multiplicatorNode.Value - '0') + carry;
+                        carry = product / 10;
+
+                        resultNode.Value = (char)(product % 10 + '0');
+
+                        resultNode = resultNode.Previous;
+                        multiplicatorNode = multiplicatorNode.Previous;
+                    }
+
+                    if (carry != 0)
+                        resultNode.Value = (char)(carry + '0');
+                }
+
+                resultNodeSkipCount++;
+                multiplicandNode = multiplicandNode.Previous;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Subtracts specified lists representing unsigned integers
+        /// </summary>
+        /// <param name="minuend"></param>
+        /// <param name="subtrahend"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static LinkedList<char> Subtract(LinkedList<char> minuend, LinkedList<char> subtrahend)
+        {
+            if (minuend is null)
+                throw new ArgumentNullException(nameof(minuend));
+
+            if (subtrahend is null)
+                throw new ArgumentNullException(nameof(subtrahend));
+
+            LinkedList<char> result = new();
+            LinkedListNode<char> minuendNode = minuend.Last, subtrahendNode = subtrahend.Last;
+
+            int difference, carry = 0;
+            while (minuendNode is not null || subtrahendNode is not null)
+            {
+                difference = 0;
+                if (minuendNode is not null)
+                {
+                    difference += minuendNode.Value - '0';
+                    minuendNode = minuendNode.Previous;
+                }
+                if (subtrahendNode is not null)
+                {
+                    difference -= subtrahendNode.Value - '0';
+                    subtrahendNode = subtrahendNode.Previous;
+                }
+
+                difference -= carry;
+                if (difference >= 0)
+                    carry = 0;
+                else
+                {
+                    difference += 10;
+                    carry = 1;
+                }
+
+                result.AddFirst((char)(difference + '0'));
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Return the index of a list in the array that is less than or equal to the specified list
+        /// </summary>
+        /// <param name="linkedList"></param>
+        /// <param name="linkedListArray"></param>
+        /// <returns></returns>
+        public static int LEBinarySearch(LinkedList<char> linkedList, LinkedList<char>[] linkedListArray)
+        {
+            int leftIndex = 0;
+            int rightIndex = linkedListArray.Length - 1;
+
+            while (leftIndex <= rightIndex)
+            {
+                int midIndex = (leftIndex + rightIndex) / 2;
+                int comparison = Compare(linkedList, linkedListArray[midIndex]);
+
+                if (comparison == 0)
+                    return midIndex;
+
+                if (comparison > 0)
+                    leftIndex = midIndex + 1;
+                if (comparison < 0)
+                    rightIndex = midIndex - 1;
+            }
+
+            if (leftIndex > linkedListArray.Length - 1)
+                return linkedListArray.Length - 1;
+
+            return rightIndex;
+        }
+    }
 }

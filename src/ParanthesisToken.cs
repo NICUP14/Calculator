@@ -14,6 +14,11 @@
             return _parenthesisTokenType == (obj as ParanthesisToken)._parenthesisTokenType;
         }
 
+        public override int GetHashCode()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public override ParanthesisToken Clone()
         {
             return new ParanthesisToken(_parenthesisTokenType, _stringRepresentation);
@@ -25,10 +30,10 @@
             ClosingParenthesis,
         }
 
-        private ParenthesisTokenType _parenthesisTokenType;
+        private readonly ParenthesisTokenType _parenthesisTokenType;
 
         /// Parenthesis token constants
-        public static readonly ParanthesisToken OpeningParenthesis = new ParanthesisToken(ParenthesisTokenType.OpeningParenthesis, TokenStringRepresentation.OpeningParenthesis);
-        public static readonly ParanthesisToken ClosingParenthesis = new ParanthesisToken(ParenthesisTokenType.ClosingParenthesis, TokenStringRepresentation.ClosingParenthesis);
+        public static readonly ParanthesisToken OpeningParenthesis = new(ParenthesisTokenType.OpeningParenthesis, TokenStringRepresentation.OpeningParenthesis);
+        public static readonly ParanthesisToken ClosingParenthesis = new(ParenthesisTokenType.ClosingParenthesis, TokenStringRepresentation.ClosingParenthesis);
     }
 }

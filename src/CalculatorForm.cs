@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace Calculator
 {
@@ -10,16 +11,15 @@ namespace Calculator
         public CalculatorForm()
         {
             InitializeComponent();
-            _buttonArray = new Button[20];
             _expressionBuilder = new ExpressionBuilder();
-            _buttonDefaultBackColorLookup = new Dictionary<FunctionTag, ButtonDefaultProperty>();
+            _buttonDefaultStateLookup = new Dictionary<FunctionTag, ButtonDefaultState>();
         }
 
         private void CalculatorForm_FormLoad(object sender, EventArgs e)
         {
-            /// Configure button unique identifiers
+            /// Links buttons to their unique identifiers
             clearButton.Tag = FunctionTag.Clear;
-            deleteButton.Tag = FunctionTag.Delete;
+            deleteButton.Tag = FunctionTag.RemoveLastCharacter;
             changeSignButton.Tag = FunctionTag.ChangeSign;
             insertParanthesisButton.Tag = FunctionTag.InsertParanthesis;
             divisionButton.Tag = FunctionTag.Division;
@@ -39,78 +39,69 @@ namespace Calculator
             eightButton.Tag = FunctionTag.Eight;
             nineButton.Tag = FunctionTag.Nine;
 
-            /// Add button references to button array
-            _buttonArray[0] = clearButton;
-            _buttonArray[1] = deleteButton;
-            _buttonArray[2] = changeSignButton;
-            _buttonArray[3] = insertParanthesisButton;
-            _buttonArray[4] = divisionButton;
-            _buttonArray[5] = additionButton;
-            _buttonArray[6] = subtractionButton;
-            _buttonArray[7] = multiplicationButton;
-            _buttonArray[8] = calculateButton;
-            _buttonArray[9] = periodButton;
-            _buttonArray[10] = zeroButton;
-            _buttonArray[11] = oneButton;
-            _buttonArray[12] = twoButton;
-            _buttonArray[13] = threeButton;
-            _buttonArray[14] = fourButton;
-            _buttonArray[15] = fiveButton;
-            _buttonArray[16] = sixButton;
-            _buttonArray[17] = sevenButton;
-            _buttonArray[18] = eightButton;
-            _buttonArray[19] = nineButton;
+            /// Acquires the references of all the buttons
+            _buttonArray = buttonTableLayoutPanel.Controls.OfType<Button>().ToArray();
 
+            /// Acquires the default properties of all the buttons
             foreach (Button button in _buttonArray)
             {
-                ButtonDefaultProperty buttonDefaultProperty = new ButtonDefaultProperty();
-                buttonDefaultProperty.BackColor = button.BackColor;
-                buttonDefaultProperty.BorderColor = button.FlatAppearance.BorderColor;
-                _buttonDefaultBackColorLookup.Add((FunctionTag)button.Tag, buttonDefaultProperty);
+                ButtonDefaultState buttonDefaultState = new()
+                {
+                    BackColor = button.BackColor,
+                    BorderColor = button.FlatAppearance.BorderColor
+                };
+
+                _buttonDefaultStateLookup.Add((FunctionTag)button.Tag, buttonDefaultState);
             }
         }
 
         private void CalculatorForm_ButtonClick(object sender, EventArgs e)
         {
-            FunctionTag senderButtonTag = (FunctionTag)(sender as Button).Tag;
-            ProcessFunctionTag(senderButtonTag);
+            if (sender is null)
+                throw new ArgumentNullException(nameof(sender));
 
-            /// This is why I have WinForms
+            ProcessFunctionTag((FunctionTag)(sender as Button).Tag);
+
+            /// Sets the calculate button back in focus
             calculateButton.Focus();
         }
-        
+
         private void CalculatorForm_KeyPress(object sender, KeyPressEventArgs e)
         {
-            char keyChar = e.KeyChar;
-            if (!_hotkeyLookup.ContainsKey(keyChar))
+            if (sender is null)
+                throw new ArgumentNullException(nameof(sender));
+
+            /// Determines whether the pressed combination is recognized
+            if (!_hotkeyLookup.ContainsKey(e.KeyChar))
                 return;
 
-            FunctionTag senderButtonTag = _hotkeyLookup[keyChar];
-            ProcessFunctionTag(senderButtonTag);
-
-            e.Handled = true;
+            ProcessFunctionTag(_hotkeyLookup[e.KeyChar]);
         }
 
-        private void ProcessFunctionTag(FunctionTag senderButtonTag)
+        /// <summary>
+        /// Links front-end components to their back-end counterpars
+        /// </summary>
+        /// <param name="functionTag"></param>
+        private void ProcessFunctionTag(FunctionTag functionTag)
         {
-            if (senderButtonTag == FunctionTag.Undefined)
+            if (functionTag == FunctionTag.Undefined)
                 return;
 
             try
             {
-                switch (senderButtonTag)
+                switch (functionTag)
                 {
                     case FunctionTag.Clear:
                         _expressionBuilder.Clear();
-                        break;
-                    case FunctionTag.Delete:
-                        _expressionBuilder.RemoveLastCharacter();
                         break;
                     case FunctionTag.ChangeSign:
                         _expressionBuilder.ChangeSign();
                         break;
                     case FunctionTag.InsertParanthesis:
                         _expressionBuilder.InsertParenthesis();
+                        break;
+                    case FunctionTag.RemoveLastCharacter:
+                        _expressionBuilder.RemoveLastCharacter();
                         break;
                     case FunctionTag.Division:
                         _expressionBuilder.AppendToken(OperatorToken.Division);
@@ -125,147 +116,89 @@ namespace Calculator
                         _expressionBuilder.AppendToken(OperatorToken.Multiplication);
                         break;
                     case FunctionTag.Period:
-                        _expressionBuilder.AppendToken(new DecimalToken("."));
+                        _expressionBuilder.AppendToken(DecimalToken.Period);
                         break;
                     case FunctionTag.Zero:
-                        _expressionBuilder.AppendToken(new DecimalToken("0"));
+                        _expressionBuilder.AppendToken(DecimalToken.Zero);
                         break;
                     case FunctionTag.One:
-                        _expressionBuilder.AppendToken(new DecimalToken("1"));
+                        _expressionBuilder.AppendToken(DecimalToken.One);
                         break;
                     case FunctionTag.Two:
-                        _expressionBuilder.AppendToken(new DecimalToken("2"));
+                        _expressionBuilder.AppendToken(DecimalToken.Two);
                         break;
                     case FunctionTag.Three:
-                        _expressionBuilder.AppendToken(new DecimalToken("3"));
+                        _expressionBuilder.AppendToken(DecimalToken.Three);
                         break;
                     case FunctionTag.Four:
-                        _expressionBuilder.AppendToken(new DecimalToken("4"));
+                        _expressionBuilder.AppendToken(DecimalToken.Four);
                         break;
                     case FunctionTag.Five:
-                        _expressionBuilder.AppendToken(new DecimalToken("5"));
+                        _expressionBuilder.AppendToken(DecimalToken.Five);
                         break;
                     case FunctionTag.Six:
-                        _expressionBuilder.AppendToken(new DecimalToken("6"));
+                        _expressionBuilder.AppendToken(DecimalToken.Six);
                         break;
                     case FunctionTag.Seven:
-                        _expressionBuilder.AppendToken(new DecimalToken("7"));
+                        _expressionBuilder.AppendToken(DecimalToken.Seven);
                         break;
                     case FunctionTag.Eight:
-                        _expressionBuilder.AppendToken(new DecimalToken("8"));
+                        _expressionBuilder.AppendToken(DecimalToken.Eight);
                         break;
                     case FunctionTag.Nine:
-                        _expressionBuilder.AppendToken(new DecimalToken("9"));
+                        _expressionBuilder.AppendToken(DecimalToken.Nine);
                         break;
                 }
 
-
-                foreach (Button button in _buttonArray)
-                {
-                    button.Enabled = true;
-                    button.BackColor = _buttonDefaultBackColorLookup[(FunctionTag)button.Tag].BackColor;
-                    button.FlatAppearance.BorderColor = _buttonDefaultBackColorLookup[(FunctionTag)button.Tag].BorderColor;
-                }
-
-                UpdateExpressionResultLabel(senderButtonTag != FunctionTag.Calculate);
+                UpdateExpressionResultLabel(functionTag != FunctionTag.Calculate);
                 UpdateExpressionLabel();
+
+                SetButtonState(_buttonArray, ButtonState.Default);
             }
 
-            /// Coloured warning handler
-            catch (Exception ex)
+            /// Handles the "colored warning" case
+            catch (ExpressionBuilderRemoveLastCharacterException)
             {
-                // if (ex is ExpressionParserSyntaxError)
-                // {
-                //     calculateButton.Enabled = false;
-                //     calculateButton.BackColor = ButtonErrorBackColor;
-                //     calculateButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
-                // }
-                // else if (ex is ExpressionBuilderInsertParenthesisError)
-                // {
-                //     insertParanthesisButton.Enabled = false;
-                //     insertParanthesisButton.BackColor = ButtonErrorBackColor;
-                //     insertParanthesisButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
-                // }
-                if (ex is ExpressionBuilderRemoveLastCharacterError)
+                SetButtonState(new Button[] { deleteButton }, ButtonState.Error);
+            }
+            catch (ExpressionBuilderAppendPeriodDecimalTokenException)
+            {
+                SetButtonState(new Button[] { periodButton }, ButtonState.Error);
+            }
+            catch (ExpressionBuilderAppendMultiplicationOrDivisionOperatorTokenException)
+            {
+                SetButtonState(new Button[]
                 {
-                    deleteButton.Enabled = false;
-                    deleteButton.BackColor = ButtonErrorBackColor;
-                    deleteButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
-                }
-                else if (ex is ExpressionBuilderAppendPeriodDecimalTokenError)
+                    divisionButton,
+                    multiplicationButton
+                }, ButtonState.Error);
+            }
+            catch (ExpressionBuilderAppendOperatorTokenException)
+            {
+                SetButtonState(new Button[]
                 {
-                    periodButton.Enabled = false;
-                    periodButton.BackColor = ButtonErrorBackColor;
-                    periodButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
-                }
-                else if (ex is ExpressionBuilderAppendOperatorTokenError)
+                    divisionButton,
+                    additionButton,
+                    subtractionButton,
+                    multiplicationButton
+                }, ButtonState.Error);
+            }
+            catch (ExpressionBuilderAppendDecimalTokenException)
+            {
+                SetButtonState(new Button[]
                 {
-                    divisionButton.Enabled = false;
-                    additionButton.Enabled = false;
-                    subtractionButton.Enabled = false;
-                    multiplicationButton.Enabled = false;
-
-                    divisionButton.BackColor = ButtonErrorBackColor;
-                    additionButton.BackColor = ButtonErrorBackColor;
-                    subtractionButton.BackColor = ButtonErrorBackColor;
-                    multiplicationButton.BackColor = ButtonErrorBackColor;
-
-                    divisionButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
-                    additionButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
-                    subtractionButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
-                    multiplicationButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
-
-                }
-                else if (ex is ExpressionBuilderAppendDecimalTokenError)
-                {
-                    periodButton.Enabled = false;
-                    zeroButton.Enabled = false;
-                    oneButton.Enabled = false;
-                    twoButton.Enabled = false;
-                    threeButton.Enabled = false;
-                    fourButton.Enabled = false;
-                    fiveButton.Enabled = false;
-                    sixButton.Enabled = false;
-                    sevenButton.Enabled = false;
-                    eightButton.Enabled = false;
-                    nineButton.Enabled = false;
-
-                    periodButton.BackColor = ButtonErrorBackColor;
-                    zeroButton.BackColor = ButtonErrorBackColor;
-                    oneButton.BackColor = ButtonErrorBackColor;
-                    twoButton.BackColor = ButtonErrorBackColor;
-                    threeButton.BackColor = ButtonErrorBackColor;
-                    fourButton.BackColor = ButtonErrorBackColor;
-                    fiveButton.BackColor = ButtonErrorBackColor;
-                    sixButton.BackColor = ButtonErrorBackColor;
-                    sevenButton.BackColor = ButtonErrorBackColor;
-                    eightButton.BackColor = ButtonErrorBackColor;
-                    nineButton.BackColor = ButtonErrorBackColor;
-
-                    periodButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
-                    zeroButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
-                    oneButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
-                    twoButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
-                    threeButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
-                    fourButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
-                    fiveButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
-                    sixButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
-                    sevenButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
-                    eightButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
-                    nineButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
-                }
-                else if (ex is ExpressionBuilderAppendMultiplicationOrDivisionOperatorTokenError)
-                {
-                    divisionButton.Enabled = false;
-                    multiplicationButton.Enabled = false;
-
-                    divisionButton.BackColor = ButtonErrorBackColor;
-                    multiplicationButton.BackColor = ButtonErrorBackColor;
-
-                    divisionButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
-                    multiplicationButton.FlatAppearance.BorderColor = ButtonErrorBackColor;
-                }
-                else throw;
+                    zeroButton,
+                    oneButton,
+                    twoButton,
+                    threeButton,
+                    fourButton,
+                    fiveButton,
+                    sixButton,
+                    sevenButton,
+                    eightButton,
+                    nineButton,
+                    periodButton
+                }, ButtonState.Error);
             }
         }
 
@@ -277,34 +210,49 @@ namespace Calculator
 
         private void UpdateExpressionResultLabel(bool clearExpressionResultLabel = false)
         {
-            if(clearExpressionResultLabel == true)
+            if (clearExpressionResultLabel == true)
             {
-                expressionResultLabel.Text = "";
+                expressionResultLabel.Text = string.Empty;
                 return;
             }
 
-            try
-            {
-                string expressionResult = _expressionBuilder.Calculate().ToString();
-                expressionResultLabel.Text = expressionResult;
+            string expressionResult = _expressionBuilder.Calculate().ToString();
+            expressionResultLabel.Text = expressionResult;
 
-                _expressionBuilder.CompleteParantheses();
-            }
-            catch (Exception ex)
+            _expressionBuilder.CompleteParantheses();
+        }
+
+        private void SetButtonState(Button[] buttonArray, ButtonState buttonState)
+        {
+            foreach (Button button in buttonArray)
             {
-                if(ex is ExpressionBuilderNullError)
-                    expressionResultLabel.Text = string.Empty;
-                else throw;
+                button.Enabled = buttonState == ButtonState.Default;
+
+                if (buttonState == ButtonState.Error)
+                {
+                    button.BackColor = ButtonErrorColor;
+                    button.FlatAppearance.BorderColor = ButtonErrorColor;
+                }
+                else
+                {
+                    ButtonDefaultState buttonDefaultState = _buttonDefaultStateLookup[(FunctionTag)button.Tag];
+
+                    button.BackColor = buttonDefaultState.BackColor;
+                    button.FlatAppearance.BorderColor = buttonDefaultState.BorderColor;
+                }
             }
         }
 
+        /// <summary>
+        /// Defines function unique identifiers
+        /// </summary>
         private enum FunctionTag
         {
             Undefined,
             Clear,
-            Delete,
             ChangeSign,
             InsertParanthesis,
+            RemoveLastCharacter,
             Division,
             Addition,
             Subtraction,
@@ -323,42 +271,48 @@ namespace Calculator
             Nine
         }
 
-        private Button[] _buttonArray;
-        private Dictionary<FunctionTag, ButtonDefaultProperty> _buttonDefaultBackColorLookup;
-        private struct ButtonDefaultProperty
+        private enum ButtonState
+        {
+            Error,
+            Default
+        }
+
+        private readonly Dictionary<FunctionTag, ButtonDefaultState> _buttonDefaultStateLookup;
+        private struct ButtonDefaultState
         {
             public Color BackColor;
             public Color BorderColor;
         }
 
-        private readonly Dictionary<char, FunctionTag> _hotkeyLookup  = new Dictionary<char, FunctionTag>
+        private readonly Dictionary<char, FunctionTag> _hotkeyLookup = new()
         {
-            {(char)Keys.Escape, FunctionTag.Clear},
-            {(char)Keys.Back,   FunctionTag.Delete},
-            {'!',               FunctionTag.ChangeSign},
-            {'s',               FunctionTag.ChangeSign},
-            {'(',               FunctionTag.InsertParanthesis},
-            {')',               FunctionTag.InsertParanthesis},
-            {'p',               FunctionTag.InsertParanthesis},
-            {'/',               FunctionTag.Division},
-            {'+',               FunctionTag.Addition},
-            {'-',               FunctionTag.Subtraction},
-            {'*',               FunctionTag.Multiplication},
-            {(char)Keys.Enter,  FunctionTag.Calculate},
-            {'.',               FunctionTag.Period},
-            {'0',               FunctionTag.Zero},
-            {'1',               FunctionTag.One},
-            {'2',               FunctionTag.Two},
-            {'3',               FunctionTag.Three},
-            {'4',               FunctionTag.Four},
-            {'5',               FunctionTag.Five},
-            {'6',               FunctionTag.Six},
-            {'7',               FunctionTag.Seven},
-            {'8',               FunctionTag.Eight},
-            {'9',               FunctionTag.Nine},
+            { (char)Keys.Escape, FunctionTag.Clear },
+            { (char)Keys.Back, FunctionTag.RemoveLastCharacter },
+            { '!', FunctionTag.ChangeSign },
+            { 's', FunctionTag.ChangeSign },
+            { '(', FunctionTag.InsertParanthesis },
+            { ')', FunctionTag.InsertParanthesis },
+            { 'p', FunctionTag.InsertParanthesis },
+            { '/', FunctionTag.Division },
+            { '+', FunctionTag.Addition },
+            { '-', FunctionTag.Subtraction },
+            { '*', FunctionTag.Multiplication },
+            { (char)Keys.Enter, FunctionTag.Calculate },
+            { '.', FunctionTag.Period },
+            { '0', FunctionTag.Zero },
+            { '1', FunctionTag.One },
+            { '2', FunctionTag.Two },
+            { '3', FunctionTag.Three },
+            { '4', FunctionTag.Four },
+            { '5', FunctionTag.Five },
+            { '6', FunctionTag.Six },
+            { '7', FunctionTag.Seven },
+            { '8', FunctionTag.Eight },
+            { '9', FunctionTag.Nine },
         };
 
-        private ExpressionBuilder _expressionBuilder;
-        public static Color ButtonErrorBackColor = Color.FromArgb(255, 105, 97);
+        private Button[] _buttonArray;
+        private readonly ExpressionBuilder _expressionBuilder;
+        private static readonly Color ButtonErrorColor = Color.FromArgb(255, 105, 97);
     }
 }

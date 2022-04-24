@@ -2,12 +2,12 @@
 {
     static class TokenStringRepresentation
     {
-        public const string Division =               "÷";
-        public const string Addition =               "+";
-        public const string Subtraction =            "-";
-        public const string Multiplication =         "×";
-        public const string OpeningParenthesis =     "(";
-        public const string ClosingParenthesis =     ")";
+        public const string Division = "÷";
+        public const string Addition = "+";
+        public const string Subtraction = "-";
+        public const string Multiplication = "×";
+        public const string OpeningParenthesis = "(";
+        public const string ClosingParenthesis = ")";
     }
 
     class Token
@@ -23,6 +23,11 @@
             if (obj is not Token)
                 return false;
             return _tokenType == (obj as Token)._tokenType;
+        }
+
+        public override int GetHashCode()
+        {
+            throw new System.NotImplementedException();
         }
 
         public override string ToString()
@@ -56,13 +61,13 @@
             }
         }
 
-        private TokenType _tokenType;
+        private readonly TokenType _tokenType;
         public string _stringRepresentation;
 
         /// Token constants
-        public static readonly Token Decimal = new Token(TokenType.Decimal);
-        public static readonly Token Operator = new Token(TokenType.Operator);
-        public static readonly Token Undefined = new Token(TokenType.Undefined);
-        public static readonly Token Parenthesis = new Token(TokenType.Parenthesis);
+        public static readonly Token Decimal = new(TokenType.Decimal);
+        public static readonly Token Operator = new(TokenType.Operator);
+        public static readonly Token Undefined = new(TokenType.Undefined);
+        public static readonly Token Parenthesis = new(TokenType.Parenthesis);
     }
 }

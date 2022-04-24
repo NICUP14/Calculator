@@ -2,74 +2,38 @@
 
 namespace Calculator
 {
-    class ErrorMessage
+    static class ExceptionMessage
     {
-        public const string DecimalNullError =                                                  "DecimalNullError";
-        public const string DecimalPeriodError =                                                "DecimalPeriodError";
-        public const string DecimalInvalidError =                                               "DecimalInvalidError";
-        public const string DecimalDivisionError =                                              "DecimalDivisionError";
-        public const string ExpressionParserNullError =                                         "ExpressionParserNullError";
-        public const string ExpressionParserSyntaxError =                                       "ExpressionParserSyntaxError";
-        public const string ExpressionParserTokenError =                                        "ExpressionParserTokenError";
-        public const string ExpressionBuilderNullError =                                        "ExpressionBuilderNullError";
-        public const string ExpressionBuilderInsertParenthesisError =                                "ExpressionBuilderInsertTokenError";
-        public const string ExpressionBuilderAppendDecimalTokenError =                          "ExpressionBuilderAppendDecimalTokenError";
-        public const string ExpressionBuilderAppendOperatorTokenError =                         "ExpressionBuilderAppendOperatorTokenError";
-        public const string ExpressionBuilderRemoveLastCharacterError =                         "ExpressionBuilderRemoveLastCharacterError";
-        public const string ExpressionBuilderAppendPeriodDecimalTokenError =                    "ExpressionBuilderAppendPeriodDecimalTokenError";
-        public const string ExpressionBuilderAppendMultiplicationOrDivisionOperatorTokenError = "ExpressionBuilderAppendMultiplicationOrDivisionError";
+        public static string DecimalFormatException = "DecimalFormatException";
+        public static string DecimalArithmeticException = "DecimalArithmeticException";
+        public static string ExpressionParserSyntaxException = "ExpressionParserSyntaxException";
+        public static string ExpressionParserTokenException = "ExpressionParserTokenException";
+        public static string ExpressionBuilderEmptyException = "ExpressionBuilderEmptyException";
+        public static string ExpressionBuilderInsertParenthesisException = "ExpressionBuilderInsertTokenException";
+        public static string ExpressionBuilderAppendDecimalTokenException = "ExpressionBuilderAppendDecimalTokenException";
+        public static string ExpressionBuilderAppendOperatorTokenException = "ExpressionBuilderAppendOperatorTokenException";
+        public static string ExpressionBuilderRemoveLastCharacterException = "ExpressionBuilderRemoveLastCharacterException";
+        public static string ExpressionBuilderAppendPeriodDecimalTokenException = "ExpressionBuilderAppendPeriodDecimalTokenException";
+        public static string ExpressionBuilderAppendMultiplicationOrDivisionOperatorTokenException = "ExpressionBuilderAppendMultiplicationOrDivisionException";
     }
 
     /// <summary>
-    /// Occurs when a decimal is constructed from a null or an empty string
+    /// The exception that is thrown when the format of the decimal constructor argument is invalid
     /// </summary>
-    class DecimalNullError : Exception
+    class DecimalFormatException : Exception
     {
-        public DecimalNullError() : base(ErrorMessage.DecimalNullError)
+        public DecimalFormatException() : base(ExceptionMessage.DecimalFormatException)
         {
 
         }
     }
 
     /// <summary>
-    /// Occurs when a decimal is constructed from a string with a misplaced period
+    /// The exception that is thrown for errors in the decimal division operation
     /// </summary>
-    class DecimalPeriodError : Exception
+    class DecimalArithmeticException : Exception
     {
-        public DecimalPeriodError() : base(ErrorMessage.DecimalPeriodError)
-        {
-
-        }
-    }
-
-    /// <summary>
-    /// Occurs when a decimal is constructed from a string with invalid characters
-    /// </summary>
-    class DecimalInvalidError : Exception
-    {
-        public DecimalInvalidError() : base(ErrorMessage.DecimalInvalidError)
-        {
-
-        }
-    }
-
-    /// <summary>
-    /// Occurs when the decimal's internal division precision is less than one or a decimal is divided by zero
-    /// </summary>
-    class DecimalDivisionError : Exception
-    {
-        public DecimalDivisionError() : base(ErrorMessage.DecimalDivisionError)
-        {
-
-        }
-    }
-
-    /// <summary>
-    /// Occurs when the expression parser encounters a null or an empty expression
-    /// </summary>
-    class ExpressionParserNullError : Exception
-    {
-        public ExpressionParserNullError() : base(ErrorMessage.ExpressionParserNullError)
+        public DecimalArithmeticException() : base(ExceptionMessage.DecimalArithmeticException)
         {
 
         }
@@ -78,9 +42,9 @@ namespace Calculator
     /// <summary>
     /// Occurs when the expression parser detects a syntactically invalid expression
     /// </summary>
-    class ExpressionParserSyntaxError : Exception
+    class ExpressionParserSyntaxException : Exception
     {
-        public ExpressionParserSyntaxError() : base(ErrorMessage.ExpressionParserSyntaxError)
+        public ExpressionParserSyntaxException() : base(ExceptionMessage.ExpressionParserSyntaxException)
         {
 
         }
@@ -89,17 +53,17 @@ namespace Calculator
     /// <summary>
     /// Occurs when the expression parser detects an undefined token
     /// </summary>
-    class ExpressionParserTokenError : Exception
+    class ExpressionParserTokenException : Exception
     {
-        public ExpressionParserTokenError() : base(ErrorMessage.ExpressionParserTokenError)
+        public ExpressionParserTokenException() : base(ExceptionMessage.ExpressionParserTokenException)
         {
 
         }
     }
 
-    class ExpressionBuilderNullError : Exception
+    class ExpressionBuilderEmptyException : Exception
     {
-        public ExpressionBuilderNullError() : base(ErrorMessage.ExpressionBuilderNullError)
+        public ExpressionBuilderEmptyException() : base(ExceptionMessage.ExpressionBuilderEmptyException)
         {
 
         }
@@ -108,9 +72,9 @@ namespace Calculator
     /// <summary>
     /// Occurs when the expression builder detects the call to InsertParenthesis that would break expression validity
     /// </summary>
-    class ExpressionBuilderInsertParenthesisError : Exception
+    class ExpressionBuilderInsertParenthesisException : Exception
     {
-        public ExpressionBuilderInsertParenthesisError() : base(ErrorMessage.ExpressionBuilderInsertParenthesisError)
+        public ExpressionBuilderInsertParenthesisException() : base(ExceptionMessage.ExpressionBuilderInsertParenthesisException)
         {
 
         }
@@ -119,9 +83,9 @@ namespace Calculator
     /// <summary>
     /// Occurs when the expression builder detects the call to AppendToken that would break expression validity
     /// </summary>
-    class ExpressionBuilderAppendDecimalTokenError : Exception
+    class ExpressionBuilderAppendDecimalTokenException : Exception
     {
-        public ExpressionBuilderAppendDecimalTokenError() : base(ErrorMessage.ExpressionBuilderAppendDecimalTokenError)
+        public ExpressionBuilderAppendDecimalTokenException() : base(ExceptionMessage.ExpressionBuilderAppendDecimalTokenException)
         {
 
         }
@@ -130,17 +94,17 @@ namespace Calculator
     /// <summary>
     /// Occurs when the expression builder detects the call to AppendToken that would break expression validity
     /// </summary>
-    class ExpressionBuilderAppendOperatorTokenError : Exception
+    class ExpressionBuilderAppendOperatorTokenException : Exception
     {
-        public ExpressionBuilderAppendOperatorTokenError() : base(ErrorMessage.ExpressionBuilderAppendOperatorTokenError)
+        public ExpressionBuilderAppendOperatorTokenException() : base(ExceptionMessage.ExpressionBuilderAppendOperatorTokenException)
         {
 
         }
     }
 
-    class ExpressionBuilderRemoveLastCharacterError : Exception
+    class ExpressionBuilderRemoveLastCharacterException : Exception
     {
-        public ExpressionBuilderRemoveLastCharacterError() : base(ErrorMessage.ExpressionBuilderRemoveLastCharacterError)
+        public ExpressionBuilderRemoveLastCharacterException() : base(ExceptionMessage.ExpressionBuilderRemoveLastCharacterException)
         {
 
         }
@@ -149,17 +113,17 @@ namespace Calculator
     /// <summary>
     /// Occurs when the expression builder detects the call to AppendToken that would break expression validity
     /// </summary>
-    class ExpressionBuilderAppendPeriodDecimalTokenError : Exception
+    class ExpressionBuilderAppendPeriodDecimalTokenException : Exception
     {
-        public ExpressionBuilderAppendPeriodDecimalTokenError() : base(ErrorMessage.ExpressionBuilderAppendPeriodDecimalTokenError)
+        public ExpressionBuilderAppendPeriodDecimalTokenException() : base(ExceptionMessage.ExpressionBuilderAppendPeriodDecimalTokenException)
         {
 
         }
     }
 
-    class ExpressionBuilderAppendMultiplicationOrDivisionOperatorTokenError : Exception
+    class ExpressionBuilderAppendMultiplicationOrDivisionOperatorTokenException : Exception
     {
-        public ExpressionBuilderAppendMultiplicationOrDivisionOperatorTokenError() : base(ErrorMessage.ExpressionBuilderAppendMultiplicationOrDivisionOperatorTokenError)
+        public ExpressionBuilderAppendMultiplicationOrDivisionOperatorTokenException() : base(ExceptionMessage.ExpressionBuilderAppendMultiplicationOrDivisionOperatorTokenException)
         {
 
         }
