@@ -1,39 +1,38 @@
 # Calculator
 
-<img width = 269 height = 463 src = "docs/Images/CalculatorScreenshot.png"></img>
+<img width = 284 height = 467 src = "docs/Images/CalculatorScreenshot.png"></img>
 
-A smart, fast and lightweight calculator utility written in C#
+An efficient, lightweight, keyboard-centric calculator utility written in pure C#
 
 Directory | Role
 ----------|-----
-src       | Project's source files folder
-docs      | Project-related documentation folder
+src       | The Project's source files folder
+docs      | The Project-related documentation folder
 
 ## Features
 
-* Real-time expression calculation
-* Infinite precision arithmetic operations
-* Expression calculation following the order of operations
-* Smart expression manipulation functions
-* Keyboard hotkey support
-* Colored warning support
+* Infinite precision for arithmetic operations
+* Expression evaluation following the order of operations
+* Efficient expression modifications
+* Keyboard shortcut support
+* Button warning support
 
 ## Roadmap
 
-- [X] Implement infinite precision arithmetic operations
-- [X] Implement expression calculation following the order of operations
-- [X] Implement smart expression manipulation capabilities
-- [X] Implement colored warning support
-- [X] Implement hotkey support
-- [X] Design the application's user interface
-- [X] Link frontend to backend components
+- [X] Implement the infinite precision arithmetic library
+- [X] Implement the expression parser and manipulator libraries
+- [X] Design and implement the application's user interface
+- [X] Implement the keyboard shortcut capabilities
+- [X] Implement the button warning capabilities
 - [X] Resize the application's user interface
 - [X] End-of-project general refactoring
-- [ ] Licence project under the MIT licence
+- [X] License project under the MIT license
 - [ ] Provide project-related documentation
 
-Project is approximately 90% complete.
+The "Calculator" project is now ready to be publicly released
 
 ## License
 
-Work in progress! The project will soon be available under the MIT license.
+Copyright © 2022 Nicolae Petri
+
+Licensed under the [MIT License](./LICENSE).
