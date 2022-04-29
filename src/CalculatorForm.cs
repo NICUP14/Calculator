@@ -240,8 +240,8 @@ namespace Calculator
 
                 _expressionBuilder.CompleteParentheses();
             }
-
-            expressionResultLabel.Text = string.Empty;
+            else
+                expressionResultLabel.Text = string.Empty;
         }
 
         /// <summary>
