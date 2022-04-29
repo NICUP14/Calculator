@@ -20,12 +20,15 @@ namespace Calculator
                 throw new ArgumentNullException(nameof(expression));
 
             if (expression.Length == 0)
-                return new Token[0];
+                return Array.Empty<Token>();
+
+            /// Removes all spaces from the expression
+            expression = expression.Replace(" ", string.Empty);
 
             /// Infers the token type of a character of a token's string representation
             static Token.TokenType characterToTokenType(char character)
             {
-                if (character == '.' || char.IsDigit(character))
+                if (char.IsDigit(character) || character == '.')
                     return Token.TokenType.Decimal;
 
                 if (character == '(' || character == ')')
@@ -46,7 +49,7 @@ namespace Calculator
 
             Token.TokenType tokenType, previousTokenType = Token.TokenType.Undefined;
 
-            /// Determines the length of the token array
+            /// Determines the length of the array of tokens
             int tokenArrayLength = 1;
             foreach (char expressionChar in expression)
             {
@@ -64,7 +67,8 @@ namespace Calculator
                 if (stringRepresentation is null)
                     throw new ArgumentNullException(nameof(stringRepresentation));
 
-                int digitAndPeriodCount = System.Linq.Enumerable.Count(stringRepresentation, character => char.IsDigit(character) || character == '.');
+                int digitAndPeriodCount = System.Linq.Enumerable.Count(
+                    stringRepresentation, character => char.IsDigit(character) || character == '.');
 
                 if (digitAndPeriodCount == stringRepresentation.Length)
                 {
@@ -73,14 +77,14 @@ namespace Calculator
                         return new DecimalToken(stringRepresentation);
                     }
 
-                    /// Up-casts the thrown decimal format exception
+                    /// Up-casts the thrown DecimalFormatException
                     catch (DecimalFormatException)
                     {
                         throw new ExpressionParserTokenException();
                     }
                 }
 
-                /// Handles the "unrecognised token" case
+                /// Throws an exception in case the token isn't recognized
                 if (!tokenLookup.ContainsKey(stringRepresentation))
                     throw new ExpressionParserTokenException();
 
@@ -89,7 +93,7 @@ namespace Calculator
 
             previousTokenType = Token.TokenType.Undefined;
 
-            /// Performs the expression splitting routine
+            /// Splits the expression into an array of tokens
             int tokenArrayIndex = 0;
             Token[] tokenArray = new Token[tokenArrayLength];
             StringBuilder tokenBuilder = new(expression.Length);
@@ -127,11 +131,11 @@ namespace Calculator
             if (tokenArray.Length == 0)
                 return string.Empty;
 
-            /// Re-arranges a shallow copy of the token array into postfix order
+            /// Re-arranges a shallow copy of the array of tokens into postfix order
             Token[] tokenArrayClone = tokenArray.Clone() as Token[];
             ReorderTokenArray(ref tokenArrayClone);
 
-            /// Performs the expression re-construction routine
+            /// Reconstructs the expression
             Stack<string> operandStack = new();
             foreach (Token token in tokenArrayClone)
             {
@@ -163,7 +167,7 @@ namespace Calculator
         }
 
         /// <summary>
-        /// Calculates a pre-parsed expression and returns its result in decimal format
+        /// Calculates an array of tokens representing an expression and returns its result in Decimal format
         /// </summary>
         /// <param name="tokenArray"></param>
         /// <returns></returns>
@@ -174,9 +178,9 @@ namespace Calculator
                 throw new ArgumentNullException(nameof(tokenArray));
 
             if (tokenArray.Length == 0)
-                return new("0");
+                return Decimal.Zero;
 
-            /// Re-arranges a shallow copy of the token array into postfix order
+            /// Re-arranges a shallow copy of the array of tokens into postfix order
             Token[] tokenArrayClone = tokenArray.Clone() as Token[];
             ReorderTokenArray(ref tokenArrayClone);
 
@@ -184,7 +188,7 @@ namespace Calculator
         }
 
         /// <summary>
-        /// Calculates an expression and returns its result in decimal format
+        /// Calculates an expression and returns its result in Decimal format
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
@@ -195,9 +199,9 @@ namespace Calculator
                 throw new ArgumentNullException(nameof(expression));
 
             if (expression.Length == 0)
-                return new("0");
+                return Decimal.Zero;
 
-            /// Re-arranges the parsed token array into postfix order
+            /// Re-arranges the parsed array of tokens into postfix order
             Token[] tokenArray = Parse(expression);
             ReorderTokenArray(ref tokenArray);
 
@@ -205,7 +209,7 @@ namespace Calculator
         }
 
         /// <summary>
-        /// Calculates an array of tokens in postfix order and returns its result in decimal format
+        /// Calculates an array of tokens representing an expression in postfix order and returns its result in Decimal format
         /// </summary>
         /// <param name="tokenArray"></param>
         /// <returns></returns>
@@ -218,8 +222,7 @@ namespace Calculator
             /// Algorithm based on the postfix notation evaluation algorithm
 
             /*
-                While there are tokens to be read:
-                    Read a token
+                For each an every token:
                     If it's a number
                         Push the number onto the stack
                     If it's an operator
@@ -228,7 +231,7 @@ namespace Calculator
                 Pop result from the stack
             */
 
-            /// Performs the evaluation routine
+            /// Calculates the array of tokens
             Stack<Decimal> operandStack = new();
             foreach (Token token in tokenArray)
             {
@@ -260,7 +263,7 @@ namespace Calculator
                             operandResult = Decimal.Divide(operand, operand2);
                         }
 
-                        /// Up-casts the thrown decimal arithmetic exception
+                        /// Up-casts the thrown DecimalArithmeticException
                         catch (DecimalArithmeticException)
                         {
                             throw new ExpressionParserSyntaxException();
@@ -285,7 +288,7 @@ namespace Calculator
         }
 
         /// <summary>
-        /// Changes the order of the token array from infix to postfix
+        /// Changes the order of the array of tokens from infix to postfix notation
         /// </summary>
         /// <param name="tokenArray"></param>
         /// <returns></returns>
@@ -295,8 +298,8 @@ namespace Calculator
                 throw new ArgumentNullException(nameof(tokenArray));
 
             /// Algorithm based on Edsger W. Dijkstra's shunting-yard algorithm
-            /// Additionally, this algorithm performs anti-function checks and converts unary addition and subtraction operators to a binary operation
-            /// Function-like structures n(m), (n)m, (n)(m) are troublesome because they exploit the design of the postfix conversion algorithm
+            /// Additionally, this algorithm performs anti-function checks and converts unary addition and subtraction operators to their binary counter-part
+            /// Function-like structures n(m), (n)m, (n)(m) are troublesome because they exploit the postfix conversion algorithm
             /// Example: infix expression "(1)(2)+" is represented in postfix as "1 2 +", which is equivalent to the infix expression "1+2"
 
             /*
@@ -316,12 +319,12 @@ namespace Calculator
                     Pop operator from the operator stack and add it to the postfix array
             */
 
-            Token previousToken = Token.Undefined;
-            Token[] postfixTokenArray = new Token[tokenArray.Length + 1];
 
-            /// Performs the shunting-yard conversion routine
+            /// Re-orders the array of tokens to postfix notation
             int postfixTokenArrayIndex = 0;
             Stack<Token> operatorStack = new();
+            Token previousToken = Token.Undefined;
+            Token[] postfixTokenArray = new Token[tokenArray.Length + 1];
             foreach (Token token in tokenArray)
             {
                 if (token is null)
@@ -329,39 +332,41 @@ namespace Calculator
 
                 if (token.Equals(Token.Decimal))
                 {
-                    /// Anti-function patch #1
-                    if (previousToken.Equals(ParanthesisToken.ClosingParenthesis))
+                    /// Checks for a function-like structure (check #1)
+                    if (previousToken.Equals(ParenthesisToken.ClosingParenthesis))
                         throw new ExpressionParserSyntaxException();
 
                     postfixTokenArray[postfixTokenArrayIndex++] = token;
                 }
                 else if (token.Equals(Token.Parenthesis))
                 {
-                    if (token.Equals(ParanthesisToken.OpeningParenthesis))
+                    if (token.Equals(ParenthesisToken.OpeningParenthesis))
                     {
-                        /// Anti-function patch #2
-                        if (previousToken.Equals(Token.Decimal) || previousToken.Equals(ParanthesisToken.ClosingParenthesis))
+                        /// Checks for a function-like structure (check #2)
+                        if (previousToken.Equals(Token.Decimal) || previousToken.Equals(ParenthesisToken.ClosingParenthesis))
                             throw new ExpressionParserSyntaxException();
 
                         operatorStack.Push(token);
                     }
                     else
                     {
-                        /// Anti-function patch #3
-                        if (previousToken.Equals(ParanthesisToken.OpeningParenthesis))
+                        /// Checks for a function-like structure (check #3)
+                        if (previousToken.Equals(ParenthesisToken.OpeningParenthesis))
                             throw new ExpressionParserSyntaxException();
 
-                        while (operatorStack.Count > 0 && !operatorStack.Peek().Equals(Token.Parenthesis))
+                        while (operatorStack.Count > 0 && !operatorStack.Peek().Equals(ParenthesisToken.OpeningParenthesis))
                             postfixTokenArray[postfixTokenArrayIndex++] = operatorStack.Pop();
+
                         if (operatorStack.Count == 0)
                             throw new ExpressionParserSyntaxException();
+
                         operatorStack.Pop();
                     }
                 }
                 else if (token.Equals(Token.Operator))
                 {
-                    /// Handles the "unary sign operator" case
-                    if (previousToken.Equals(Token.Undefined) || previousToken.Equals(ParanthesisToken.OpeningParenthesis))
+                    /// Converts the unary addition and subtraction operators to their binary counter-part
+                    if (previousToken.Equals(Token.Undefined) || previousToken.Equals(ParenthesisToken.OpeningParenthesis))
                     {
                         if (token.Equals(OperatorToken.Addition))
                             continue;
@@ -371,6 +376,7 @@ namespace Calculator
 
                     while (operatorStack.Count > 0 && !operatorStack.Peek().Equals(Token.Parenthesis) && OperatorToken.Compare((token as OperatorToken), (operatorStack.Peek() as OperatorToken)) <= 0)
                         postfixTokenArray[postfixTokenArrayIndex++] = operatorStack.Pop();
+
                     operatorStack.Push(token);
                 }
 
@@ -389,7 +395,7 @@ namespace Calculator
         }
 
         /// <summary>
-        /// Links a token's string representation to its token counterpart
+        /// Links a token's string representation to its token counter-part
         /// </summary>
         private static readonly Dictionary<string, Token> tokenLookup = new()
         {
@@ -397,8 +403,8 @@ namespace Calculator
             { TokenStringRepresentation.Addition, OperatorToken.Addition },
             { TokenStringRepresentation.Subtraction, OperatorToken.Subtraction },
             { TokenStringRepresentation.Multiplication, OperatorToken.Multiplication },
-            { TokenStringRepresentation.OpeningParenthesis, ParanthesisToken.OpeningParenthesis },
-            { TokenStringRepresentation.ClosingParenthesis, ParanthesisToken.ClosingParenthesis },
+            { TokenStringRepresentation.OpeningParenthesis, ParenthesisToken.OpeningParenthesis },
+            { TokenStringRepresentation.ClosingParenthesis, ParenthesisToken.ClosingParenthesis },
         };
     }
 }

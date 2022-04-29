@@ -2,17 +2,19 @@
 
 namespace Calculator
 {
+    /// <summary>
+    /// Defines exception messages for the Decimal, ExpressionParser and ExpressionBuilder classes
+    /// </summary>
     static class ExceptionMessage
     {
         public static string DecimalFormatException = "DecimalFormatException";
         public static string DecimalArithmeticException = "DecimalArithmeticException";
         public static string ExpressionParserSyntaxException = "ExpressionParserSyntaxException";
         public static string ExpressionParserTokenException = "ExpressionParserTokenException";
-        public static string ExpressionBuilderEmptyException = "ExpressionBuilderEmptyException";
         public static string ExpressionBuilderInsertParenthesisException = "ExpressionBuilderInsertTokenException";
         public static string ExpressionBuilderAppendDecimalTokenException = "ExpressionBuilderAppendDecimalTokenException";
         public static string ExpressionBuilderAppendOperatorTokenException = "ExpressionBuilderAppendOperatorTokenException";
-        public static string ExpressionBuilderRemoveLastCharacterException = "ExpressionBuilderRemoveLastCharacterException";
+        public static string ExpressionBuilderRemoveTrailingCharacterException = "ExpressionBuilderRemoveLastCharacterException";
         public static string ExpressionBuilderAppendPeriodDecimalTokenException = "ExpressionBuilderAppendPeriodDecimalTokenException";
         public static string ExpressionBuilderAppendMultiplicationOrDivisionOperatorTokenException = "ExpressionBuilderAppendMultiplicationOrDivisionException";
     }
@@ -40,7 +42,7 @@ namespace Calculator
     }
 
     /// <summary>
-    /// Occurs when the expression parser detects a syntactically invalid expression
+    /// The exception that is thrown for syntax errors in the ExpressionBuilder.Calculate methods
     /// </summary>
     class ExpressionParserSyntaxException : Exception
     {
@@ -51,7 +53,7 @@ namespace Calculator
     }
 
     /// <summary>
-    /// Occurs when the expression parser detects an undefined token
+    /// The exception that is thrown for unrecognized tokens in the ExpressionBuilder.Parse method
     /// </summary>
     class ExpressionParserTokenException : Exception
     {
@@ -61,16 +63,8 @@ namespace Calculator
         }
     }
 
-    class ExpressionBuilderEmptyException : Exception
-    {
-        public ExpressionBuilderEmptyException() : base(ExceptionMessage.ExpressionBuilderEmptyException)
-        {
-
-        }
-    }
-
     /// <summary>
-    /// Occurs when the expression builder detects the call to InsertParenthesis that would break expression validity
+    /// The exception that is thrown by ExpressionBuilder.InsertParenthesis
     /// </summary>
     class ExpressionBuilderInsertParenthesisException : Exception
     {
@@ -81,7 +75,7 @@ namespace Calculator
     }
 
     /// <summary>
-    /// Occurs when the expression builder detects the call to AppendToken that would break expression validity
+    /// The exception that is thrown by ExpressionBuilder.AppendToken(DecimalToken)
     /// </summary>
     class ExpressionBuilderAppendDecimalTokenException : Exception
     {
@@ -92,7 +86,7 @@ namespace Calculator
     }
 
     /// <summary>
-    /// Occurs when the expression builder detects the call to AppendToken that would break expression validity
+    /// The exception that is thrown by ExpressionBuilder.AppendToken(OperatorToken)
     /// </summary>
     class ExpressionBuilderAppendOperatorTokenException : Exception
     {
@@ -102,16 +96,19 @@ namespace Calculator
         }
     }
 
-    class ExpressionBuilderRemoveLastCharacterException : Exception
+    /// <summary>
+    /// The exception that is thrown by ExpressionBuilder.RemoveTrailingCharacter
+    /// </summary>
+    class ExpressionBuilderRemoveTrailingCharacterException : Exception
     {
-        public ExpressionBuilderRemoveLastCharacterException() : base(ExceptionMessage.ExpressionBuilderRemoveLastCharacterException)
+        public ExpressionBuilderRemoveTrailingCharacterException() : base(ExceptionMessage.ExpressionBuilderRemoveTrailingCharacterException)
         {
 
         }
     }
 
     /// <summary>
-    /// Occurs when the expression builder detects the call to AppendToken that would break expression validity
+    /// The exception that is thrown by ExpressionBuilder.AppendToken(DecimalToken.Period)
     /// </summary>
     class ExpressionBuilderAppendPeriodDecimalTokenException : Exception
     {
@@ -121,6 +118,9 @@ namespace Calculator
         }
     }
 
+    /// <summary>
+    /// The exception that is thrown by ExpressionBuilder.AppendToken(OperatorToken.Multiplication) or by ExpressionBuilder.AppendToken(OperatorToken.Division)
+    /// </summary>
     class ExpressionBuilderAppendMultiplicationOrDivisionOperatorTokenException : Exception
     {
         public ExpressionBuilderAppendMultiplicationOrDivisionOperatorTokenException() : base(ExceptionMessage.ExpressionBuilderAppendMultiplicationOrDivisionOperatorTokenException)

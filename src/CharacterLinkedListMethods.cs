@@ -11,7 +11,7 @@ namespace Calculator
     {
 
         /// <summary>
-        /// Indicates whether the specified list contains only the "zero" character
+        /// Indicates whether the specified list contains only the "zero" character ('0')
         /// </summary>
         /// <param name="linkedList"></param>
         /// <returns></returns>
@@ -25,7 +25,7 @@ namespace Calculator
         }
 
         /// <summary>
-        // Removes all occurrences of the "zero" characters from the beginning of a list.
+        // Removes all occurrences of the "zero" characters ('0') from the beginning of a list.
         /// </summary>
         /// <param name="linkedList"></param>
         /// <returns></returns>
@@ -38,8 +38,8 @@ namespace Calculator
             int trimCount = 0;
             while (linkedList.Count > 1 && linkedList.First.Value == '0')
             {
-                trimCount++;
                 linkedList.RemoveFirst();
+                trimCount++;
             }
 
             return trimCount;

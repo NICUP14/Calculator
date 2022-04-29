@@ -1,6 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Text;
+using System.Collections.Generic;
 
 namespace Calculator
 {
@@ -10,7 +10,8 @@ namespace Calculator
     class Decimal
     {
         /// <summary>
-        /// Initializes a new instance of decimal to be used by internal logic
+        /// Initializes a new instance of the Decimal class.
+        /// This constructor is used by the Decimal's internal methods
         /// </summary>
         /// <param name="isPositive"></param>
         /// <param name="integerPart"></param>
@@ -31,7 +32,7 @@ namespace Calculator
 
 
         /// <summary>
-        /// Initializes a new instance of decimal to the value of the specified string.
+        /// Initializes a new instance of the Decimal class that matches the value of the specified string.
         /// </summary>
         /// <param name="stringRepresentation"></param>
         /// <exception cref="ArgumentNullException"></exception>
@@ -67,31 +68,27 @@ namespace Calculator
             if (_fractionalPart.Count == 0)
                 _fractionalPart.AddLast('0');
 
-            /// Handles the "negative zero" case
+            /// Handles the signed zero case
             if (CharacterLinkedListMethods.ContainsOnlyZeroes(_integerPart) && CharacterLinkedListMethods.ContainsOnlyZeroes(_fractionalPart))
                 _isPositive = true;
 
-            /// Reformats the integer part
+            /// Reformats and validates the integer part
             if (!CharacterLinkedListMethods.ContainsOnlyZeroes(_integerPart))
                 CharacterLinkedListMethods.TrimLeadingZeroes(_integerPart);
-
-            /// Reformats the fractional part
-            if (!CharacterLinkedListMethods.ContainsOnlyZeroes(_fractionalPart))
-                CharacterLinkedListMethods.TrimTrailingZeroes(_fractionalPart);
-
-            /// Validates the integer part
             foreach (char integerPartChar in _integerPart)
                 if (!char.IsDigit(integerPartChar))
                     throw new DecimalFormatException();
 
-            /// Validates the fractional part
+            /// Reformats and validates the fractional part
+            if (!CharacterLinkedListMethods.ContainsOnlyZeroes(_fractionalPart))
+                CharacterLinkedListMethods.TrimTrailingZeroes(_fractionalPart);
             foreach (char fractionalPartChar in _fractionalPart)
                 if (!char.IsDigit(fractionalPartChar))
                     throw new DecimalFormatException();
         }
 
         /// <summary>
-        /// Returns a string that represents the current decimal
+        /// Returns a string that represents the current Decimal
         /// </summary>
         /// <returns></returns>
         public override string ToString()
@@ -101,8 +98,10 @@ namespace Calculator
             /// Determines the required capacity of the string builder
             int stringRepresentationBuilderCapacity = 0;
             stringRepresentationBuilderCapacity += _integerPart.Count;
-            stringRepresentationBuilderCapacity += _isPositive ? 0 : 1;
-            stringRepresentationBuilderCapacity += fractionalPartIsZero ? 0 : _fractionalPart.Count + 1;
+            stringRepresentationBuilderCapacity += Convert.ToInt32(_isPositive);
+            stringRepresentationBuilderCapacity += Convert.ToInt32(!fractionalPartIsZero) * (_fractionalPart.Count + 1);
+
+            /// Initializes the StringBuilder instance
             StringBuilder stringRepresentationBuilder = new(stringRepresentationBuilderCapacity);
 
             if (!_isPositive)
@@ -120,7 +119,7 @@ namespace Calculator
         }
 
         /// <summary>
-        /// Adds two specified decimal values
+        /// Adds two specified Decimal values
         /// </summary>
         /// <param name="firstAddend"></param>
         /// <param name="secondAddend"></param>
@@ -134,7 +133,7 @@ namespace Calculator
             if (secondAddend is null)
                 throw new ArgumentNullException(nameof(secondAddend));
 
-            /// Determines fractional part offset and convert decimals for the addition routine
+            /// Determines fractional part offset and convert Decimals for the addition routine
             int fractionalPartOffset = Math.Max(firstAddend._fractionalPart.Count, secondAddend._fractionalPart.Count);
             LinkedList<char> firstAddendLinkedList = DecimalToLinkedList(firstAddend, fractionalPartOffset);
             LinkedList<char> secondAddendLinkedList = DecimalToLinkedList(secondAddend, fractionalPartOffset);
@@ -198,7 +197,7 @@ namespace Calculator
         }
 
         /// <summary>
-        /// Subtracts two specified decimal values
+        /// Subtracts two specified Decimal values
         /// </summary>
         /// <param name="minuend"></param>
         /// <param name="subtrahend"></param>
@@ -212,13 +211,13 @@ namespace Calculator
             if (subtrahend is null)
                 throw new ArgumentNullException(nameof(subtrahend));
 
-            /// Performs decimal addition after negating the sign of the subtrahend
+            /// Performs Decimal addition after negating the sign of the subtrahend
             Decimal auxiliary = new(!subtrahend._isPositive, subtrahend._integerPart, subtrahend._fractionalPart);
             return Add(minuend, auxiliary);
         }
 
         /// <summary>
-        /// Multiplies two specified decimal values
+        /// Multiplies two specified Decimal values
         /// </summary>
         /// <param name="multiplicand"></param>
         /// <param name="multiplicator"></param>
@@ -232,7 +231,7 @@ namespace Calculator
             if (multiplicator is null)
                 throw new ArgumentNullException(nameof(multiplicator));
 
-            /// Converts decimals for the multiplication routine
+            /// Converts Decimals for the multiplication routine
             LinkedList<char> multiplicandLinkedList = DecimalToLinkedList(multiplicand);
             LinkedList<char> multiplicatorLinkedList = DecimalToLinkedList(multiplicator);
             CharacterLinkedListMethods.TrimLeadingZeroes(multiplicandLinkedList);
@@ -277,7 +276,7 @@ namespace Calculator
         }
 
         /// <summary>
-        /// Divides two specified decimal values
+        /// Divides two specified Decimal values
         /// </summary>
         /// <param name="dividend"></param>
         /// <param name="divisor"></param>
@@ -295,7 +294,7 @@ namespace Calculator
             if (_divisionPrecision <= 0)
                 throw new DecimalArithmeticException();
 
-            /// Converts decimals for the division routine
+            /// Converts Decimals for the division routine
             LinkedList<char> dividendLinkedList = DecimalToLinkedList(dividend);
             LinkedList<char> divisorLinkedList = DecimalToLinkedList(divisor);
             if (CharacterLinkedListMethods.ContainsOnlyZeroes(divisorLinkedList))
@@ -359,9 +358,8 @@ namespace Calculator
             if (fractionalPartOffset < 0)
                 CharacterLinkedListMethods.TransferLeft(integerPart, fractionalPart, -fractionalPartOffset);
 
-            /// Truncates fractional part to match division precision
-            /// Handles the "division precision overflow" case
-            while (fractionalPart.Count > _divisionPrecision)
+            /// Truncates the fractional part to match division precision
+            for (int fractionalPartRange = fractionalPart.Count; fractionalPartRange > _divisionPrecision; fractionalPartRange--)
                 fractionalPart.RemoveLast();
 
             /// Removes padding from integer and fractional parts
@@ -372,7 +370,7 @@ namespace Calculator
         }
 
         /// <summary>
-        /// Returns a linked list that represents the current decimal
+        /// Returns a linked list that represents the specified Decimal
         /// </summary>
         /// <param name="dec"></param>
         /// <param name="fractionalPartPadCount"></param>
@@ -405,5 +403,8 @@ namespace Calculator
             get { return _divisionPrecision; }
             set { _divisionPrecision = value; }
         }
+
+        /// Decimal constants
+        public static readonly Decimal Zero = new();
     }
 }

@@ -44,7 +44,7 @@ namespace Calculator
             this.clearButton = new System.Windows.Forms.Button();
             this.additionButton = new System.Windows.Forms.Button();
             this.zeroButton = new System.Windows.Forms.Button();
-            this.insertParanthesisButton = new System.Windows.Forms.Button();
+            this.insertParenthesisButton = new System.Windows.Forms.Button();
             this.calculateButton = new System.Windows.Forms.Button();
             this.subtractionButton = new System.Windows.Forms.Button();
             this.multiplicationButton = new System.Windows.Forms.Button();
@@ -120,7 +120,7 @@ namespace Calculator
             this.buttonTableLayoutPanel.Controls.Add(this.additionButton, 3, 3);
             this.buttonTableLayoutPanel.Controls.Add(this.sevenButton, 0, 1);
             this.buttonTableLayoutPanel.Controls.Add(this.zeroButton, 1, 4);
-            this.buttonTableLayoutPanel.Controls.Add(this.insertParanthesisButton, 2, 0);
+            this.buttonTableLayoutPanel.Controls.Add(this.insertParenthesisButton, 2, 0);
             this.buttonTableLayoutPanel.Controls.Add(this.calculateButton, 3, 4);
             this.buttonTableLayoutPanel.Controls.Add(this.subtractionButton, 3, 2);
             this.buttonTableLayoutPanel.Controls.Add(this.multiplicationButton, 3, 1);
@@ -361,25 +361,25 @@ namespace Calculator
             this.zeroButton.UseVisualStyleBackColor = false;
             this.zeroButton.Click += new System.EventHandler(this.CalculatorForm_ButtonClick);
             // 
-            // insertParanthesisButton
+            // insertParenthesisButton
             // 
-            this.insertParanthesisButton.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.insertParenthesisButton.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.insertParanthesisButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(227)))), ((int)(((byte)(227)))));
-            this.insertParanthesisButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(205)))), ((int)(((byte)(207)))), ((int)(((byte)(210)))));
-            this.insertParanthesisButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.insertParanthesisButton.Font = new System.Drawing.Font("Segoe UI", 20.1F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.insertParanthesisButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(78)))), ((int)(((byte)(78)))));
-            this.insertParanthesisButton.Location = new System.Drawing.Point(174, 0);
-            this.insertParanthesisButton.Margin = new System.Windows.Forms.Padding(0);
-            this.insertParanthesisButton.Name = "insertParanthesisButton";
-            this.insertParanthesisButton.Size = new System.Drawing.Size(87, 51);
-            this.insertParanthesisButton.TabIndex = 11;
-            this.insertParanthesisButton.TabStop = false;
-            this.insertParanthesisButton.Text = "( )";
-            this.insertParanthesisButton.UseVisualStyleBackColor = false;
-            this.insertParanthesisButton.Click += new System.EventHandler(this.CalculatorForm_ButtonClick);
+            this.insertParenthesisButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(227)))), ((int)(((byte)(227)))));
+            this.insertParenthesisButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(205)))), ((int)(((byte)(207)))), ((int)(((byte)(210)))));
+            this.insertParenthesisButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.insertParenthesisButton.Font = new System.Drawing.Font("Segoe UI", 20.1F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.insertParenthesisButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(78)))), ((int)(((byte)(78)))));
+            this.insertParenthesisButton.Location = new System.Drawing.Point(174, 0);
+            this.insertParenthesisButton.Margin = new System.Windows.Forms.Padding(0);
+            this.insertParenthesisButton.Name = "insertParenthesisButton";
+            this.insertParenthesisButton.Size = new System.Drawing.Size(87, 51);
+            this.insertParenthesisButton.TabIndex = 11;
+            this.insertParenthesisButton.TabStop = false;
+            this.insertParenthesisButton.Text = "( )";
+            this.insertParenthesisButton.UseVisualStyleBackColor = false;
+            this.insertParenthesisButton.Click += new System.EventHandler(this.CalculatorForm_ButtonClick);
             // 
             // calculateButton
             // 
@@ -587,7 +587,7 @@ namespace Calculator
         private System.Windows.Forms.Button fourButton;
         private System.Windows.Forms.Button nineButton;
         private System.Windows.Forms.Button eightButton;
-        private System.Windows.Forms.Button insertParanthesisButton;
+        private System.Windows.Forms.Button insertParenthesisButton;
         private System.Windows.Forms.Button changeSignButton;
         private System.Windows.Forms.Button deleteButton;
         private System.Windows.Forms.Button clearButton;
