@@ -1,6 +1,6 @@
 # Calculator
 
-<img width = 284 height = 467 src = "docs/Images/CalculatorScreenshot.png"></img>
+<img width = 284 height = 467 src = "docs/Images/Calculator.png"></img>
 
 An efficient, lightweight, keyboard-centric calculator utility written in pure C#
 
@@ -33,6 +33,6 @@ The "Calculator" project is now ready to be publicly released
 
 ## License
 
-Copyright © 2022 Nicolae Petri
+Copyright Â© 2022 Nicolae Petri
 
 Licensed under the [MIT License](./LICENSE).

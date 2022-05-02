@@ -1,0 +1,46 @@
+digraph Calculator_Graph
+{
+	node [style=filled];
+
+	/// Node relationships
+	Decimal           -> DecimalFormatException
+	Decimal           -> DecimalArithmeticException
+	DecimalToken      -> Decimal
+	DecimalToken      -> Token
+	OperatorToken     -> Token
+	ParenthesisToken  -> Token
+	ExpressionParser  -> DecimalToken
+	ExpressionParser  -> OperatorToken
+	ExpressionParser  -> ParenthesisToken
+	ExpressionParser  -> ExpressionParserSyntaxException
+	ExpressionParser  -> ExpressionParserTokenException
+	ExpressionBuilder -> ExpressionParser
+	ExpressionBuilder -> ExpressionBuilderInsertParenthesisException
+	ExpressionBuilder -> ExpressionBuilderAppendDecimalTokenException
+	ExpressionBuilder -> ExpressionBuilderAppendOperatorTokenException
+	ExpressionBuilder -> ExpressionBuilderRemoveTrailingCharacterException
+	ExpressionBuilder -> ExpressionBuilderAppendPeriodDecimalTokenException
+	ExpressionBuilder -> ExpressionBuilderAppendMultiplicationOrDivisionOperatorTokenException
+	CalculatorForm    -> ExpressionBuilder
+
+	/// Color relationship
+	Decimal                                                               [color="lightsteelblue1"];
+	Token                                                                 [color="lightsteelblue1"];
+	DecimalToken                                                          [color="lightsteelblue1"];
+	OperatorToken                                                         [color="lightsteelblue1"];
+	ParenthesisToken                                                      [color="lightsteelblue1"];
+	ExpressionParser                                                      [color="lightsteelblue1"];
+	ExpressionBuilder                                                     [color="lightsteelblue1"];
+	CalculatorForm                                                        [color="steelblue3"];
+	DecimalFormatException                                                [color="thistle2"];
+	DecimalArithmeticException                                            [color="thistle2"];
+	ExpressionParserSyntaxException                                       [color="thistle2"];
+	ExpressionParserTokenException                                        [color="thistle2"];
+	ExpressionBuilderInsertParenthesisException                           [color="thistle2"];
+	ExpressionBuilderAppendDecimalTokenException                          [color="thistle2"];
+	ExpressionBuilderAppendOperatorTokenException                         [color="thistle2"];
+	ExpressionBuilderRemoveTrailingCharacterException                     [color="thistle2"];
+	ExpressionBuilderAppendPeriodDecimalTokenException                    [color="thistle2"];
+	ExpressionBuilderAppendMultiplicationOrDivisionOperatorTokenException [color="thistle2"];
+
+}

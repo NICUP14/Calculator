@@ -6,7 +6,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <StartupObject />
     <PackageIcon>CalculatorLogo.png</PackageIcon>
-    <ApplicationIcon>docs\Images\CalculatorLog.ico</ApplicationIcon>
+    <ApplicationIcon>docs\Images\Calculator_Logo.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="docs\Images\CalculatorLog.ico" />
+    <Content Include="docs\Images\Calculator_Logo.ico" />
   </ItemGroup>
 
   <ItemGroup>
